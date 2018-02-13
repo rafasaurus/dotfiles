@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(PROG_TYPE avrisp)
-set(USBPORT /dev/tty.usbmodem411)
+set(PROG_TYPE /home/pi/Downloads/arduino-1.8.5/hardware/tools/avr/etc/avrdude.conf)
+set(USBPORT /dev/ttyUSB0)
 # extra arguments to avrdude: baud rate, chip type, -F flag, etc.
-set(PROG_ARGS -b 19200 -P ${USBPORT})
+set(PROG_ARGS -b 115200 -P ${USBPORT})
 
 # Variables regarding the AVR chip
 set(MCU   atmega2560)
@@ -27,7 +27,7 @@ set(CMAKE_CXX_COMPILER ${AVRCPP})
 set(CMAKE_C_COMPILER   ${AVRC})
 set(CMAKE_ASM_COMPILER   ${AVRC})
 
-project (blink C CXX ASM)
+project (gimbal C CXX ASM)
 
 # Important project paths
 set(BASE_PATH    "${${PROJECT_NAME}_SOURCE_DIR}")
