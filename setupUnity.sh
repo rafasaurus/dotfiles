@@ -1,3 +1,4 @@
+#!/bin/bash
 sudo apt-get install -y htop \
 	git \
 	vim \
@@ -29,6 +30,15 @@ wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-ke
 echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
 sudo apt-get update
 sudo apt-get install google-chrome-stable
+
+# dropbox
+sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 5044912E
+sudo sh -c 'echo "deb http://linux.dropbox.com/ubuntu/ xenial main" >> /etc/apt/sources.list.d/dropbox.list'
+sudo apt-get update 
+sudo apt-get install -y dropbox 
+
+# redshift-gtk
+sudo apt-get install -y redshift-gtk
 
 # clean
 sudo apt-get autoremove

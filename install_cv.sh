@@ -1,3 +1,4 @@
+#!/bin/bash
 sudo apt-get install -y  build-essential checkinstall cmake pkg-config yasm \
 git \
 gfortran \
