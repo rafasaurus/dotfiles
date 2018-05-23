@@ -200,7 +200,7 @@ nmap ,wr :Ack <cword><CR>
 " use 256 colors when possible
 if (&term =~? 'mlterm\|xterm\|xterm-256\|screen-256') || has('nvim')
 	let &t_Co = 256
-    colorscheme peachpuff
+    colorscheme Tomorrow-Night
 else
     colorscheme delek
 endif
@@ -306,13 +306,18 @@ nmap <leader>e :Errors<CR>
 " check also when just opened the file
 let g:syntastic_check_on_open = 1
 " don't put icons on the sign column (it hides the vcs status icons of signify)
-let g:syntastic_enable_signs = 0
+let g:syntastic_enable_signs = 1
+"**********************************
+"let g:syntastic_always_populate_loc_list = 0
+"let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_wq = 1
+"**********************************
 " custom icons (enable them if you use a patched font, and enable the previous 
 " setting)
-"let g:syntastic_error_symbol = '✗'
-"let g:syntastic_warning_symbol = '⚠'
-"let g:syntastic_style_error_symbol = '✗'
-"let g:syntastic_style_warning_symbol = '⚠'
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_warning_symbol = '⚠'
+let g:syntastic_style_error_symbol = '✗'
+let g:syntastic_style_warning_symbol = '⚠'
 
 " Jedi-vim ------------------------------
 
@@ -417,3 +422,7 @@ map <C-l> <End>
 "rafasaurus mapping
 inoremap kj <Esc>
 cnoremap kj <Esc>
+
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
