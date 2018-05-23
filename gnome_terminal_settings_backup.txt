@@ -1,0 +1,39 @@
+[legacy/keybindings]
+next-tab='<Shift>Right'
+prev-tab='<Shift>Left'
+
+[legacy/profiles:]
+list=['b1dcc9dd-5262-4d8d-a863-c897e6d979b9', '908e2d21-f9b5-4d6f-a67b-4a949a9bf3bc']
+
+[legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9]
+foreground-color='rgb(255,251,245)'
+palette=['rgb(46,52,54)', 'rgb(255,0,0)', 'rgb(94,153,38)', 'rgb(196,160,0)', 'rgb(52,100,164)', 'rgb(202,255,133)', 'rgb(6,152,154)', 'rgb(211,215,207)', 'rgb(85,87,83)', 'rgb(214,191,255)', 'rgb(255,145,249)', 'rgb(248,246,73)', 'rgb(0,255,165)', 'rgb(255,248,90)', 'rgb(52,226,226)', 'rgb(238,238,236)']
+default-size-rows=36
+default-size-columns=130
+use-system-font=false
+use-transparent-background=true
+use-theme-colors=false
+font='League Mono Medium 11.5'
+use-theme-transparency=false
+background-color='rgb(4,0,9)'
+background-transparency-percent=7
+audible-bell=false
+
+[legacy/profiles:/:908e2d21-f9b5-4d6f-a67b-4a949a9bf3bc]
+foreground-color='rgb(255,251,245)'
+visible-name='Unnamed (Copy)'
+palette=['rgb(46,52,54)', 'rgb(255,0,0)', 'rgb(94,153,38)', 'rgb(196,160,0)', 'rgb(52,100,164)', 'rgb(202,255,133)', 'rgb(6,152,154)', 'rgb(211,215,207)', 'rgb(85,87,83)', 'rgb(214,191,255)', 'rgb(255,145,249)', 'rgb(252,233,79)', 'rgb(0,255,165)', 'rgb(255,228,96)', 'rgb(52,226,226)', 'rgb(238,238,236)']
+default-size-rows=36
+default-size-columns=130
+use-system-font=false
+use-transparent-background=true
+use-theme-colors=false
+font='League Mono Medium 11.5'
+use-theme-transparency=false
+background-color='rgb(4,0,9)'
+background-transparency-percent=7
+audible-bell=false
+
+[legacy]
+schema-version=uint32 3
+theme-variant='dark'
