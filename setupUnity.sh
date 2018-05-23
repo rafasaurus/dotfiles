@@ -10,6 +10,7 @@ sudo apt-get install -y htop \
 	numix-gtk-theme \
 	unity-tweak-tool \
 	compizconfig-settings-manager \
+    openssh-server\
 
 # telegram
 sudo add-apt-repository -y ppa:atareao/telegram
