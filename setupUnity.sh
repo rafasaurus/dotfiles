@@ -41,5 +41,10 @@ sudo apt-get install -y dropbox
 # redshift-gtk
 sudo apt-get install -y redshift-gtk
 
+# oomox theme generator
+sudo add-apt-repository ppa:nilarimogard/webupd8
+sudo apt update
+sudo apt install oomox
+
 # clean
 sudo apt-get autoremove
