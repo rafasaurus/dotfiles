@@ -32,70 +32,78 @@ endif
 " want to use
 call plug#begin('~/.vim/plugged')
 
-" Plugins from github repos:
-
-" Override configs by directory 
-Plug 'arielrossanigo/dir-configs-override.vim'
-" Better file browser
-Plug 'scrooloose/nerdtree'
-" Code commenter
-Plug 'scrooloose/nerdcommenter'
-" Class/module browser
-Plug 'majutsushi/tagbar'
-" Code and files fuzzy finder
-Plug 'ctrlpvim/ctrlp.vim'
-" Extension to ctrlp, for fuzzy command finder
-Plug 'fisadev/vim-ctrlp-cmdpalette'
-" Zen coding
-Plug 'mattn/emmet-vim'
-" Git integration
+" " Git integration
 Plug 'motemen/git-vim'
-" Tab list panel
-Plug 'kien/tabman.vim'
-" Airline
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-" Terminal Vim with 256 colors colorscheme
-Plug 'fisadev/fisa-vim-colorscheme'
-" Consoles as buffers
-Plug 'rosenfeld/conque-term'
-" Pending tasks list
-Plug 'fisadev/FixedTaskList.vim'
 " Surround
 Plug 'tpope/vim-surround'
-" Autoclose
-Plug 'Townk/vim-autoclose'
-" Indent text object
-Plug 'michaeljsmith/vim-indent-object'
-" Indentation based movements
-Plug 'jeetsukumaran/vim-indentwise'
-" Python autocompletion, go to definition.
+" " Python autocompletion, go to definition.
 Plug 'davidhalter/jedi-vim'
-" Better autocompletion
+" " Better autocompletion
 Plug 'Shougo/neocomplcache.vim'
-" Snippets manager (SnipMate), dependencies, and snippets repo
-Plug 'MarcWeber/vim-addon-mw-utils'
-Plug 'tomtom/tlib_vim'
-Plug 'honza/vim-snippets'
-Plug 'garbas/vim-snipmate'
-" Git/mercurial/others diff icons on the side of the file lines
-Plug 'mhinz/vim-signify'
-" Automatically sort python imports
+" " Automatically sort python imports
 Plug 'fisadev/vim-isort'
-" Drag visual blocks arround
-Plug 'fisadev/dragvisuals.vim'
-" Window chooser
-Plug 't9md/vim-choosewin'
-" Python and other languages code checker
+" " Python and other languages code checker
 Plug 'scrooloose/syntastic'
-" Paint css colors with the real color
-Plug 'lilydjwg/colorizer'
-" Ack code search (requires ack installed in the system)
+" Search results counter
+Plug 'vim-scripts/IndexedSearch'
+" XML/HTML tags navigation
+Plug 'vim-scripts/matchit.zip'
+" Gvim colorscheme
+Plug 'vim-scripts/Wombat'
+" Yank history navigation
+Plug 'vim-scripts/YankRing.vim'
+" " Ack code search (requires ack installed in the system)
 Plug 'mileszs/ack.vim'
 if has('python')
     " YAPF formatter for Python
     Plug 'pignacio/vim-yapf-format'
 endif
+" Plugins from github repos:
+
+" "Override configs by directory 
+" Plug 'arielrossanigo/dir-configs-override.vim'
+" " Better file browser
+" Plug 'scrooloose/nerdtree'
+" " Code commenter
+" Plug 'scrooloose/nerdcommenter'
+" " Class/module browser
+" Plug 'majutsushi/tagbar'
+" " Code and files fuzzy finder
+" Plug 'ctrlpvim/ctrlp.vim'
+" " Extension to ctrlp, for fuzzy command finder
+" Plug 'fisadev/vim-ctrlp-cmdpalette'
+" " Zen coding
+" Plug 'mattn/emmet-vim'
+" " Tab list panel
+" Plug 'kien/tabman.vim'
+" " Airline
+" Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
+" " Terminal Vim with 256 colors colorscheme
+" Plug 'fisadev/fisa-vim-colorscheme'
+" " Consoles as buffers
+" Plug 'rosenfeld/conque-term'
+" " Pending tasks list
+" Plug 'fisadev/FixedTaskList.vim'
+" Autoclose
+" Plug 'Townk/vim-autoclose'
+" " Indent text object
+" Plug 'michaeljsmith/vim-indent-object'
+" " Indentation based movements
+" Plug 'jeetsukumaran/vim-indentwise'
+" " Snippets manager (SnipMate), dependencies, and snippets repo
+" Plug 'MarcWeber/vim-addon-mw-utils'
+" Plug 'tomtom/tlib_vim'
+" Plug 'honza/vim-snippets'
+" Plug 'garbas/vim-snipmate'
+" " Git/mercurial/others diff icons on the side of the file lines
+" Plug 'mhinz/vim-signify'
+" " Drag visual blocks arround
+" Plug 'fisadev/dragvisuals.vim'
+" " Window chooser
+" Plug 't9md/vim-choosewin'
+" " Paint css colors with the real color
+" Plug 'lilydjwg/colorizer'
 " Relative numbering of lines (0 is the current line)
 " (disabled by default because is very intrusive and can't be easily toggled
 " on/off. When the plugin is present, will always activate the relative 
@@ -105,14 +113,6 @@ endif
 
 " Plugins from vim-scripts repos:
 
-" Search results counter
-Plug 'vim-scripts/IndexedSearch'
-" XML/HTML tags navigation
-Plug 'vim-scripts/matchit.zip'
-" Gvim colorscheme
-Plug 'vim-scripts/Wombat'
-" Yank history navigation
-Plug 'vim-scripts/YankRing.vim'
 
 " Tell vim-plug we finished declaring plugins, so it can load them
 call plug#end()
@@ -158,8 +158,6 @@ set hlsearch
 " syntax highlight on
 syntax on
 
-" show line numbers
-set nu
 
 " tab navigation mappings
 map tn :tabn<CR>
@@ -421,9 +419,9 @@ endif
 map <C-h> <Home>
 map <C-l> <End> 
 "rafasaurus mapping
-inoremap kj <Esc>
-cnoremap kj <Esc>
-vnoremap kj <Esc>  
+inoremap <ALT+i> <Esc>
+cnoremap <ALT+i> <Esc>
+vnoremap <ALT+i> <Esc>  
 "set statusline+=%#warningmsg#
 "set statusline+=%{SyntasticStatuslineFlag()}
 "set statusline+=%*
@@ -477,4 +475,5 @@ function! RangeChooser()
 endfunction
 command! -bar RangerChooser call RangeChooser()
 nnoremap <leader>r :<C-U>RangerChooser<CR>
-:set autoread
+set autoread
+set number relativenumber
