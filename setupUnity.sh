@@ -1,4 +1,6 @@
 #!/bin/bash
+sudo apt update
+sudo apt upgrade
 sudo apt-get install -y htop \
 	git \
 	vim \
@@ -11,6 +13,17 @@ sudo apt-get install -y htop \
 	unity-tweak-tool \
 	compizconfig-settings-manager \
     openssh-server\
+    tmux\
+    tilda\
+    slack\
+    python3-dev\
+    python3-tk\
+    python3-pip\
+    msr-tools\
+    tilda\
+    python-pip\
+    lm-sensors
+
 
 # telegram
 sudo add-apt-repository -y ppa:atareao/telegram
@@ -23,14 +36,14 @@ sudo apt-get update
 sudo apt-get install papirus-icon-theme
 
 # python3
-sudo apt-get install -y python3-dev python3-tk python3-pip
 sudo pip3 install seaborn numpy pandas sklearn
+sudo pip install undervolt
 
 # chrome
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
 sudo apt-get update
-sudo apt-get install google-chrome-stable
+sudo apt-get install -y google-chrome-stable
 
 # dropbox
 sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 5044912E
@@ -44,7 +57,12 @@ sudo apt-get install -y redshift-gtk
 # oomox theme generator
 sudo add-apt-repository ppa:nilarimogard/webupd8
 sudo apt update
-sudo apt install oomox
+sudo apt install -y oomox
+
+# qdirstat
+sudo add-apt-repository ppa:nathan-renniewaldock/qdirstat
+sudo apt-get update
+sudo apt-get install qdirstat
 
 # clean
-sudo apt-get autoremove
+sudo apt-get -y autoremove
