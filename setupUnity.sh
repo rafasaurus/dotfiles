@@ -22,7 +22,8 @@ sudo apt-get install -y htop \
     msr-tools\
     tilda\
     python-pip\
-    lm-sensors
+    lm-sensors\
+    gparted
 
 
 # telegram
@@ -63,6 +64,9 @@ sudo apt install -y oomox
 sudo add-apt-repository ppa:nathan-renniewaldock/qdirstat
 sudo apt-get update
 sudo apt-get install qdirstat
-
+# sublime
+sudo add-apt-repository ppa:webupd8team/sublime-text-3
+sudo apt-get update
+sudo apt-get install sublime-text-installer
 # clean
 sudo apt-get -y autoremove
