@@ -23,7 +23,9 @@ sudo apt-get install -y htop \
     tilda\
     python-pip\
     lm-sensors\
-    gparted
+    gparted\
+    turbostat\
+    powertop
 
 
 # telegram
