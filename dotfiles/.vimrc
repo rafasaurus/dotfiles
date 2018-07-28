@@ -31,7 +31,6 @@ endif
 " this needs to be here, so vim-plug knows we are declaring the plugins we
 " want to use
 call plug#begin('~/.vim/plugged')
-
 " " Git integration
 Plug 'motemen/git-vim'
 " Surround
@@ -476,4 +475,13 @@ endfunction
 command! -bar RangerChooser call RangeChooser()
 nnoremap <leader>r :<C-U>RangerChooser<CR>
 set autoread
-set number relativenumber
+set number 
+set relativenumber
+map qq :run<CR>
+set runtimepath^=~/.vim/bundle/ag
+map <silent> <C-v> <c-w>v
+map <silent> <C-s> <c-w>s
+map <silent> <C-h> <c-w>h
+map <silent> <C-j> <c-w>j
+map <silent> <C-k> <c-w>k
+map <silent> <C-l> <c-w>l
