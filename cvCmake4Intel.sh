@@ -1,6 +1,6 @@
 cmake -DBUILD_TIFF=ON \
   -DBUILD_opencv_java=OFF \
-  -DOPENCV_EXTRA_MODULES_PATH=/home/rafael/opencv_contrib-3.4.1/modules \
+  -DOPENCV_EXTRA_MODULES_PATH=/home/rafael/opencv/opencv_contrib-3.4.2/modules \
   -DWITH_CUDA=OFF \
   -DENABLE_AVX=ON \
   -DWITH_OPENGL=ON \
