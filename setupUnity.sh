@@ -24,8 +24,6 @@ sudo apt-get install -y htop \
     python-pip\
     lm-sensors\
     gparted\
-    turbostat\
-    powertop
 
 
 # telegram
