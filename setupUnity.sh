@@ -31,12 +31,12 @@ sudo apt-get install -y htop \
 # telegram
 sudo add-apt-repository -y ppa:atareao/telegram
 sudo apt-get update
-sudo apt-get install telegram
+sudo apt-get install -y telegram
 
 # papirus icons
 sudo add-apt-repository -y ppa:papirus/papirus
 sudo apt-get update
-sudo apt-get install papirus-icon-theme
+sudo apt-get install -y papirus-icon-theme
 
 # python3
 sudo pip3 install seaborn numpy pandas sklearn
@@ -58,17 +58,17 @@ sudo apt-get install -y dropbox
 sudo apt-get install -y redshift-gtk
 
 # oomox theme generator
-sudo add-apt-repository ppa:nilarimogard/webupd8
+sudo add-apt-repository -y ppa:nilarimogard/webupd8
 sudo apt update
 sudo apt install -y oomox
 
 # qdirstat
-sudo add-apt-repository ppa:nathan-renniewaldock/qdirstat
+sudo add-apt-repository -y ppa:nathan-renniewaldock/qdirstat
 sudo apt-get update
-sudo apt-get install qdirstat
+sudo apt-get install -y qdirstat
 # sublime
-sudo add-apt-repository ppa:webupd8team/sublime-text-3
+sudo add-apt-repository -y ppa:webupd8team/sublime-text-3
 sudo apt-get update
-sudo apt-get install sublime-text-installer
+sudo apt-get install -y sublime-text-installer
 # clean
 sudo apt-get -y autoremove
