@@ -12,10 +12,10 @@ sudo apt install libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev libexiv2-d
    https://github.com/opencv/opencv_contrib/archive/3.4.1.tar.gz
 - cd opencv-3.2.0
 - mkdir build; cd build
-- cmake -D CMAKE_BUILD_TYPE=RELEASE \
+cmake -D CMAKE_BUILD_TYPE=RELEASE \
         -D CMAKE_INSTALL_PREFIX=/usr/local \
         -D INSTALL_PYTHON_EXAMPLES=OFF \
         -D INSTALL_C_EXAMPLES=OFF \
-        -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib-3.4.1/modules \
+        -D OPENCV_EXTRA_MODULES_PATH=~/opencv/opencv_contrib-3.4.2/modules \
         -D BUILD_EXAMPLES=OFF \
         -D BUILD_TESTS=OFF ..
