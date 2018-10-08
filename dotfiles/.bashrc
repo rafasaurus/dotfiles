@@ -117,3 +117,13 @@ if ! shopt -oq posix; then
 fi
 PS1='\[\033[1;36m\]\u\[\033[1;31m\]@\[\033[1;32m\]\h:\[\033[1;35m\]\w\[\033[1;31m\]\$\[\033[0m\] '
 stty -ixon
+alias jlinkexe='/opt/SEGGER/JLink/JLinkExe'
+export PATH=$PATH:$HOME/work/ardupilot_alke/Tools/autotest
+export PATH=/usr/lib/ccache:$PATH
+PS1="\[$(tput bold)\]\[$(tput setaf 1)\][\[$(tput setaf 3)\]\u\[$(tput setaf 2)\]@\[$(tput setaf 4)\]\h \[$(tput setaf 5)\]\W\[$(tput setaf 1)\]]\[$(tput setaf 7)\]\\$ \[$(tput sgr0)\]"
+alias v="vim"
+alias sv="sudo vim"
+alias i="sudo apt-get install"
+alias upd="sudo apt update"
+alias upg="sudo apt upgrade"
+alias xo="xdg-open"
