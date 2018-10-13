@@ -5,3 +5,4 @@ keysym k = k K Up
 keysym j = j J Down
 keysym y = y Y End
 keysym o = o O Home 
+keysym space = space space Escape
