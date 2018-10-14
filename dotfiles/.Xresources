@@ -32,7 +32,7 @@
 URxvt.intensityStyles:	false
 URxvt.background:       [100]#101218
 URxvt.depth:	    32	
-URxvt.font: 		xft:monospace:size=11
+URxvt.font: 		xft:LeagueMono-SemiBold:size=11
 URxvt.scrollBar:	false
 URxvt.cursorColor:	white
 
