@@ -197,7 +197,7 @@ nmap ,wr :Ack <cword><CR>
 " use 256 colors when possible
 if (&term =~? 'mlterm\|xterm\|xterm-256\|screen-256') || has('nvim')
 	let &t_Co = 256
-    colorscheme onedark
+    colorscheme Tomorrow-Night-Eighties
 else
     colorscheme delek
 endif
@@ -432,7 +432,6 @@ inoremap <F5> <ESC>:w !python3 %<CR>
 " *** CtrlP ***
 "let g:ctrlp_map = '<c-p>'
 "let g:ctrlp_cmd = 'CtrlP'
-colorscheme onedark
 
 " Compatible with ranger 1.4.2 through 1.7.*
 "
@@ -479,9 +478,10 @@ set number
 set relativenumber
 map qq :run<CR>
 set runtimepath^=~/.vim/bundle/ag
-map <silent> <C-v> <c-w>v
-map <silent> <C-s> <c-w>s
-map <silent> <C-h> <c-w>h
-map <silent> <C-j> <c-w>j
-map <silent> <C-k> <c-w>k
-map <silent> <C-l> <c-w>l
+"map <silent> <C-v> <c-w>v
+"map <silent> <C-s> <c-w>s
+"map <silent> <C-h> <c-w>h
+"map <silent> <C-j> <c-w>j
+"map <silent> <C-k> <c-w>k
+"map <silent> <C-l> <c-w>l"
+set clipboard=unnamed"
