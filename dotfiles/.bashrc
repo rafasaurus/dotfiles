@@ -115,7 +115,6 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-PS1='\[\033[1;36m\]\u\[\033[1;31m\]@\[\033[1;32m\]\h:\[\033[1;35m\]\w\[\033[1;31m\]\$\[\033[0m\] '
 stty -ixon
 alias jlinkexe='/opt/SEGGER/JLink/JLinkExe'
 export PATH=$PATH:$HOME/work/ardupilot_alke/Tools/autotest
@@ -127,3 +126,8 @@ alias i="sudo apt-get install"
 alias upd="sudo apt update"
 alias upg="sudo apt upgrade"
 alias xo="xdg-open"
+alias red="redshift -O"
+alias ured="redshift -x"
+export EDITOR="vim"
+export PATH=$PATH:$HOME/github/settings/scripts
+export PATH="$PATH:/opt/mssql-tools/bin"

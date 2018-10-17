@@ -22,96 +22,24 @@ if vim_plug_just_installed
     :execute 'source '.fnameescape(vim_plug_path)
 endif
 
-" Obscure hacks done, you can now modify the rest of the .vimrc as you wish :)
-
-" ============================================================================
-" Active plugins
-" You can disable or add new ones here:
-
-" this needs to be here, so vim-plug knows we are declaring the plugins we
-" want to use
 call plug#begin('~/.vim/plugged')
+
 " " Git integration
 Plug 'motemen/git-vim'
-" Surround
-Plug 'tpope/vim-surround'
+" " Surround
+" Plug 'tpope/vim-surround'
 " " Python autocompletion, go to definition.
 Plug 'davidhalter/jedi-vim'
 " " Better autocompletion
 Plug 'Shougo/neocomplcache.vim'
-" " Automatically sort python imports
-Plug 'fisadev/vim-isort'
+"" " Automatically sort python imports
+"Plug 'fisadev/vim-isort'
 " " Python and other languages code checker
 Plug 'scrooloose/syntastic'
-" Search results counter
-Plug 'vim-scripts/IndexedSearch'
-" XML/HTML tags navigation
-Plug 'vim-scripts/matchit.zip'
-" Gvim colorscheme
-Plug 'vim-scripts/Wombat'
-" Yank history navigation
-Plug 'vim-scripts/YankRing.vim'
-" " Ack code search (requires ack installed in the system)
-Plug 'mileszs/ack.vim'
 if has('python')
     " YAPF formatter for Python
     Plug 'pignacio/vim-yapf-format'
 endif
-" Plugins from github repos:
-
-" "Override configs by directory 
-" Plug 'arielrossanigo/dir-configs-override.vim'
-" " Better file browser
-" Plug 'scrooloose/nerdtree'
-" " Code commenter
-" Plug 'scrooloose/nerdcommenter'
-" " Class/module browser
-" Plug 'majutsushi/tagbar'
-" " Code and files fuzzy finder
-" Plug 'ctrlpvim/ctrlp.vim'
-" " Extension to ctrlp, for fuzzy command finder
-" Plug 'fisadev/vim-ctrlp-cmdpalette'
-" " Zen coding
-" Plug 'mattn/emmet-vim'
-" " Tab list panel
-" Plug 'kien/tabman.vim'
-" " Airline
-" Plug 'vim-airline/vim-airline'
-" Plug 'vim-airline/vim-airline-themes'
-" " Terminal Vim with 256 colors colorscheme
-" Plug 'fisadev/fisa-vim-colorscheme'
-" " Consoles as buffers
-" Plug 'rosenfeld/conque-term'
-" " Pending tasks list
-" Plug 'fisadev/FixedTaskList.vim'
-" Autoclose
-" Plug 'Townk/vim-autoclose'
-" " Indent text object
-" Plug 'michaeljsmith/vim-indent-object'
-" " Indentation based movements
-" Plug 'jeetsukumaran/vim-indentwise'
-" " Snippets manager (SnipMate), dependencies, and snippets repo
-" Plug 'MarcWeber/vim-addon-mw-utils'
-" Plug 'tomtom/tlib_vim'
-" Plug 'honza/vim-snippets'
-" Plug 'garbas/vim-snipmate'
-" " Git/mercurial/others diff icons on the side of the file lines
-" Plug 'mhinz/vim-signify'
-" " Drag visual blocks arround
-" Plug 'fisadev/dragvisuals.vim'
-" " Window chooser
-" Plug 't9md/vim-choosewin'
-" " Paint css colors with the real color
-" Plug 'lilydjwg/colorizer'
-" Relative numbering of lines (0 is the current line)
-" (disabled by default because is very intrusive and can't be easily toggled
-" on/off. When the plugin is present, will always activate the relative 
-" numbering every time you go to normal mode. Author refuses to add a setting 
-" to avoid that)
-" Plug 'myusuf3/numbers.vim'
-
-" Plugins from vim-scripts repos:
-
 
 " Tell vim-plug we finished declaring plugins, so it can load them
 call plug#end()
@@ -123,10 +51,6 @@ if vim_plug_just_installed
     echo "Installing Bundles, please ignore key map error messages"
     :PlugInstall
 endif
-
-" ============================================================================
-" Vim settings and mappings
-" You can edit them as you wish
 
 " no vi-compatible
 set nocompatible
@@ -157,18 +81,6 @@ set hlsearch
 " syntax highlight on
 syntax on
 
-
-" tab navigation mappings
-map tn :tabn<CR>
-map tp :tabp<CR>
-map tm :tabm 
-map tt :tabnew 
-map ts :tab split<CR>
-map <C-S-Right> :tabn<CR>
-imap <C-S-Right> <ESC>:tabn<CR>
-map <C-S-Left> :tabp<CR>
-imap <C-S-Left> <ESC>:tabp<CR>
-
 " navigate windows with meta+arrows
 map <M-Right> <c-w>l
 map <M-Left> <c-w>h
@@ -179,40 +91,8 @@ imap <M-Left> <ESC><c-w>h
 imap <M-Up> <ESC><c-w>k
 imap <M-Down> <ESC><c-w>j
 
-" old autocomplete keyboard shortcut
-imap <C-J> <C-X><C-O>
-
-" Comment this line to enable autocompletion preview window
-" (displays documentation related to the selected completion option)
-" Disabled by default because preview makes the window flicker
-set completeopt-=preview
-
-" save as sudo
-ca w!! w !sudo tee "%"
-
-" simple recursive grep
-nmap ,r :Ack 
-nmap ,wr :Ack <cword><CR>
-
-" use 256 colors when possible
-if (&term =~? 'mlterm\|xterm\|xterm-256\|screen-256') || has('nvim')
-	let &t_Co = 256
-    colorscheme Tomorrow-Night-Eighties
-else
-    colorscheme delek
-endif
-
-" colors for gvim
-if has('gui_running')
-    colorscheme wombat
-endif
-
 " when scrolling, keep cursor 3 lines away from screen border
 set scrolloff=3
-
-" autocompletion of files and commands behaves like shell
-" (complete only the common part, list the options that match)
-set wildmode=list:longest
 
 " better backup, swap and undos storage
 set directory=~/.vim/dirs/tmp     " directory to place swap files in
@@ -235,68 +115,12 @@ if !isdirectory(&undodir)
     call mkdir(&undodir, "p")
 endif
 
-" ============================================================================
-" Plugins settings and mappings
-" Edit them as you wish.
-
-" Tagbar ----------------------------- 
-
-" toggle tagbar display
-map <F4> :TagbarToggle<CR>
-" autofocus on tagbar open
-let g:tagbar_autofocus = 1
-
-" NERDTree ----------------------------- 
-
-" toggle nerdtree display
-map <F3> :NERDTreeToggle<CR>
-" open nerdtree with the current file selected
-nmap ,t :NERDTreeFind<CR>
-" don;t show these file types
-let NERDTreeIgnore = ['\.pyc$', '\.pyo$']
-
-
-" Tasklist ------------------------------
-
-" show pending tasks list
-map <F2> :TaskList<CR>
-
-" CtrlP ------------------------------
-
-" file finder mapping
-let g:ctrlp_map = ',e'
-" tags (symbols) in current file finder mapping
-nmap ,g :CtrlPBufTag<CR>
-" tags (symbols) in all files finder mapping
-nmap ,G :CtrlPBufTagAll<CR>
-" general code finder in all files mapping
-nmap ,f :CtrlPLine<CR>
-" recent files finder mapping
-nmap ,m :CtrlPMRUFiles<CR>
-" commands finder mapping
-nmap ,c :CtrlPCmdPalette<CR>
-" to be able to call CtrlP with default search text
-function! CtrlPWithSearchText(search_text, ctrlp_command_end)
-    execute ':CtrlP' . a:ctrlp_command_end
-    call feedkeys(a:search_text)
-endfunction
-" same as previous mappings, but calling with current word as default text
-nmap ,wg :call CtrlPWithSearchText(expand('<cword>'), 'BufTag')<CR>
-nmap ,wG :call CtrlPWithSearchText(expand('<cword>'), 'BufTagAll')<CR>
-nmap ,wf :call CtrlPWithSearchText(expand('<cword>'), 'Line')<CR>
-nmap ,we :call CtrlPWithSearchText(expand('<cword>'), '')<CR>
-nmap ,pe :call CtrlPWithSearchText(expand('<cfile>'), '')<CR>
-nmap ,wm :call CtrlPWithSearchText(expand('<cword>'), 'MRUFiles')<CR>
-nmap ,wc :call CtrlPWithSearchText(expand('<cword>'), 'CmdPalette')<CR>
-" don't change working directory
 let g:ctrlp_working_path_mode = 0
 " ignore these files and folders on file finder
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules)$',
   \ 'file': '\.pyc$\|\.pyo$',
   \ }
-
-" Syntastic ------------------------------
 
 " show list of errors and warnings on the current file
 nmap <leader>e :Errors<CR>
@@ -315,18 +139,6 @@ let g:syntastic_error_symbol = '✗'
 let g:syntastic_warning_symbol = '⚠'
 let g:syntastic_style_error_symbol = '✗'
 let g:syntastic_style_warning_symbol = '⚠'
-
-" Jedi-vim ------------------------------
-
-" All these mappings work only for python code:
-" Go to definition
-let g:jedi#goto_command = ',d'
-" Find ocurrences
-let g:jedi#usages_command = ',o'
-" Find assignments
-let g:jedi#goto_assignments_command = ',a'
-" Go to definition in new tab
-nmap ,D :tab split<CR>:call jedi#goto()<CR>
 
 " NeoComplCache ------------------------------
 
@@ -369,15 +181,13 @@ vmap <expr> <S-M-DOWN> DVB_Drag('down')
 vmap <expr> <S-M-UP> DVB_Drag('up')
 " mapping to duplicate block
 vmap <expr> D DVB_Duplicate()
-
-" Signify ------------------------------
-
 " this first setting decides in which order try to guess your current vcs
 " UPDATE it to reflect your preferences, it will speed up opening files
 let g:signify_vcs_list = [ 'git', 'hg' ]
 " mappings to jump to changed blocks
 nmap <leader>sn <plug>(signify-next-hunk)
 nmap <leader>sp <plug>(signify-prev-hunk)
+
 " nicer colors
 highlight DiffAdd           cterm=bold ctermbg=none ctermfg=119
 highlight DiffDelete        cterm=bold ctermbg=none ctermfg=167
@@ -386,61 +196,17 @@ highlight SignifySignAdd    cterm=bold ctermbg=237  ctermfg=119
 highlight SignifySignDelete cterm=bold ctermbg=237  ctermfg=167
 highlight SignifySignChange cterm=bold ctermbg=237  ctermfg=227
 
-" Window Chooser ------------------------------
-
 " mapping
 nmap  -  <Plug>(choosewin)
 " show big letters
 let g:choosewin_overlay_enable = 1
-
-
-" Airline ------------------------------
-
 let g:airline_powerline_fonts = 0
 let g:airline_theme = 'bubblegum'
 let g:airline#extensions#whitespace#enabled = 0
 
-" to use fancy symbols for airline, uncomment the following lines and use a
-" patched font (more info on the README.rst)
-"if !exists('g:airline_symbols')
-"   let g:airline_symbols = {}
-"endif
-"let g:airline_left_sep = '⮀'
-"let g:airline_left_alt_sep = '⮁'
-"let g:airline_right_sep = '⮂'
-"let g:airline_right_alt_sep = '⮃'
-"let g:airline_symbols.branch = '⭠'
-"let g:airline_symbols.readonly = '⭤'
-"let g:airline_symbols.linenr = '⭡'"
 if has("autocmd")
     au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | 
 endif
-map <C-h> <Home>
-map <C-l> <End> 
-"rafasaurus mapping
-inoremap <ALT+i> <Esc>
-cnoremap <ALT+i> <Esc>
-vnoremap <ALT+i> <Esc>  
-"set statusline+=%#warningmsg#
-"set statusline+=%{SyntasticStatuslineFlag()}
-"set statusline+=%*
-noremap <F5> :w !python3 %<CR>
-inoremap <F5> <ESC>:w !python3 %<CR>
-" ** NERDTree **
-" autocmd StdinReadPre * let s:std_in=1
-" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-" *** CtrlP ***
-"let g:ctrlp_map = '<c-p>'
-"let g:ctrlp_cmd = 'CtrlP'
-
-" Compatible with ranger 1.4.2 through 1.7.*
-"
-" Add ranger as a file chooser in vim
-"
-" If you add this code to the .vimrc, ranger can be started using the command
-" ":RangerChooser" or the keybinding "<leader>r".  Once you select one or more
-" files, press enter and ranger will quit again and vim will open the selected
-" files.
 
 function! RangeChooser()
     let temp = tempname()
@@ -475,7 +241,7 @@ command! -bar RangerChooser call RangeChooser()
 nnoremap <leader>r :<C-U>RangerChooser<CR>
 set autoread
 set number 
-set relativenumber
+" set relativenumber
 map qq :run<CR>
 set runtimepath^=~/.vim/bundle/ag
 "map <silent> <C-v> <c-w>v
@@ -483,5 +249,40 @@ set runtimepath^=~/.vim/bundle/ag
 "map <silent> <C-h> <c-w>h
 "map <silent> <C-j> <c-w>j
 "map <silent> <C-k> <c-w>k
-"map <silent> <C-l> <c-w>l"
+"map <silent> <C-l> <c-w>l
 set clipboard=unnamed"
+colorscheme delek
+
+" Comment this line to enable autocompletion preview window
+" (displays documentation related to the selected completion option)
+" Disabled by default because preview makes the window flicker
+set completeopt-=preview
+" autocompletion of files and commands behaves like shell
+" (complete only the common part, list the options that match)
+set wildmode=list:longest
+
+" tab navigation mappings
+map tn :tabn<CR>
+map tp :tabp<CR>
+map tm :tabm 
+map tt :tabnew 
+map ts :tab split<CR>
+map <C-S-Right> :tabn<CR>
+imap <C-S-Right> <ESC>:tabn<CR>
+map <C-S-Left> :tabp<CR>
+imap <C-S-Left> <ESC>:tabp<CR>
+
+map <C-h> <Home>
+map <C-l> <End> 
+
+" Jedi-vim ------------------------------
+
+" All these mappings work only for python code:
+" Go to definition
+let g:jedi#goto_command = ',d'
+" Find ocurrences
+let g:jedi#usages_command = ',o'
+" Find assignments
+let g:jedi#goto_assignments_command = ',a'
+" Go to definition in new tab
+nmap ,D :tab split<CR>:call jedi#goto()<CR>
