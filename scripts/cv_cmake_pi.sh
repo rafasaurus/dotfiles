@@ -1,10 +1,6 @@
 cmake -DBUILD_TIFF=ON \
   -DBUILD_opencv_java=OFF \
-<<<<<<< HEAD
   -DOPENCV_EXTRA_MODULES_PATH=/home/pi/opencv/opencv_contrib-3.4.3/modules \
-=======
-  -DOPENCV_EXTRA_MODULES_PATH=/home/pi/opencv/opencv_contrib-3.4.2/modules \
->>>>>>> 553ec57ef428dd67c6b55b4e113b2aca6e20da86
   -DWITH_CUDA=OFF \
   -DENABLE_NEON=ON \
   -DWITH_OPENGL=ON \
@@ -13,7 +9,7 @@ cmake -DBUILD_TIFF=ON \
   -DWITH_IPP=ON \
   -DWITH_TBB=ON \
   -DWITH_EIGEN=ON \
-  -DWITH_V4L=ON \
+  -DWITH_V4L2=ON \
   -DBUILD_TESTS=OFF \
   -DBUILD_PERF_TESTS=OFF \
   -DBUILD_EXAMPLES=OFF \
