@@ -36,6 +36,13 @@ Plug 'Shougo/neocomplcache.vim'
 "Plug 'fisadev/vim-isort'
 " " Python and other languages code checker
 Plug 'scrooloose/syntastic'
+" " Surrounding edit
+Plug 'tpope/surround'
+" " Repeat surround
+Plug 'tpope/repeat'
+" Easy-motion 
+Plug 'easymotion/vim-easymotion'
+
 if has('python')
     " YAPF formatter for Python
     Plug 'pignacio/vim-yapf-format'
@@ -245,11 +252,11 @@ set number
 map qq :run<CR>
 set runtimepath^=~/.vim/bundle/ag
 "map <silent> <C-v> <c-w>v
-"map <silent> <C-s> <c-w>s
-"map <silent> <C-h> <c-w>h
-"map <silent> <C-j> <c-w>j
-"map <silent> <C-k> <c-w>k
-"map <silent> <C-l> <c-w>l
+map <silent> <C-s> <c-w>s
+map <silent> <C-h> <c-w>h
+map <silent> <C-j> <c-w>j
+map <silent> <C-k> <c-w>k
+map <silent> <C-l> <c-w>l
 set clipboard=unnamed"
 colorscheme delek
 
@@ -271,7 +278,8 @@ map <C-S-Right> :tabn<CR>
 imap <C-S-Right> <ESC>:tabn<CR>
 map <C-S-Left> :tabp<CR>
 imap <C-S-Left> <ESC>:tabp<CR>
-
+map qq "+y
+map qw "+p
 map <C-h> <Home>
 map <C-l> <End> 
 
@@ -286,3 +294,23 @@ let g:jedi#usages_command = ',o'
 let g:jedi#goto_assignments_command = ',a'
 " Go to definition in new tab
 nmap ,D :tab split<CR>:call jedi#goto()<CR>
+
+" T-Comment plugin - press "\" + c to comment/uncoumment
+map <leader>c <c-_><c-_>
+
+" ###--- Easy Motion Setup ---###
+" <Leader>f{char} to move to {char}
+map  <Leader>f <Plug>(easymotion-bd-f)
+nmap <Leader>f <Plug>(easymotion-overwin-f)
+
+" s{char}{char} to move to {char}{char}
+nmap s <Plug>(easymotion-overwin-f2)
+
+" Move to line
+map <Leader>L <Plug>(easymotion-bd-jk)
+nmap <Leader>L <Plug>(easymotion-overwin-line)
+
+" Move to word
+map  <Leader>w <Plug>(easymotion-bd-w)
+nmap <Leader>w <Plug>(easymotion-overwin-w)
+" ###---###################---###
