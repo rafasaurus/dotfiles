@@ -251,7 +251,7 @@ set number
 " set relativenumber
 map qq :run<CR>
 set runtimepath^=~/.vim/bundle/ag
-"map <silent> <C-v> <c-w>v
+map <silent> <C-q> <m-w>v
 map <silent> <C-s> <c-w>s
 map <silent> <C-h> <c-w>h
 map <silent> <C-j> <c-w>j
@@ -307,8 +307,8 @@ nmap <Leader>f <Plug>(easymotion-overwin-f)
 nmap s <Plug>(easymotion-overwin-f2)
 
 " Move to line
-map <Leader>L <Plug>(easymotion-bd-jk)
-nmap <Leader>L <Plug>(easymotion-overwin-line)
+map <Leader>l <Plug>(easymotion-bd-jk)
+nmap <Leader>l <Plug>(easymotion-overwin-line)
 
 " Move to word
 map  <Leader>w <Plug>(easymotion-bd-w)
