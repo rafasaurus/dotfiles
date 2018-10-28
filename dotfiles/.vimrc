@@ -40,8 +40,12 @@ Plug 'scrooloose/syntastic'
 Plug 'tpope/surround'
 " " Repeat surround
 Plug 'tpope/repeat'
-" Easy-motion 
+" " Easy-motion 
 Plug 'easymotion/vim-easymotion'
+" " Multiple-Cursors
+Plug 'terryma/vim-multiple-cursors'
+" " Vim statusbar
+Plug 'itchyny/lightline.vim'
 
 if has('python')
     " YAPF formatter for Python
@@ -258,7 +262,7 @@ map <silent> <C-j> <c-w>j
 map <silent> <C-k> <c-w>k
 map <silent> <C-l> <c-w>l
 set clipboard=unnamed"
-colorscheme delek
+colorscheme ron
 
 " Comment this line to enable autocompletion preview window
 " (displays documentation related to the selected completion option)
@@ -304,7 +308,7 @@ map  <Leader>f <Plug>(easymotion-bd-f)
 nmap <Leader>f <Plug>(easymotion-overwin-f)
 
 " s{char}{char} to move to {char}{char}
-nmap s <Plug>(easymotion-overwin-f2)
+nmap <Leader> <Plug>(easymotion-overwin-f2)
 
 " Move to line
 map <Leader>l <Plug>(easymotion-bd-jk)
@@ -314,3 +318,15 @@ nmap <Leader>l <Plug>(easymotion-overwin-line)
 map  <Leader>w <Plug>(easymotion-bd-w)
 nmap <Leader>w <Plug>(easymotion-overwin-w)
 " ###---###################---###
+
+" Multi-Cursor https://github.com/terryma/vim-multiple-cursors
+" Default mapping
+let g:multi_cursor_start_word_key      = '<C-n>'
+let g:multi_cursor_select_all_word_key = '<A-n>'
+let g:multi_cursor_start_key           = 'g<C-n>'
+let g:multi_cursor_select_all_key      = 'g<A-n>'
+let g:multi_cursor_next_key            = '<C-n>'
+let g:multi_cursor_prev_key            = '<C-p>'
+let g:multi_cursor_skip_key            = '<C-x>'
+let g:multi_cursor_quit_key            = '<Esc>'
+highlight Comment ctermfg=green
