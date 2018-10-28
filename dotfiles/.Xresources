@@ -1,3 +1,4 @@
+!! if there is a lag issues due to graphics problem just install/run "xcompmgr -c"
 *foreground: #ffffff
 *foreground_bold: #a8a19f
 *cursor: #a8a19f
@@ -30,11 +31,16 @@
 *color15: #f1efee
 
 URxvt.intensityStyles:	false
-URxvt.background:       [100]#101218
+URxvt.internalBorder:  0
+! URxvt.background:       [100]#101218
+URxvt.background:       [100]#000000
 URxvt.depth:	    32	
-URxvt.font: 		xft:LeagueMono-SemiBold:size=11
+URxvt.font: 		xft:LeagueMono-SemiBold:size=22
+! URxvt*font: xft:Terminus (TTF)-16
 URxvt.scrollBar:	false
 URxvt.cursorColor:	white
+URxvt*scrollWithBuffer:  false
+URxvt*skipScroll:  true
 
 !! for fullscreen apt install wmctrl
 !! Extensions
@@ -53,3 +59,8 @@ URxvt.resize-font.bigger:	C-k
 !! Matcher
 URxvt.url-launcher:	linkhandler
 URxvt.matcher.button:	1
+
+URxvt.keysym.Home: \033[1~
+URxvt.keysym.End: \033[4~
+URxvt.keysym.KP_Home: \033[1~
+URxvt.keysym.KP_End:  \033[4~
