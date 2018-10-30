@@ -8,3 +8,4 @@ keysym o = o O Home
 keysym i = i I Prior
 keysym u = u U Next
 keysym space = space space Escape
+keysym Alt_L = Alt_L Alt_L Caps_Lock

@@ -1,34 +1,26 @@
 !! if there is a lag issues due to graphics problem just install/run "xcompmgr -c"
-*foreground: #ffffff
 *foreground_bold: #a8a19f
 *cursor: #a8a19f
-*background:       #1b1918
-!!*background: rgba(0, 0, 0, .7)
-
-!! black
-*color0: #1b1918
-*color8: #766e6b
-!! red
-*color1: #f22c40
-*color9: #f22c40
-!! green
-*color2: #5ab738
-*color10: #5ab738
-!! yellow
-*color3: #d5911a
-*color11: #d5911a
-!! blue
-*color4: #407ee7
-*color12: #407ee7
-!! magenta
-*color5: #6666ea
-*color13: #6666ea
-!! cyan
-*color6: #00ad9c
-*color14: #00ad9c
-!! white
-*color7: #a8a19f
-*color15: #f1efee
+*background:	#1E2541
+*foreground:	#EEFFFF
+*cursorColor:	#EEFFFF
+*color0:	#1E2541
+*color1:	#F0719B
+*color2:	#5AF7B0
+*color3:	#FFA56B
+*color4:	#57C7FF
+*color5:	#C792EA
+*color6:	#89DDFF
+*color7:	#EEFFFF
+*color8:	#354274
+*color9:	#F02E6E
+*color10:	#2CE592
+*color11:	#FF8537
+*color12:	#1DA0E2
+*color13:	#A742EA
+*color14:	#47BAE8
+*color15:	#DEE6E7
+*color16: #2A335A
 
 URxvt.intensityStyles:	false
 URxvt.internalBorder:  0
