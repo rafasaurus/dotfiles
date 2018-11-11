@@ -27,6 +27,7 @@ sudo apt-get install -y htop \
     lm-sensors\
     gparted\
     vim-gtk3\
+    preload\
 
 # telegram
 sudo add-apt-repository -y ppa:atareao/telegram
