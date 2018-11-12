@@ -1,2 +1,2 @@
 #!/bin/bash
-xmodmap $HOME/github/settings/dotfiles/.Xmodmap
+xmodmap $HOME/github/config/dotfiles/.Xmodmap
