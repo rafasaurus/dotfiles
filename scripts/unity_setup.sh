@@ -4,16 +4,16 @@ sudo apt update
 sudo apt update
 sudo apt upgrade
 sudo apt-get install -y htop \
-	git \
-	vim \
-	curl \
-	indicator-multiload \
-	indicator-cpufreq \
-	synapse \
-	plank \
-	numix-gtk-theme \
-	unity-tweak-tool \
-	compizconfig-settings-manager \
+    git \
+    vim \
+    curl \
+    indicator-multiload \
+    indicator-cpufreq \
+    synapse \
+    plank \
+    numix-gtk-theme \
+    unity-tweak-tool \
+    compizconfig-settings-manager \
     openssh-server\
     tmux\
     tilda\
@@ -29,7 +29,7 @@ sudo apt-get install -y htop \
     vim-gtk3\
     preload\
 
-# telegram
+    # telegram
 sudo add-apt-repository -y ppa:atareao/telegram
 sudo apt-get update
 sudo apt-get install -y telegram
