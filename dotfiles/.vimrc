@@ -18,21 +18,16 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
-" " Code checker
-Plug 'scrooloose/syntastic'
-" " Surrounding edit
+" use jedi plugin for python find definition
+" Plug 'scrooloose/syntastic'
 Plug 'tpope/vim-surround'
-" " Repeat surround
 Plug 'tpope/vim-repeat'
-" " Easy-motion 
 Plug 'easymotion/vim-easymotion'
-" " Multiple-Cursors
 Plug 'terryma/vim-multiple-cursors'
-" " Vim statusbar
 Plug 'itchyny/lightline.vim'
-" " t-comment
 Plug 'tomtom/tcomment_vim'
-" " YAPF formatter for Python
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 " Plug 'pignacio/vim-yapf-format'
 
 " Tell vim-plug we finished declaring plugins, so it can load them
@@ -94,36 +89,16 @@ endif
 let g:ctrlp_working_path_mode = 0
 " ignore these files and folders on file finder
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules)$',
-  \ 'file': '\.pyc$\|\.pyo$',
-  \ }
-
-" NeoComplCache
-let g:neocomplcache_enable_at_startup = 1
-let g:neocomplcache_enable_ignore_case = 1
-let g:neocomplcache_enable_smart_case = 1
-let g:neocomplcache_enable_auto_select = 1
-let g:neocomplcache_enable_fuzzy_completion = 1
-let g:neocomplcache_enable_camel_case_completion = 1
-let g:neocomplcache_enable_underbar_completion = 1
-let g:neocomplcache_fuzzy_completion_start_length = 1
-let g:neocomplcache_auto_completion_start_length = 1
-let g:neocomplcache_manual_completion_start_length = 1
-let g:neocomplcache_min_keyword_length = 1
-let g:neocomplcache_min_syntax_length = 1
-" complete with workds from any opened file
-let g:neocomplcache_same_filetype_lists = {}
-let g:neocomplcache_same_filetype_lists._ = '_'
+            \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules)$',
+            \ 'file': '\.pyc$\|\.pyo$',
+            \ }
 
 " to open the file where you left of
 if has("autocmd")
     au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | 
 endif
 
-" set number 
-" set relativenumber
 map qq :run<CR>
-" set runtimepath^=~/.vim/bundle/ag
 map <silent> <C-q> <m-w>v
 map <silent> <C-s> <c-w>s
 map <silent> <C-h> <c-w>h
@@ -134,15 +109,6 @@ colorscheme ron
 
 " Jedi-vim ------------------------------
 " All these mappings work only for python code:
-
-" Go to definition
-let g:jedi#goto_command = ',d'
-" Find ocurrences
-let g:jedi#usages_command = ',o'
-" Find assignments
-let g:jedi#goto_assignments_command = ',a'
-" Go to definition in new tab
-nmap ,D :tab split<CR>:call jedi#goto()<CR>
 
 " T-Comment plugin - press "\" + c to comment/uncoumment
 map <leader>c <c-_><c-_>
@@ -176,25 +142,29 @@ let g:multi_cursor_skip_key            = '<C-x>'
 let g:multi_cursor_quit_key            = '<Esc>'
 
 highlight Comment ctermfg=green
-set timeoutlen=1000 ttimeoutlen=0
+set timeoutlen=300
+set ttimeoutlen=0
 
 " tab navigation mappings
 nnoremap tn :tabnew<Space>
-
 nnoremap tk :tabnext<CR>
 nnoremap tj :tabprev<CR>
 nnoremap th :tabfirst<CR>
 nnoremap tl :tablast<CR>
-
 map qq "+y
 map qw "+p
 map <C-h> <Home>
 map <C-l> <End> 
 
-" Ctags!
 command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
 " command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q /usr/include .
 " command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q --fields=+l --languages=python --python-kinds=-iv -f ./tags
 
 set path+=** " search for every subdirectory
 set wildmenu
+" fuzzy finder
+map <leader>fz :Files<CR>
+
+let g:lightline = {
+            \ 'colorscheme': 'powerline',
+            \ }
