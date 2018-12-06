@@ -1,31 +1,62 @@
 !! if there is a lag issues due to graphics problem just install/run "xcompmgr -c"
-*foreground_bold: #a8a19f
-*cursor: #a8a19f
-*background:	#1E2541
-*foreground:	#EEFFFF
-*cursorColor:	#EEFFFF
-*color0:	#1E2541
-*color1:	#F0719B
-*color2:	#5AF7B0
-*color3:	#FFA56B
-*color4:	#57C7FF
-*color5:	#C792EA
-*color6:	#89DDFF
-*color7:	#EEFFFF
-*color8:	#354274
-*color9:	#F02E6E
-*color10:	#2CE592
-*color11:	#FF8537
-*color12:	#1DA0E2
-*color13:	#A742EA
-*color14:	#47BAE8
-*color15:	#DEE6E7
-*color16: #2A335A
+! *foreground_bold: #a8a19f
+! *cursor: #a8a19f
+! *background:	#1E2541
+! *foreground:	#EEFFFF
+! *cursorColor:	#EEFFFF
+! *color0:	#1E2541
+! *color1:	#F0719B
+! *color2:	#5AF7B0
+! *color3:	#FFA56B
+! *color4:	#57C7FF
+! *color5:	#C792EA
+! *color6:	#89DDFF
+! *color7:	#EEFFFF
+! *color8:	#354274
+! *color9:	#F02E6E
+! *color10:	#2CE592
+! *color11:	#FF8537
+! *color12:	#1DA0E2
+! *color13:	#A742EA
+! *color14:	#47BAE8
+! *color15:	#DEE6E7
+! *color16: #2A335A
+! ------------------------------------------------------------------------------
+! Colour Configuration
+! ------------------------------------------------------------------------------
+! special
+*.foreground:   #d8dee8
+*.background:   #2f343f
+*.cursorColor:  #b48ead
+! black
+*.color0  : #4b5262
+*.color8  : #434a5a
+! red
+*.color1  : #bf616a
+*.color9  : #b3555e
+! green
+*.color2  : #a3be8c
+*.color10 : #93ae7c
+! yellow
+*.color3  : #ebcb8b
+*.color11 : #dbbb7b
+! blue
+*.color4  : #81a1c1
+*.color12 : #7191b1
+! magenta
+*.color5  : #b48ead
+*.color13 : #a6809f
+! cyan
+*.color6  : #89d0bA
+*.color14 : #7dbba8
+! white
+*.color7  : #e5e9f0
+*.color15 : #d1d5dc
 
 URxvt.intensityStyles:	false
 URxvt.internalBorder:  0
 ! URxvt.background:       [100]#101218
-URxvt.background:       [100]#000000
+URxvt.background:       [95]#212121
 URxvt.depth:	    32	
 URxvt.font: 		xft:LeagueMono-SemiBold:size=22
 ! URxvt*font: xft:Terminus (TTF)-16
