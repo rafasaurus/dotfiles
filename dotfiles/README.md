@@ -14,7 +14,7 @@ ln -s ~/.vim ~/.nvim
 
 ##### MX Master Mouse
 
-install 
+[install](https://wiki.archlinux.org/index.php/Logitech_MX_Master#Mappings_for_extra_buttons)
 ```
 solaar 
 xbindkeys 
