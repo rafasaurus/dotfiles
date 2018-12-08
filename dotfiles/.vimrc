@@ -1,6 +1,13 @@
 " a-vim-config
 " http://fisadev.github.io/fisa-vim-config/
 
+" if !has('nvim')
+"     set viminfo+=n~/vim/viminfo
+" else
+"     " Do nothing here to use the neovim default
+"     "   " or do soemething like:
+"     set viminfo+=n~/.local/share/nvim/shada
+"     endif
 let vim_plug_just_installed = 0
 let vim_plug_path = expand('~/.vim/autoload/plug.vim')
 if !filereadable(vim_plug_path)
@@ -28,6 +35,9 @@ Plug 'itchyny/lightline.vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'mboughaba/i3config.vim'
+
+Plug 'junegunn/goyo.vim'
 " Plug 'pignacio/vim-yapf-format'
 
 " Tell vim-plug we finished declaring plugins, so it can load them
@@ -71,7 +81,6 @@ set backup                        " make backup files
 set backupdir=~/.vim/dirs/backups " where to put backup files
 set undofile                      " persistent undos - undo after you re-open the file
 set undodir=~/.vim/dirs/undos
-set viminfo+=n~/.vim/dirs/viminfo
 " store yankring history file there too
 let g:yankring_history_dir = '~/.vim/dirs/'
 

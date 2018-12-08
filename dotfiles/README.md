@@ -5,3 +5,9 @@ for tmux plugin you should install [tpm](https://github.com/tmux-plugins/tpm)
 ```
 press `shift + I` for installation of plugins
 
+#### noevim 
+run 
+```
+ln -s ~/.vimrc ~/.nvimrc
+ln -s ~/.vim ~/.nvim
+```
