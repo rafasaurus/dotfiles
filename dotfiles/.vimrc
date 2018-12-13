@@ -10,8 +10,7 @@ if !filereadable(vim_plug_path)
     let vim_plug_just_installed = 1
 endif
 
-" manually load vim-plug the first time
-if vim_plug_just_installed
+if vim_plug_just_installed " manually load vim-plug the first time
     :execute 'source '.fnameescape(vim_plug_path)
 endif
 
@@ -66,8 +65,7 @@ set undodir=~/.vim/dirs/undos
 
 let g:yankring_history_dir = '~/.vim/dirs/' " store yankring history file there too
 
-" create needed directories if they don't exist
-if !isdirectory(&backupdir)
+if !isdirectory(&backupdir) " create needed directories if they don't exist
     call mkdir(&backupdir, "p")
 endif
 if !isdirectory(&directory)
@@ -76,7 +74,6 @@ endif
 if !isdirectory(&undodir)
     call mkdir(&undodir, "p")
 endif
-
 if has("autocmd") " to open the file where you left of
     au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | 
 endif
@@ -88,9 +85,15 @@ map <silent> <C-h> <c-w>h
 map <silent> <C-j> <c-w>j
 map <silent> <C-k> <c-w>k
 map <silent> <C-l> <c-w>l
-colorscheme ron
-highlight Comment ctermfg=green
-
+map qq "+y " clipboard copy
+map qw "+p
+map <C-h> <Home>
+map <C-l> <End> 
+nnoremap tn :tabnew<Space> " tab navigation mappings
+nnoremap tk :tabnext<CR>
+nnoremap tj :tabprev<CR>
+nnoremap th :tabfirst<CR>
+nnoremap tl :tablast<CR>
 map <leader>fz :Files<CR> " fuzzy finder
 map <leader>c <c-_><c-_> " T-Comment
 map  <Leader>f <Plug>(easymotion-bd-f) " <Leader>f{char} to move to {char}
@@ -100,19 +103,10 @@ map <Leader>l <Plug>(easymotion-bd-jk) " Move to line
 nmap <Leader>l <Plug>(easymotion-overwin-line)
 map  <Leader>w <Plug>(easymotion-bd-w) " Move to word
 nmap <Leader>w <Plug>(easymotion-overwin-w)
-
-nnoremap tn :tabnew<Space> " tab navigation mappings
-nnoremap tk :tabnext<CR>
-nnoremap tj :tabprev<CR>
-nnoremap th :tabfirst<CR>
-nnoremap tl :tablast<CR>
-map qq "+y " clipboard copy
-map qw "+p
-map <C-h> <Home>
-map <C-l> <End> 
+colorscheme ron
+highlight Comment ctermfg=green
 
 let g:lightline = {'colorscheme': 'powerline'}
 command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
 " command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q /usr/include .
 " command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q --fields=+l --languages=python --python-kinds=-iv -f ./tags
-
