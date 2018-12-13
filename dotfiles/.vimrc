@@ -1,5 +1,4 @@
 " a-vim-config
-" http://fisadev.github.io/fisa-vim-config/
 let vim_plug_just_installed = 0
 let vim_plug_path = expand('~/.vim/autoload/plug.vim')
 if !filereadable(vim_plug_path)
