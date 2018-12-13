@@ -35,9 +35,8 @@ if vim_plug_just_installed
     :PlugInstall
 endif
 
-" DELETE " allow plugins by file type (required for plugins!)
-" filetype plugin on
-" filetype indent on
+filetype plugin on
+filetype indent on
 
 " tabs and spaces handling
 set expandtab
@@ -47,11 +46,14 @@ set shiftwidth=4
 set nocompatible " no vi-compatible
 set incsearch " search as characters are entered
 set hlsearch " highlight matches
+set cursorline  " highlight current line
+set showmatch " highlight matching [{()}]
 syntax on
 set scrolloff=2 " keep cursor 3 lines away from screen border
 set wildmenu
 set path+=** " search for every subdirectory
-set ls=2
+set laststatus=2 " for powerline
+set noswapfile
 " set timeoutlen=300
 " set ttimeoutlen=0
 
@@ -102,7 +104,7 @@ map <Leader>l <Plug>(easymotion-bd-jk) " Move to line
 nmap <Leader>l <Plug>(easymotion-overwin-line)
 map  <Leader>w <Plug>(easymotion-bd-w) " Move to word
 nmap <Leader>w <Plug>(easymotion-overwin-w)
-colorscheme ron
+color dracula
 highlight Comment ctermfg=green
 
 let g:lightline = {'colorscheme': 'powerline'}
