@@ -37,6 +37,7 @@ endif
 
 filetype plugin on
 filetype indent on
+autocmd VimLeave * call system("xsel -ib", getreg('+')) " Prevent Vim from clearing the clipboard on exit
 
 " tabs and spaces handling
 set expandtab
