@@ -16,6 +16,8 @@ endif
 call plug#begin('~/.vim/plugged')
 
 " Plug 'scrooloose/syntastic'
+" Plug 'neomake/neomake'
+Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'easymotion/vim-easymotion'
@@ -55,8 +57,8 @@ set wildmenu
 set path+=** " search for every subdirectory
 set laststatus=2 " for powerline
 set noswapfile
-" set timeoutlen=300
-" set ttimeoutlen=0
+set timeoutlen=300 " faster insert-normal switch
+set ttimeoutlen=0
 
 " ============== better backup, swap and undos storage ==============
 set directory=~/.vim/dirs/tmp     " directory to place swap files in
@@ -108,7 +110,9 @@ nmap <Leader>w <Plug>(easymotion-overwin-w)
 color dracula
 highlight Comment ctermfg=green
 
-let g:lightline = {'colorscheme': 'powerline'}
+let g:lightline = {'colorscheme': 'wombat'}
 command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
 " command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q /usr/include .
 " command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q --fields=+l --languages=python --python-kinds=-iv -f ./tags
+" call neomake#configure#automake('nrwi', 500)
+" let g:neomake_python_enabled_makers = ['flake8']

@@ -1,89 +1,35 @@
-!! if there is a lag issues due to graphics problem just install/run "xcompmgr -c"
-! *foreground_bold: #a8a19f
-! *cursor: #a8a19f
-! *background:	#1E2541
-! *foreground:	#EEFFFF
-! *cursorColor:	#EEFFFF
-! *color0:	#1E2541
-! *color1:	#F0719B
-! *color2:	#5AF7B0
-! *color3:	#FFA56B
-! *color4:	#57C7FF
-! *color5:	#C792EA
-! *color6:	#89DDFF
-! *color7:	#EEFFFF
-! *color8:	#354274
-! *color9:	#F02E6E
-! *color10:	#2CE592
-! *color11:	#FF8537
-! *color12:	#1DA0E2
-! *color13:	#A742EA
-! *color14:	#47BAE8
-! *color15:	#DEE6E7
-! *color16: #2A335A
-! ------------------------------------------------------------------------------
-! Colour Configuration
-! ------------------------------------------------------------------------------
-! special
+*.alpha: 250
 *.foreground:   #d8dee8
 *.background:   #2f343f
-*.cursorColor:  #b48ead
-! black
-*.color0  : #4b5262
-*.color8  : #434a5a
-! red
-*.color1  : #bf616a
-*.color9  : #b3555e
-! green
-*.color2  : #a3be8c
-*.color10 : #93ae7c
-! yellow
-*.color3  : #ebcb8b
-*.color11 : #dbbb7b
-! blue
-*.color4  : #81a1c1
-*.color12 : #7191b1
-! magenta
-*.color5  : #b48ead
-*.color13 : #a6809f
-! cyan
-*.color6  : #89d0bA
-*.color14 : #7dbba8
-! white
-*.color7  : #e5e9f0
-*.color15 : #d1d5dc
+*.color2:	#5AF7B0
+*.color3:	#FFA56B
+*.color4:	#57C7FF
+*.color5:	#C792EA
+*.color6:	#89DDFF
+*.color7:	#EEFFFF
+*.color8:	#354274
+*.color9:	#F02E6E
+*.color10:	#2CE592
+*.color11:	#FF8537
+*.color12:	#1DA0E2
+*.color13:	#A742EA
+*.color14:	#47BAE8
+*.color15:	#DEE6E7
+*.color16: #2A335A
 
-URxvt.intensityStyles:	false
-URxvt.internalBorder:  0
-! URxvt.background:       [100]#101218
-URxvt.background:       [95]#212121
-URxvt.depth:	    32	
-URxvt.font: 		xft:LeagueMono-SemiBold:size=22
-! URxvt*font: xft:Terminus (TTF)-16
-URxvt.scrollBar:	false
-URxvt.cursorColor:	white
-URxvt*scrollWithBuffer:  false
-URxvt*skipScroll:  true
-
-!! for fullscreen apt install wmctrl
-!! Extensions
-URxvt.perl-ext-common:	fullscreen,default,matcher,resize-font,url-select,keyboard-select
-URxvt.colorUL:		#4682B4
-URxvt.keysym.F11: perl:fullscreen:switch
-!! url-select
-URxvt.keysym.M-u:	perl:url-select:select_next
-URxvt.url-select.launcher: linkhandler
-URxvt.url-select.underline: true
-!! keyboard-select:
-URxvt.keysym.M-Escape: perl:keyboard-select:activate
-!! resize-font
-URxvt.resize-font.smaller:	C-j
-URxvt.resize-font.bigger:	C-k
-!! Matcher
-URxvt.url-launcher:	linkhandler
-URxvt.matcher.button:	1
-
-URxvt.keysym.Home: \033[1~
-URxvt.keysym.End: \033[4~
-URxvt.keysym.KP_Home: \033[1~
-URxvt.keysym.KP_End:  \033[4~
+! *.color0  : #4b5262
+! *.color1  : #bf616a
+! *.color2  : #a3be8c
+! *.color3  : #ebcb8b
+! *.color4  : #81a1c1
+! *.color5  : #b48ead
+! *.color6  : #89d0bA
+! *.color7  : #e5e9f0
+! *.color8  : #434a5a
+! *.color9  : #b3555e
+! *.color10 : #93ae7c
+! *.color11 : #dbbb7b
+! *.color12 : #7191b1
+! *.color13 : #a6809f
+! *.color14 : #7dbba8
+! *.color15 : #d1d5dc
