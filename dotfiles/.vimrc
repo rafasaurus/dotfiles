@@ -28,6 +28,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'mboughaba/i3config.vim'
 Plug 'junegunn/goyo.vim'
+Plug 'rking/ag.vim'
 " Plug 'pignacio/vim-yapf-format'
 
 call plug#end()
@@ -93,7 +94,7 @@ map qq "+y " clipboard copy
 map qw "+p
 map <C-h> <Home>
 map <C-l> <End> 
-nnoremap tn :tabnew<Space> " tab navigation mappings
+nnoremap tn :tabnew<Space>
 nnoremap tk :tabnext<CR>
 nnoremap tj :tabprev<CR>
 nnoremap th :tabfirst<CR>
@@ -109,6 +110,17 @@ map  <Leader>w <Plug>(easymotion-bd-w) " Move to word
 nmap <Leader>w <Plug>(easymotion-overwin-w)
 color dracula
 highlight Comment ctermfg=green
+map <leader>ag :Ag!
+" e    to open file and close the quickfix window
+" o    to open (same as enter)
+" go   to preview file (open but maintain focus on ag.vim results)
+" t    to open in new tab
+" T    to open in new tab silently
+" h    to open in horizontal split
+" H    to open in horizontal split silently
+" v    to open in vertical split
+" gv   to open in vertical split silently
+" q    to close the quickfix window
 
 let g:lightline = {'colorscheme': 'wombat'}
 command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
@@ -116,3 +128,4 @@ command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
 " command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q --fields=+l --languages=python --python-kinds=-iv -f ./tags
 " call neomake#configure#automake('nrwi', 500)
 " let g:neomake_python_enabled_makers = ['flake8']
+:noremap <leader>u :w<Home>silent <End> !urlview<CR>&
