@@ -29,6 +29,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'mboughaba/i3config.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'rking/ag.vim'
+Plug 'dracula/vim'
 " Plug 'pignacio/vim-yapf-format'
 
 call plug#end()
@@ -108,7 +109,6 @@ map <Leader>l <Plug>(easymotion-bd-jk) " Move to line
 nmap <Leader>l <Plug>(easymotion-overwin-line)
 map  <Leader>w <Plug>(easymotion-bd-w) " Move to word
 nmap <Leader>w <Plug>(easymotion-overwin-w)
-color dracula
 highlight Comment ctermfg=green
 map <leader>ag :Ag!
 " e    to open file and close the quickfix window
@@ -129,3 +129,4 @@ command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
 " call neomake#configure#automake('nrwi', 500)
 " let g:neomake_python_enabled_makers = ['flake8']
 :noremap <leader>u :w<Home>silent <End> !urlview<CR>&
+color dracula
