@@ -17,6 +17,7 @@ call plug#begin('~/.vim/plugged')
 
 " Plug 'scrooloose/syntastic'
 " Plug 'neomake/neomake'
+Plug 'GGalizzi/cake-vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -100,8 +101,10 @@ nnoremap tk :tabnext<CR>
 nnoremap tj :tabprev<CR>
 nnoremap th :tabfirst<CR>
 nnoremap tl :tablast<CR>
-map <leader>fz :Files<CR> " fuzzy finder
-map <leader>c <c-_><c-_> " T-Comment
+" fuzzy finder
+map <leader>fz :Files<CR> 
+" T-Comment
+map <leader>c <c-_><c-_> 
 map  <Leader>f <Plug>(easymotion-bd-f) " <Leader>f{char} to move to {char}
 nmap <Leader>f <Plug>(easymotion-overwin-f)
 nmap <Leader> <Plug>(easymotion-overwin-f2) " s{char}{char} to move to {char}{char}
@@ -122,7 +125,8 @@ map <leader>ag :Ag!
 " gv   to open in vertical split silently
 " q    to close the quickfix window
 
-let g:lightline = {'colorscheme': 'wombat'}
+" let g:lightline = {'colorscheme': 'wombat'}
+" let g:lightline = {'colorscheme': 'powerline'}
 command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
 " command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q /usr/include .
 " command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q --fields=+l --languages=python --python-kinds=-iv -f ./tags
