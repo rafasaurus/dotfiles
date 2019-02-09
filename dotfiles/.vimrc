@@ -17,6 +17,7 @@ call plug#begin('~/.vim/plugged')
 
 " Plug 'scrooloose/syntastic'
 " Plug 'neomake/neomake'
+Plug 'xuhdev/vim-latex-live-preview'
 Plug 'GGalizzi/cake-vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-surround'
@@ -101,6 +102,8 @@ nnoremap tk :tabnext<CR>
 nnoremap tj :tabprev<CR>
 nnoremap th :tabfirst<CR>
 nnoremap tl :tablast<CR>
+" latex preview
+map <leader>tex :LLPStartPreview
 " fuzzy finder
 map <leader>fz :Files<CR> 
 " T-Comment
