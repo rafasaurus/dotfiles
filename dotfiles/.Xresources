@@ -1,6 +1,33 @@
-*.alpha: 250
+*.alpha: 240
+! *.font:	LeagueMono-SemiBold.:pixelsize=23:antialias=true:autohint=true;
+*.font: LeagueMono-Regular:pixelsize=23:antialias=true:autohint=true;
 *.foreground:   #d8dee8
 *.background:   #2f343f
+! ! *.font:     xft:LeagueMono-Bold:pixelsize=14
+! *.color2:	#5AF7B0
+! *.color3:	#FFA56B
+! *.color4:	#57C7FF
+! *.color5:	#C792EA
+! *.color6:	#89DDFF
+! *.color7:	#EEFFFF
+! *.color8:	#354274
+! *.color9:	#F02E6E
+! *.color10:	#2CE592
+! *.color11:	#FF8537
+! *.color12:	#1DA0E2
+! *.color13:	#A742EA
+! *.color14:	#47BAE8
+! *.color15:	#DEE6E7
+! *.color16:  #2A335A
+
+! manta
+! https://github.com/elenapan/dotfiles/blob/master/.xfiles/manta
+! *.background:	#1E2541
+! *.foreground:	#EEFFFF
+*.cursorColor:	#EEFFFF
+! *.color0:	#1E2541
+! *.color0:	#5d5d5d
+*.color1:	#F0719B
 *.color2:	#5AF7B0
 *.color3:	#FFA56B
 *.color4:	#57C7FF
@@ -15,21 +42,4 @@
 *.color13:	#A742EA
 *.color14:	#47BAE8
 *.color15:	#DEE6E7
-*.color16: #2A335A
-
-! *.color0  : #4b5262
-! *.color1  : #bf616a
-! *.color2  : #a3be8c
-! *.color3  : #ebcb8b
-! *.color4  : #81a1c1
-! *.color5  : #b48ead
-! *.color6  : #89d0bA
-! *.color7  : #e5e9f0
-! *.color8  : #434a5a
-! *.color9  : #b3555e
-! *.color10 : #93ae7c
-! *.color11 : #dbbb7b
-! *.color12 : #7191b1
-! *.color13 : #a6809f
-! *.color14 : #7dbba8
-! *.color15 : #d1d5dc
+*.color16:	#2A335A

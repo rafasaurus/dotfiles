@@ -17,6 +17,7 @@ call plug#begin('~/.vim/plugged')
 
 " Plug 'scrooloose/syntastic'
 " Plug 'neomake/neomake'
+Plug 'tfnico/vim-gradle'
 Plug 'xuhdev/vim-latex-live-preview'
 Plug 'GGalizzi/cake-vim'
 Plug 'airblade/vim-gitgutter'
@@ -103,7 +104,7 @@ nnoremap tj :tabprev<CR>
 nnoremap th :tabfirst<CR>
 nnoremap tl :tablast<CR>
 " latex preview
-map <leader>tex :LLPStartPreview
+map <leader>t :LLPStartPreview
 " fuzzy finder
 map <leader>fz :Files<CR> 
 " T-Comment
@@ -137,3 +138,5 @@ command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
 " let g:neomake_python_enabled_makers = ['flake8']
 :noremap <leader>u :w<Home>silent <End> !urlview<CR>&
 color dracula
+" Run xrdb whenever Xdefaults or Xresources are updated.
+autocmd BufWritePost ~/.Xresources,~/.Xdefaults !xrdb %
