@@ -1,0 +1,16 @@
+[Desktop Entry]
+Name=st
+Comment=Use the command line
+TryExec=st
+Exec=st
+Icon=utilities-terminal
+Type=Application
+Categories=Utility;TerminalEmulator;
+StartupNotify=true
+Keywords=Run;
+Actions=New
+
+[Desktop Action New]
+Name=New st
+Exec=st
+OnlyShowIn=Unity
