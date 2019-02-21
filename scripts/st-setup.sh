@@ -9,6 +9,7 @@ cp league-mono/ttf/* $FONTS_DIR
 rm -rf league-mono
 # st
 git clone https://github.com/lukesmithxyz/st
+sudo apt install -y libx11-dev libxft-dev dmenu golang
 sudo make -C st install
 rm -rf st
 # xresources
@@ -17,8 +18,6 @@ if [  -n "$(uname -a | grep Ubuntu)" ]; then
     sudo cp st.desktop /usr/share/applications
 fi
 
-sudo apt update
-sudo apt install dmenu golang
 mkdir -p $HOME/gocode
 export GOPATH=$HOME/gocode
 go get -u mvdan.cc/xurls/cmd/xurls

@@ -11,3 +11,4 @@ sudo make install
 cd -
 sudo rm -rf /usr/local/src/tmux-*
 sudo mv tmux-${VERSION} /usr/local/src
+wget -O $HOME/.tmux.conf https://raw.githubusercontent.com/rafasaurus/config/master/dotfiles/.tmux.conf
