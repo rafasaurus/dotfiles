@@ -16,3 +16,10 @@ wget https://raw.githubusercontent.com/rafasaurus/config/master/dotfiles/.Xresou
 if [  -n "$(uname -a | grep Ubuntu)" ]; then
     sudo cp st.desktop /usr/share/applications
 fi
+
+sudo apt update
+sudo apt install dmenu golang
+mkdir -p $HOME/gocode
+export GOPATH=$HOME/gocode
+go get -u mvdan.cc/xurls/cmd/xurls
+sudo cp $HOME/gocode/bin/xurls /usr/bin/
