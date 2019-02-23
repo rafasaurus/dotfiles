@@ -15,9 +15,9 @@ HISTCONTROL=ignoreboth
 # append to the history file, don't overwrite it
 shopt -s histappend
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
+# # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+# HISTSIZE=1000
+# HISTFILESIZE=2000
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -115,19 +115,56 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+# configuration
 stty -ixon
-alias jlinkexe='/opt/SEGGER/JLink/JLinkExe'
-export PATH=$PATH:$HOME/work/ardupilot_alke/Tools/autotest
+export PATH=$PATH:$HOME/workspace/ardupilot_alke/Tools/autotest
 export PATH=/usr/lib/ccache:$PATH
 PS1="\[$(tput bold)\]\[$(tput setaf 1)\][\[$(tput setaf 3)\]\u\[$(tput setaf 2)\]@\[$(tput setaf 4)\]\h \[$(tput setaf 5)\]\W\[$(tput setaf 1)\]]\[$(tput setaf 7)\]\\$ \[$(tput sgr0)\]"
-alias v="vim"
-alias sv="sudo vim"
+export EDITOR="vim"
+# export PATH=$PATH:$HOME/github/config/scripts
+export PATH="$PATH:/opt/mssql-tools/bin"
+export TERM=xterm-256color
+
+export PATH=$PATH:$HOME/workspace/khach/scripts
+export PATH=$PATH:$HOME/workspace/khach/build/tools
+export PATH=$PATH:$HOME/workspace/khach/build/tools
+export PATH=$PATH:$HOME/workspace/khach/build/khach
+export PATH=$PATH:/opt/telegram
+# alias sl="ls"
+alias r="ranger"
 alias i="sudo apt-get install"
 alias upd="sudo apt update"
 alias upg="sudo apt upgrade"
 alias xo="xdg-open"
 alias red="redshift -O"
 alias ured="redshift -x"
-export EDITOR="vim"
-export PATH=$PATH:$HOME/github/settings/scripts
-export PATH="$PATH:/opt/mssql-tools/bin"
+alias jlinkexe='/opt/SEGGER/JLink/JLinkExe'
+
+export PYTHONPATH=$PYTHONPATH:/home/rafael/workspace/nn/models/research:/home/rafael/workspace/nn/models/research/slim
+
+# unified bash history across tmux, and other terminal emulators
+export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
+shopt -s histappend
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+alias vim="nvim"
+alias xm="xmodmap.sh"
+alias w3m="/usr/bin/w3m"
+# alias weather='curl -4 http://wttr.in/Seattle'
+alias weather='curl wttr.in/Yerevan'
+export PYTHONPATH="${PYTHONPATH}:/opt/movidius/caffe/python"
+
+# Eternal bash history.
+# ---------------------
+# Undocumented feature which sets the size to "unlimited".
+# http://stackoverflow.com/questions/9457233/unlimited-bash-history
+export HISTFILESIZE=20000
+export HISTSIZE=20000
+export HISTTIMEFORMAT="[%F %T] "
+# Change the file location because certain bash sessions truncate .bash_history file upon close.
+# http://superuser.com/questions/575479/bash-history-truncated-to-500-lines-on-each-login
+export HISTFILE=~/.bash_eternal_history
+# Force prompt to write history after every command.
+# http://superuser.com/questions/20900/bash-history-loss
+PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+# source /opt/intel/computer_vision_sdk/bin/setupvars.sh

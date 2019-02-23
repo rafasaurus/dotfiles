@@ -17,6 +17,9 @@ call plug#begin('~/.vim/plugged')
 
 " Plug 'scrooloose/syntastic'
 " Plug 'neomake/neomake'
+
+" npm install -g livedown
+Plug 'shime/vim-livedown'
 Plug 'tfnico/vim-gradle'
 Plug 'xuhdev/vim-latex-live-preview'
 Plug 'GGalizzi/cake-vim'
@@ -94,8 +97,9 @@ map <silent> <C-h> <c-w>h
 map <silent> <C-j> <c-w>j
 map <silent> <C-k> <c-w>k
 map <silent> <C-l> <c-w>l
-map qq "+y " clipboard copy
-map qw "+p
+" clipboard copy
+map qq "+
+map qw "+
 map <C-h> <Home>
 map <C-l> <End> 
 nnoremap tn :tabnew<Space>
@@ -105,6 +109,8 @@ nnoremap th :tabfirst<CR>
 nnoremap tl :tablast<CR>
 " latex preview
 map <leader>t :LLPStartPreview
+" livedownvim
+nmap <leader>m :LivedownToggle<CR>
 " fuzzy finder
 map <leader>fz :Files<CR> 
 " T-Comment
