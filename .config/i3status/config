@@ -21,12 +21,13 @@ order += "volume master"
 # order += "load"
 order += "cpu_usage"
 order += "cpu_temperature 0"
-order += "cpu_temperature 1"
+# order += "cpu_temperature 1"
+order += "cpu_frequency 0"
 order += "disk /"
 # order += "ipv6"
-order += "run_watch DHCP"
-order += "run_watch VPN"
-order += "wireless wlp2s0"
+# order += "run_watch DHCP"
+# order += "run_watch VPN"
+# order += "wireless wlp2s0"
 order += "battery 0"
 order += "tztime local"
 
@@ -46,7 +47,9 @@ load {
 cpu_usage {
 	format = " CPU: %usage "
 }
-
+# cpu_frequency 0 {
+#     format = "lscpu | grep CPU\ MHz"
+# }
 cpu_temperature 0 {
 	format = " %degrees°C "
 	path = "/sys/devices/platform/coretemp.0/hwmon/hwmon2/temp2_input"
@@ -83,12 +86,13 @@ tztime local {
 }
 
 battery 0 {
-	format = "%status %percentage (%consumption)"
+	format = "%status %percentage %remaining (%consumption)"
 	format_down = "No battery"
 	status_chr = "⚇ CHR"
 	status_bat = "⚡ BAT"
 	status_full = "☻ FULL"
 	low_threshold = 20
+    integer_battery_capacity = true
 	threshold_type = "time"
 	path = "/sys/class/power_supply/BAT0/uevent"
 }
