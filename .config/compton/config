@@ -1,0 +1,79 @@
+# basic configuration
+backend = "glx";
+vsync = "opengl";
+# 
+glx-swap-method = 2;
+# xrender-sync = true;
+# xrender-sync-fence = true;
+blur-background = true;
+# blur-background-fixed = true;
+# blur-kern = "15,15,0.140858,0.182684,0.227638,0.272532,0.313486,0.346456,0.367879,0.375311,0.367879,0.346456,0.313486,0.272532,0.227638,0.182684,0.140858,0.182684,0.236928,0.295230,0.353455,0.406570,0.449329,0.477114,0.486752,0.477114,0.449329,0.406570,0.353455,0.295230,0.236928,0.182684,0.227638,0.295230,0.367879,0.440432,0.506617,0.559898,0.594521,0.606531,0.594521,0.559898,0.506617,0.440432,0.367879,0.295230,0.227638,0.272532,0.353455,0.440432,0.527292,0.606531,0.670320,0.711770,0.726149,0.711770,0.670320,0.606531,0.527292,0.440432,0.353455,0.272532,0.313486,0.406570,0.506617,0.606531,0.697676,0.771052,0.818731,0.835270,0.818731,0.771052,0.697676,0.606531,0.506617,0.406570,0.313486,0.346456,0.449329,0.559898,0.670320,0.771052,0.852144,0.904837,0.923116,0.904837,0.852144,0.771052,0.670320,0.559898,0.449329,0.346456,0.367879,0.477114,0.594521,0.711770,0.818731,0.904837,0.960789,0.980199,0.960789,0.904837,0.818731,0.711770,0.594521,0.477114,0.367879,0.375311,0.486752,0.606531,0.726149,0.835270,0.923116,0.980199,0.980199,0.923116,0.835270,0.726149,0.606531,0.486752,0.375311,0.367879,0.477114,0.594521,0.711770,0.818731,0.904837,0.960789,0.980199,0.960789,0.904837,0.818731,0.711770,0.594521,0.477114,0.367879,0.346456,0.449329,0.559898,0.670320,0.771052,0.852144,0.904837,0.923116,0.904837,0.852144,0.771052,0.670320,0.559898,0.449329,0.346456,0.313486,0.406570,0.506617,0.606531,0.697676,0.771052,0.818731,0.835270,0.818731,0.771052,0.697676,0.606531,0.506617,0.406570,0.313486,0.272532,0.353455,0.440432,0.527292,0.606531,0.670320,0.711770,0.726149,0.711770,0.670320,0.606531,0.527292,0.440432,0.353455,0.272532,0.227638,0.295230,0.367879,0.440432,0.506617,0.559898,0.594521,0.606531,0.594521,0.559898,0.506617,0.440432,0.367879,0.295230,0.227638,0.182684,0.236928,0.295230,0.353455,0.406570,0.449329,0.477114,0.486752,0.477114,0.449329,0.406570,0.353455,0.295230,0.236928,0.182684,0.140858,0.182684,0.227638,0.272532,0.313486,0.346456,0.367879,0.375311,0.367879,0.346456,0.313486,0.272532,0.227638,0.182684,0.140858";
+blur-kern = "9,9,0.169013,0.249352,0.329193,0.388896,0.411112,0.388896,0.329193,0.249352,0.169013,0.249352,0.367879,0.485672,0.573753,0.606531,0.573753,0.485672,0.367879,0.249352,0.329193,0.485672,0.641180,0.757465,0.800737,0.757465,0.641180,0.485672,0.329193,0.388896,0.573753,0.757465,0.894839,0.945959,0.894839,0.757465,0.573753,0.388896,0.411112,0.606531,0.800737,0.945959,0.945959,0.800737,0.606531,0.411112,0.388896,0.573753,0.757465,0.894839,0.945959,0.894839,0.757465,0.573753,0.388896,0.329193,0.485672,0.641180,0.757465,0.800737,0.757465,0.641180,0.485672,0.329193,0.249352,0.367879,0.485672,0.573753,0.606531,0.573753,0.485672,0.367879,0.249352,0.169013,0.249352,0.329193,0.388896,0.411112,0.388896,0.329193,0.249352,0.169013,";
+
+# 
+# # transparancy settings for i3
+# opacity-rule =
+# [
+#     "0:_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'",
+# 	"90:class_g = 'termite' && focused",
+# 	"0:class_g = 'termite' && !focused"
+# ];
+# 
+# # workspace opacity transition for i3
+# fading = false;
+# fade-delta = 2.1;
+# fade-in-step = 0.03;
+# fade-out-step = 0.03;
+# 
+# # window shadows for i3
+# shadow = true;
+# no-dock-shadow = true;
+# no-dnd-shadow = true;
+# clear-shadow = true;
+# shadow-radius = 30;
+# shadow-offset-x = -7;
+# shadow-offset-y = -7;
+# #############################################################33
+# # Shadow
+shadow = true;                                  # Enabled client-side shadows on windows.
+no-dock-shadow = true;                          # Avoid drawing shadows on dock/panel windows.
+no-dnd-shadow = true;                           # Don't draw shadows on DND windows.
+clear-shadow = true;                            # Zero the part of the shadow's mask behind the window (experimental).
+shadow-radius = 7;                              # The blur radius for shadows. (default 12)
+shadow-offset-x = -10;                          # The left offset for shadows. (default -15)
+shadow-offset-y = -10;                          # The top offset for shadows. (default -15)
+# shadow-opacity = 0.7;                         # The translucency for shadows. (default .75)
+# shadow-red = 0.0;                             # Red color value of shadow. (0.0 - 1.0, defaults to 0)
+# shadow-green = 0.0;                           # Green color value of shadow. (0.0 - 1.0, defaults to 0)
+# shadow-blue = 0.0;                            # Blue color value of shadow. (0.0 - 1.0, defaults to 0)
+# shadow-exclude = [ "n:e:Notification" ];        # Exclude conditions for shadows.
+# shadow-exclude = "n:e:Notification";
+shadow-ignore-shaped = true;
+ 
+# Opacity
+menu-opacity = 10.0;                     # The opacity for menus. (default 1.0)
+inactive-opacity = 1.0;                 # Opacity of inactive windows. (0.1 - 1.0)
+#frame-opacity = 0.8;                   # Opacity of window titlebars and borders. (0.1 - 1.0)
+inactive-opacity-override = true;       # Inactive opacity set by 'inactive-opacity' overrides value of _NET_WM_OPACITY.
+ 
+# Fading
+fading = false;                 # Fade windows during opacity changes.
+# fade-delta = (100/6);         # The time between steps in a fade in milliseconds. (default 10).
+fade-in-step = 0.1;             # Opacity change between steps while fading in. (default 0.028).
+fade-out-step = 0.1;            # Opacity change between steps while fading out. (default 0.03).
+# no-fading-openclose = true;   # Fade windows in/out when opening/closing.
+ 
+# Other
+#inactive-dim = 0.5;            # Dim inactive windows. (0.0 - 1.0, defaults to 0).
+mark-wmwin-focused = true;      # Try to detect WM windows and mark them as active.
+mark-ovredir-focused = true;
+detect-rounded-corners = true;
+ 
+# Window type settings
+wintypes:
+{
+  tooltip = { fade = true; shadow = false; opacity = 0.75; };
+};
+ 
+##excluded apps
+#shadow-exclude = [ "g:si:Conky" ];

@@ -1,6 +1,15 @@
-*.alpha: 240
+! ██╗░░██╗██████╗░███████╗███████╗░██████╗░██╗░░░██╗██████╗░░██████╗███████╗███████╗
+! ╚██╗██╔╝██╔══██╗██╔════╝██╔════╝██╔═══██╗██║░░░██║██╔══██╗██╔════╝██╔════╝██╔════╝
+! ░╚███╔╝░██████╔╝█████╗░░███████╗██║░░░██║██║░░░██║██████╔╝██║░░░░░█████╗░░███████╗
+! ░██╔██╗░██╔══██╗██╔══╝░░╚════██║██║░░░██║██║░░░██║██╔══██╗██║░░░░░██╔══╝░░╚════██║
+! ██╔╝░██╗██║░░██║███████╗███████║╚██████╔╝╚██████╔╝██║░░██║╚██████╗███████╗███████║
+! ╚═╝░░╚═╝╚═╝░░╚═╝╚══════╝╚══════╝░╚═════╝░░╚═════╝░╚═╝░░╚═╝░╚═════╝╚══════╝╚══════╝
+!
+! -----------------------------------
+
+*.alpha: 245
 ! *.font:	LeagueMono-SemiBold.:pixelsize=23:antialias=true:autohint=true;
-*.font: LeagueMono-Regular:pixelsize=23:antialias=true:autohint=true;
+*.font: LiberationMono-Regular:pixelsize=24:antialias=true:autohint=true;
 *.foreground:   #d8dee8
 *.background:   #2f343f
 ! ! *.font:     xft:LeagueMono-Bold:pixelsize=14
@@ -26,7 +35,7 @@
 ! *.foreground:	#EEFFFF
 *.cursorColor:	#EEFFFF
 ! *.color0:	#1E2541
-! *.color0:	#5d5d5d
+*.color0:	#29292B 
 *.color1:	#F0719B
 *.color2:	#5AF7B0
 *.color3:	#FFA56B

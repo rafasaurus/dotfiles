@@ -92,14 +92,15 @@ bindsym $mod+a focus parent
 #bindsym $mod+d focus child
 
 set $workspace1 "1: term"
-set $workspace2 "2: browser"
+set $workspace2 "2: web"
 set $workspace3 "3: chat"
+set $workspace4 "4: office"
 set $workspace10 "10: music"
 # switch to workspace
 bindsym $mod+1 workspace $workspace1
 bindsym $mod+2 workspace $workspace2
 bindsym $mod+3 workspace $workspace3
-bindsym $mod+4 workspace 4
+bindsym $mod+4 workspace $workspace4
 bindsym $mod+5 workspace 5
 bindsym $mod+6 workspace 6
 bindsym $mod+7 workspace 7
@@ -111,7 +112,7 @@ bindsym $mod+0 workspace $workspace10
 bindsym $mod+Shift+1 move container to workspace $workspace1
 bindsym $mod+Shift+2 move container to workspace $workspace2
 bindsym $mod+Shift+3 move container to workspace $workspace3
-bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+4 move container to workspace $workspace4
 bindsym $mod+Shift+5 move container to workspace 5
 bindsym $mod+Shift+6 move container to workspace 6
 bindsym $mod+Shift+7 move container to workspace 7
@@ -152,7 +153,7 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-set $bg-color 	         #b7fE7D
+set $bg-color 	         #90CAF9
 set $inactive-bg-color   #2f343f
 set $text-color          #03040f
 set $inactive-text-color #676E7D
@@ -160,17 +161,27 @@ set $urgent-bg-color     #E53935
 
 # window colors
 #                       border              background         text                 indicator
-client.focused          $bg-color           $bg-color          $text-color          #0000ff
-client.unfocused        $inactive-bg-color  $inactive-bg-color $inactive-text-color #0000ff
-client.focused_inactive $inactive-bg-color  $inactive-bg-color $inactive-text-color #0000ff
-client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          #0000ff
+client.focused          $bg-color           $bg-color          $text-color          #29292B
+client.unfocused        $inactive-bg-color  $inactive-bg-color $inactive-text-color #29292B
+client.focused_inactive $inactive-bg-color  $inactive-bg-color $inactive-text-color #29292B
+client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          #29292B
 # client.background       $bg-color
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bindsym $mod+m bar mode toggle
 bar {
-    	font pango:mono 12
+    colors {
+        background #282A36
+            statusline #ffffff # status-letters
+            separator #aaaaaa
+
+            focused_workspace  #4c7899 #2c5879 #ffffff
+            active_workspace   #333333 #5f676a #ffffff
+            inactive_workspace #333333 #222222 #888888
+            urgent_workspace   #2f343a #900000 #ffffff
+    }
+    font pango:mono 12
         status_command i3status
         tray_output primary
         position top
@@ -196,7 +207,7 @@ bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
-exec_always feh --bg-scale ~/Dropbox/wallpaper/pixelart-1548151161171-1923.jpg
+exec_always feh --bg-scale ~/Dropbox/wallpaper/705837.png
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
 exec_always xrandr --dpi 138
 
@@ -211,7 +222,12 @@ bindsym XF86Launch1		exec --no-startup-id xset dpms force off
 # export TERMINAL="st"
 set $term --no-startup-id $TERMINAL
 bindsym $mod+Return 		exec $term
-exec xcompmgr -c -n # -f for fade
+
+# compositor setup
+# exec xcompmgr -c -n # -f for fade
+# setup from reddit
+# https://www.reddit.com/r/unixporn/comments/3crspe/xfce4_sorry_for_xfce4numix_post_9435_but_i_like/
+exec --no-startup-id compton --config ~/.config/compton/config --vsync opengl --mark-wmwin-focused --mark-ovredir-focused -b
 
 assign [class="St"] $workspace1
 assign [class="Spotify"] $workspace10
@@ -221,6 +237,13 @@ assign [class="Chromium-browser"] $workspace2
 assign [class="Firefox"] $workspace2
 assign [class="TelegramDesktop"] $workspace3
 assign [class="Slack"] $workspace3
+assign [class="Slack"] $workspace3
+assign [class="libreoffice-writer"] $workspace4
+assign [class="libreoffice-impress"] $workspace4
+assign [class="libreoffice-calc"] $workspace4
+assign [class="libreoffice"] $workspace4
+assign [class="(?i)libreoffice-startcenter"] $workspace4
+assign [class="(?i)libreoffice-calc"] $workspace4
 exec_always --no-startup-id /home/rafael/github/config/i3-alternating-layout/alternating_layouts.py
 exec_always dropbox
 exec_always setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'us,lt,am' -variant ',,phonetic'
@@ -239,5 +262,5 @@ for_window [class="^.*"] border pixel 1
 smart_borders on
 smart_gaps on
 
-gaps inner 21
-gaps outer -2
+gaps inner 12
+gaps outer 0
