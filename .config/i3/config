@@ -75,7 +75,7 @@ bindsym $mod+v split v
 bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout stacking
+# bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
@@ -153,7 +153,7 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-set $bg-color 	         #90CAF9
+set $bg-color 	         #306879
 set $inactive-bg-color   #2f343f
 set $text-color          #03040f
 set $inactive-text-color #676E7D
@@ -207,7 +207,7 @@ bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
-exec_always feh --bg-scale ~/Dropbox/wallpaper/705837.png
+exec_always feh --bg-scale ~/Dropbox/wallpaper/255548.jpg
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
 exec_always xrandr --dpi 138
 
@@ -227,7 +227,7 @@ bindsym $mod+Return 		exec $term
 # exec xcompmgr -c -n # -f for fade
 # setup from reddit
 # https://www.reddit.com/r/unixporn/comments/3crspe/xfce4_sorry_for_xfce4numix_post_9435_but_i_like/
-exec --no-startup-id compton --config ~/.config/compton/config --vsync opengl --mark-wmwin-focused --mark-ovredir-focused -b
+exec_always --no-startup-id compton --config ~/.config/compton/config --vsync opengl --mark-wmwin-focused --mark-ovredir-focused -b
 
 assign [class="St"] $workspace1
 assign [class="Spotify"] $workspace10
@@ -262,5 +262,8 @@ for_window [class="^.*"] border pixel 1
 smart_borders on
 smart_gaps on
 
-gaps inner 12
+gaps inner 25
 gaps outer 0
+
+bindsym $mod+s			gaps inner current plus 8
+bindsym $mod+Shift+s		gaps inner current minus 8
