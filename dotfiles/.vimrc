@@ -57,7 +57,7 @@ set shiftwidth=4
 set nocompatible " no vi-compatible
 set incsearch " search as characters are entered
 set hlsearch " highlight matches
-set cursorline  " highlight current line
+" set cursorline  " highlight current line
 set showmatch " highlight matching [{()}]
 syntax on
 set scrolloff=2 " keep cursor 3 lines away from screen border
@@ -89,14 +89,18 @@ endif
 if has("autocmd") " to open the file where you left of
     au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | 
 endif
-
-map qq :run<CR>
+" split
 map <silent> <C-q> <m-w>v
 map <silent> <C-s> <c-w>s
 map <silent> <C-h> <c-w>h
 map <silent> <C-j> <c-w>j
 map <silent> <C-k> <c-w>k
 map <silent> <C-l> <c-w>l
+" resize split
+nnoremap <C-left> :vertical resize -5<cr>
+nnoremap <C-down> :resize +5<cr>
+nnoremap <C-up> :resize -5<cr>
+nnoremap <C-right> :vertical resize +5<cr>
 " clipboard copy
 map qq "+
 map qw "+
@@ -143,6 +147,7 @@ command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
 " call neomake#configure#automake('nrwi', 500)
 " let g:neomake_python_enabled_makers = ['flake8']
 :noremap <leader>u :w<Home>silent <End> !urlview<CR>&
-color dracula
+" color dracula
+color torte
 " Run xrdb whenever Xdefaults or Xresources are updated.
 autocmd BufWritePost ~/.Xresources,~/.Xdefaults !xrdb %

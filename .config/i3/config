@@ -91,11 +91,11 @@ bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 
-set $workspace1 "1: term"
-set $workspace2 "2: web"
-set $workspace3 "3: chat"
-set $workspace4 "4: office"
-set $workspace10 "10: music"
+set $workspace1 "1:term"
+set $workspace2 "2:web"
+set $workspace3 "3:chat"
+set $workspace4 "4:office"
+set $workspace10 "10:music"
 # switch to workspace
 bindsym $mod+1 workspace $workspace1
 bindsym $mod+2 workspace $workspace2
@@ -247,3 +247,13 @@ bindsym $mod+Shift+s		gaps inner current minus 8
 
 bindsym $mod+Tab workspace next
 bindsym $mod+Shift+Tab workspace prev
+
+bindsym $mod+t			split toggle
+bindsym $mod+Shift+t		gaps inner current set 15; gaps outer current set 15
+bindsym $mod+Shift+d		gaps inner current set 0; gaps outer current set 0
+
+bindsym $mod+Shift+f		exec --no-startup-id firefox
+
+# no gaps for workspaces
+workspace $workspace2 gaps inner 0
+workspace $workspace2 gaps outer 0
