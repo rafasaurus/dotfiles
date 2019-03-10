@@ -91,3 +91,13 @@ wintypes:
  
 ##excluded apps
 #shadow-exclude = [ "g:si:Conky" ];
+
+# don't draw shadows for hidden tabs
+shadow-exclude = [
+  "_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"
+];
+
+# make all hidden windows completely transparent
+opacity-rule = [
+  "0:_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"
+];

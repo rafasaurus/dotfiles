@@ -83,7 +83,7 @@ bindsym $mod+e layout toggle split
 bindsym $mod+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+# bindsym $mod+space focus mode_toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
@@ -187,7 +187,7 @@ bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
-exec_always feh --bg-scale ~/Dropbox/wallpaper/255548.jpg
+exec_always feh --bg-scale ~/github/config/wallpaper/AFI4uui.png
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
 exec_always xrandr --dpi 138
 
@@ -226,7 +226,8 @@ assign [class="(?i)libreoffice-startcenter"] $workspace4
 assign [class="(?i)libreoffice-calc"] $workspace4
 exec_always --no-startup-id /home/rafael/github/config/i3-alternating-layout/alternating_layouts.py
 exec_always dropbox
-exec_always setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'us,lt,am' -variant ',,phonetic'
+exec_always setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'us,am' -variant ',phonetic'
+
 exec_always xset r rate 270 50
 # exec pa-applet
 exec nm-applet
