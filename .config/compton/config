@@ -1,58 +1,59 @@
-# basic configuration
+# install compton fork https://github.com/chjj/compton
 backend = "glx";
-vsync = "opengl";
-# 
+vsync = "none";
+ 
 glx-swap-method = 2;
 xrender-sync = true;
 xrender-sync-fence = true;
-# blur-background = true;
-# blur-background-fixed = true;
 
-# blur-kern = "15,15,0.140858,0.182684,0.227638,0.272532,0.313486,0.346456,0.367879,0.375311,0.367879,0.346456,0.313486,0.272532,0.227638,0.182684,0.140858,0.182684,0.236928,0.295230,0.353455,0.406570,0.449329,0.477114,0.486752,0.477114,0.449329,0.406570,0.353455,0.295230,0.236928,0.182684,0.227638,0.295230,0.367879,0.440432,0.506617,0.559898,0.594521,0.606531,0.594521,0.559898,0.506617,0.440432,0.367879,0.295230,0.227638,0.272532,0.353455,0.440432,0.527292,0.606531,0.670320,0.711770,0.726149,0.711770,0.670320,0.606531,0.527292,0.440432,0.353455,0.272532,0.313486,0.406570,0.506617,0.606531,0.697676,0.771052,0.818731,0.835270,0.818731,0.771052,0.697676,0.606531,0.506617,0.406570,0.313486,0.346456,0.449329,0.559898,0.670320,0.771052,0.852144,0.904837,0.923116,0.904837,0.852144,0.771052,0.670320,0.559898,0.449329,0.346456,0.367879,0.477114,0.594521,0.711770,0.818731,0.904837,0.960789,0.980199,0.960789,0.904837,0.818731,0.711770,0.594521,0.477114,0.367879,0.375311,0.486752,0.606531,0.726149,0.835270,0.923116,0.980199,0.980199,0.923116,0.835270,0.726149,0.606531,0.486752,0.375311,0.367879,0.477114,0.594521,0.711770,0.818731,0.904837,0.960789,0.980199,0.960789,0.904837,0.818731,0.711770,0.594521,0.477114,0.367879,0.346456,0.449329,0.559898,0.670320,0.771052,0.852144,0.904837,0.923116,0.904837,0.852144,0.771052,0.670320,0.559898,0.449329,0.346456,0.313486,0.406570,0.506617,0.606531,0.697676,0.771052,0.818731,0.835270,0.818731,0.771052,0.697676,0.606531,0.506617,0.406570,0.313486,0.272532,0.353455,0.440432,0.527292,0.606531,0.670320,0.711770,0.726149,0.711770,0.670320,0.606531,0.527292,0.440432,0.353455,0.272532,0.227638,0.295230,0.367879,0.440432,0.506617,0.559898,0.594521,0.606531,0.594521,0.559898,0.506617,0.440432,0.367879,0.295230,0.227638,0.182684,0.236928,0.295230,0.353455,0.406570,0.449329,0.477114,0.486752,0.477114,0.449329,0.406570,0.353455,0.295230,0.236928,0.182684,0.140858,0.182684,0.227638,0.272532,0.313486,0.346456,0.367879,0.375311,0.367879,0.346456,0.313486,0.272532,0.227638,0.182684,0.140858";
+blur-method = "kawase";
+blur-strength = 15;
+blur-kern = "3x3box";
+blur-background = true;
+blur-background-fixed = true;
+blur-background-exclude = [
+	"window_type = 'dock'",
+	"window_type = 'desktop'",
+	"_GTK_FRAME_EXTENTS@:c"
+];
 
-# sigma 170
-# blur-kern = "11,11,0.999135,0.999291,0.999412,0.999498,0.999550,0.999568,0.999550,0.999498,0.999412,0.999291,0.999135,0.999291,0.999447,0.999568,0.999654,0.999706,0.999723,0.999706,0.999654,0.999568,0.999447,0.999291,0.999412,0.999568,0.999689,0.999775,0.999827,0.999844,0.999827,0.999775,0.999689,0.999568,0.999412,0.999498,0.999654,0.999775,0.999862,0.999913,0.999931,0.999913,0.999862,0.999775,0.999654,0.999498,0.999550,0.999706,0.999827,0.999913,0.999965,0.999983,0.999965,0.999913,0.999827,0.999706,0.999550,0.999568,0.999723,0.999844,0.999931,0.999983,0.999983,0.999931,0.999844,0.999723,0.999568,0.999550,0.999706,0.999827,0.999913,0.999965,0.999983,0.999965,0.999913,0.999827,0.999706,0.999550,0.999498,0.999654,0.999775,0.999862,0.999913,0.999931,0.999913,0.999862,0.999775,0.999654,0.999498,0.999412,0.999568,0.999689,0.999775,0.999827,0.999844,0.999827,0.999775,0.999689,0.999568,0.999412,0.999291,0.999447,0.999568,0.999654,0.999706,0.999723,0.999706,0.999654,0.999568,0.999447,0.999291,0.999135,0.999291,0.999412,0.999498,0.999550,0.999568,0.999550,0.999498,0.999412,0.999291,0.999135,";
-# sigma 5
-blur-kern = "7,7,0.697676,0.771052,0.818731,0.835270,0.818731,0.771052,0.697676,0.771052,0.852144,0.904837,0.923116,0.904837,0.852144,0.771052,0.818731,0.904837,0.960789,0.980199,0.960789,0.904837,0.818731,0.835270,0.923116,0.980199,0.980199,0.923116,0.835270,0.818731,0.904837,0.960789,0.980199,0.960789,0.904837,0.818731,0.771052,0.852144,0.904837,0.923116,0.904837,0.852144,0.771052,0.697676,0.771052,0.818731,0.835270,0.818731,0.771052,0.697676,";
-# # transparancy settings for i3
-# opacity-rule =
-# [
-#     "0:_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'",
-# 	"90:class_g = 'termite' && focused",
-# 	"0:class_g = 'termite' && !focused"
-# ];
-# 
-# # workspace opacity transition for i3
-# fading = false;
-# fade-delta = 2.1;
-# fade-in-step = 0.03;
-# fade-out-step = 0.03;
-# 
-# # window shadows for i3
-# shadow = true;
-# no-dock-shadow = true;
-# no-dnd-shadow = true;
-# clear-shadow = true;
-# shadow-radius = 30;
-# shadow-offset-x = -7;
-# shadow-offset-y = -7;
-# #############################################################33
-# # Shadow
-shadow = true;                                  # Enabled client-side shadows on windows.
-no-dock-shadow = true;                          # Avoid drawing shadows on dock/panel windows.
-no-dnd-shadow = true;                           # Don't draw shadows on DND windows.
-clear-shadow = true;                            # Zero the part of the shadow's mask behind the window (experimental).
-shadow-radius = 14;                              # The blur radius for shadows. (default 12)
-shadow-offset-x = -40;                          # The left offset for shadows. (default -15)
-shadow-offset-y = +13;                          # The top offset for shadows. (default -15)
-shadow-opacity = 0.5;                         # The translucency for shadows. (default .75)
-# shadow-red = 0.0;                             # Red color value of shadow. (0.0 - 1.0, defaults to 0)
-# shadow-green = 0.0;                           # Green color value of shadow. (0.0 - 1.0, defaults to 0)
-# shadow-blue = 0.0;                            # Blue color value of shadow. (0.0 - 1.0, defaults to 0)
-# shadow-exclude = [ "n:e:Notification" ];        # Exclude conditions for shadows.
-# shadow-exclude = "n:e:Notification";
-shadow-ignore-shaped = true;
- 
+# Shadow
+shadow = true;
+no-dnd-shadow = true;
+no-dock-shadow = true;
+clear-shadow = true;
+shadow-radius = 10;
+shadow-offset-x = -10;
+shadow-offset-y = -10;
+shadow-opacity = 0.7;
+shadow-red = 0.0;
+shadow-green = 0.0;
+shadow-blue = 0.0;
+shadow-exclude = [
+    "! name~=''",
+    "name = 'Notification'",
+    "name = 'Plank'",
+    "name = 'Docky'",
+    "name = 'Kupfer'",
+    "name = 'xfce4-notifyd'",
+    "name *= 'VLC'",
+    "name *= 'compton'",
+    "name *= 'Chromium'",
+    "name *= 'Chrome'",
+    "name *= 'Firefox'",
+    "class_g = 'Conky'",
+    "class_g = 'Kupfer'",
+    "class_g = 'Synapse'",
+    "class_g ?= 'Notify-osd'",
+    "class_g ?= 'Cairo-dock'",
+    "class_g ?= 'Xfce4-notifyd'",
+    "class_g ?= 'Xfce4-power-manager'",
+    "class_g = 'Subl3'"
+];
+# Avoid drawing shadow on all shaped windows (see also: --detect-rounded-corners)
+shadow-ignore-shaped = false;
+xinerama-shadow-crop = false;
+
 # Opacity
 menu-opacity = 10.0;                     # The opacity for menus. (default 1.0)
 inactive-opacity = 1.0;                 # Opacity of inactive windows. (0.1 - 1.0)
@@ -72,19 +73,6 @@ mark-wmwin-focused = true;      # Try to detect WM windows and mark them as acti
 mark-ovredir-focused = true;
 detect-rounded-corners = true;
  
-# Window type settings
-wintypes:
-{
-  tooltip = { fade = true; shadow = false; opacity = 0.75; };
-};
- 
-##excluded apps
-#shadow-exclude = [ "g:si:Conky" ];
-
-# don't draw shadows for hidden tabs
-shadow-exclude = [
-  "_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"
-];
 
 # make all hidden windows completely transparent
 opacity-rule = [
