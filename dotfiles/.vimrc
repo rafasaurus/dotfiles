@@ -19,6 +19,7 @@ call plug#begin('~/.vim/plugged')
 " Plug 'neomake/neomake'
 
 " npm install -g livedown
+Plug 'mrtazz/simplenote.vim'
 Plug 'shime/vim-livedown'
 Plug 'tfnico/vim-gradle'
 Plug 'xuhdev/vim-latex-live-preview'
@@ -139,7 +140,7 @@ map <leader>ag :Ag!
 " gv   to open in vertical split silently
 " q    to close the quickfix window
 
-" let g:lightline = {'colorscheme': 'wombat'}
+let g:lightline = {'colorscheme': 'wombat'}
 " let g:lightline = {'colorscheme': 'powerline'}
 command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
 " command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q /usr/include .
@@ -148,6 +149,7 @@ command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
 " let g:neomake_python_enabled_makers = ['flake8']
 :noremap <leader>u :w<Home>silent <End> !urlview<CR>&
 " color dracula
-color torte
+color pablo
 " Run xrdb whenever Xdefaults or Xresources are updated.
 autocmd BufWritePost ~/.Xresources,~/.Xdefaults !xrdb %
+set nu

@@ -44,5 +44,4 @@
 
 *.cmake
 
-avrSetup/build
-gimbal/src/build
+st
