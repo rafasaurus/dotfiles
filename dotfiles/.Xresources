@@ -4,51 +4,51 @@
 ! ░██╔██╗░██╔══██╗██╔══╝░░╚════██║██║░░░██║██║░░░██║██╔══██╗██║░░░░░██╔══╝░░╚════██║
 ! ██╔╝░██╗██║░░██║███████╗███████║╚██████╔╝╚██████╔╝██║░░██║╚██████╗███████╗███████║
 ! ╚═╝░░╚═╝╚═╝░░╚═╝╚══════╝╚══════╝░╚═════╝░░╚═════╝░╚═╝░░╚═╝░╚═════╝╚══════╝╚══════╝
-!
-! -----------------------------------
 
-*.alpha: 245
+*.alpha: 210
 ! *.font:	LeagueMono-SemiBold.:pixelsize=23:antialias=true:autohint=true;
-*.font: LiberationMono-Regular:pixelsize=24:antialias=true:autohint=true;
-*.foreground:   #d8dee8
-*.background:   #2f343f
-! ! *.font:     xft:LeagueMono-Bold:pixelsize=14
-! *.color2:	#5AF7B0
-! *.color3:	#FFA56B
-! *.color4:	#57C7FF
-! *.color5:	#C792EA
-! *.color6:	#89DDFF
-! *.color7:	#EEFFFF
-! *.color8:	#354274
-! *.color9:	#F02E6E
-! *.color10:	#2CE592
-! *.color11:	#FF8537
-! *.color12:	#1DA0E2
-! *.color13:	#A742EA
-! *.color14:	#47BAE8
-! *.color15:	#DEE6E7
-! *.color16:  #2A335A
-
-! manta
-! https://github.com/elenapan/dotfiles/blob/master/.xfiles/manta
-! *.background:	#1E2541
-! *.foreground:	#EEFFFF
+*.font: monospace:pixelsize=24:antialias=true:autohint=true;
 *.cursorColor:	#EEFFFF
-! *.color0:	#1E2541
-*.color0:	#29292B 
-*.color1:	#F0719B
-*.color2:	#5AF7B0
-*.color3:	#FFA56B
-*.color4:	#57C7FF
-*.color5:	#C792EA
-*.color6:	#89DDFF
-*.color7:	#EEFFFF
-*.color8:	#354274
-*.color9:	#F02E6E
-*.color10:	#2CE592
-*.color11:	#FF8537
-*.color12:	#1DA0E2
-*.color13:	#A742EA
-*.color14:	#47BAE8
-*.color15:	#DEE6E7
-*.color16:	#2A335A
+! *.font:     xft:LeagueMono-Bold:pixelsize=14
+! colors: https://github.com/elenapan/dotfiles/tree/master/.xfiles
+! skyfall
+*background:  #282F37
+*foreground:  #F1FCF9
+*cursorColor: #F1FCF9
+! *color0:      #1D1F21
+*color0:      #151515
+*color1:      #DB86BA
+*color2:      #74DD91
+*color3:      #E49186
+*color4:      #75DBE1
+*color5:      #B4A1DB
+*color6:      #9EE9EA
+*color7:      #F1FCF9
+*color8:      #465463
+*color9:      #D04E9D
+*color10:     #4BC66D
+*color11:     #DB695B
+*color12:     #3DBAC2
+*color13:     #825ECE
+*color14:     #62CDCD
+*color15:     #E0E5E5
+
+! rofi.color-enabled: false
+! rofi.color-window: #4d32302f, #4d32302f, #0032302f
+! rofi.color-normal: #0032302f, #d8dee9, #0032302f, #cc458588, #32302f
+! rofi.color-active: #4d1b2b34, #6699cc, #4d343d46, #4d6699cc, #d8dee9
+! rofi.color-urgent: #4d1b2b34, #ec5f67, #4d343d46, #4dec5f67, #d8dee9
+
+rofi.modi: run,ssh,window
+rofi.separator-style: solid
+rofi.show-icons: true
+rofi.drun-icon-theme: Paper
+rofi.sidebar-mode:    true
+rofi.padding:         10
+rofi.bw:              0
+rofi.scrollbar-width: 0
+rofi.line-margin:     0
+
+rofi.lines: 10
+rofi.terminal: st
+rofi.case-sensitive: false

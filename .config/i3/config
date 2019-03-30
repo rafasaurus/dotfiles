@@ -40,7 +40,7 @@ bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
 bindsym $mod+d exec dmenu_run
-bindsym $mod+o exec --no-startup-id "rofi -show drun -font \\"DejaVu 19\\" -run-shell-command '{terminal} -e \\" {cmd}; read -n 1 -s\\"'"
+bindsym $mod+o exec --no-startup-id "rofi -show drun -opacity \\"85\\" -font \\"DejaVu 17\\" -run-shell-command '{terminal} -e \\" {cmd}; read -n 1 -s\\"'"
 
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
@@ -158,16 +158,29 @@ client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color      
 # finds out, if available)
 bindsym $mod+m bar mode toggle
 bar {
+
+    # dark
     colors {
         background #282A36
             statusline #ffffff # status-letters
             separator #aaaaaa
-
             focused_workspace  #4c7899 #4d5aa9 #ffffff
             active_workspace   #333333 #5f676a #ffffff
             inactive_workspace #333333 #222222 #888888
             urgent_workspace   #2f343a #900000 #ffffff
     }
+    
+    # # light
+    # colors {
+    #     background #EEFFFF
+    #         statusline #000000 # status-letters
+    #         separator #101010
+    #
+    #         focused_workspace  #66aa99 #88ccbb #ffffff
+    #         active_workspace   #333333 #5f676a #ffffff
+    #         inactive_workspace #dddddd #dddddd #111111
+    #         urgent_workspace   #2f343a #900000 #ffffff
+    # }
     font pango:mono 12
         status_command i3status
         tray_output primary
@@ -194,7 +207,8 @@ bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
-exec_always feh --bg-scale ~/github/config/wallpaper/polygon-mountains-minimalist-r3.jpg
+exec_always feh --bg-scale ~/github/config/wallpaper/wall_5.jpg
+
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
 exec_always xrandr --dpi 138
 
@@ -234,9 +248,10 @@ assign [class="(?i)libreoffice-calc"] $workspace4
 assign [class="Anki"] $workspace8
 for_window [class="slam.py"] floating disable
 exec_always --no-startup-id /home/rafael/github/config/i3-alternating-layout/alternating_layouts.py
-exec --no-startup-id dropbox
+exec --no-startup-id dropbox start
 exec --no-startup-id anki
-exec_always setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'us,am' -variant ',phonetic'
+# exec_always setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'us,am' -variant ',phonetic'
+exec_always setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'us,ru,am' -variant ',phonetic,phonetic'
 
 # keyboard cursor speed
 exec_always xset r rate 270 50
@@ -246,7 +261,7 @@ exec blueman-applet
 exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
 
 # exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-for_window [class="^.*"] border pixel 3
+for_window [class="^.*"] border pixel 1
 
 smart_borders on
 # smart_gaps on
@@ -269,3 +284,13 @@ bindsym $mod+Shift+f		exec --no-startup-id firefox
 # no gaps for workspaces
 workspace $workspace2 gaps inner 0
 workspace $workspace2 gaps outer 0
+set $mode_power [l]ogoff | [s]hutdown
+
+mode "$mode_power" {
+bindsym l exec i3-msg exit
+bindsym s exec systemctl poweroff
+bindsym Return mode "default"
+bindsym Escape mode "default"
+}
+bindsym --release XF86PowerOff mode "$mode_power"
+bindsym Control+q exec ~/noctrlq.sh
