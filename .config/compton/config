@@ -7,7 +7,7 @@ xrender-sync = true;
 xrender-sync-fence = true;
 
 blur-method = "kawase";
-blur-strength = 15;
+blur-strength = 20;
 blur-kern = "3x3box";
 blur-background = true;
 blur-background-fixed = true;
@@ -72,7 +72,6 @@ inactive-dim = 0.13;            # Dim inactive windows. (0.0 - 1.0, defaults to 
 mark-wmwin-focused = true;      # Try to detect WM windows and mark them as active.
 mark-ovredir-focused = true;
 detect-rounded-corners = true;
- 
 
 # make all hidden windows completely transparent
 opacity-rule = [

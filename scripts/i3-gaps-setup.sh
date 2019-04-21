@@ -16,4 +16,4 @@ mkdir -p build && cd build/
 # The prefix and sysconfdir are, obviously, dependent on the distribution.
 ../configure --prefix=/usr --sysconfdir=/etc --disable-sanitizers
 make
-sudo make install
+sudo make uninstall

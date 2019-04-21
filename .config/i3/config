@@ -102,6 +102,7 @@ set $workspace2 "2:web"
 set $workspace3 "3:chat"
 set $workspace4 "4:office"
 set $workspace8 "8:anki"
+set $workspace9 "9:habitica"
 set $workspace10 "10:music"
 # switch to workspace
 bindsym $mod+1 workspace $workspace1
@@ -144,7 +145,7 @@ set $bg-color 	         #69858F
 set $inactive-bg-color   #2f343f
 set $text-color          #03040f
 set $inactive-text-color #676E7D
-set $urgent-bg-color     #d52925
+set $urgent-bg-color     #052925
 
 # window colors
 #                       border              background         text                 indicator
@@ -167,7 +168,7 @@ bar {
             focused_workspace  #4c7899 #4d5aa9 #ffffff
             active_workspace   #333333 #5f676a #ffffff
             inactive_workspace #333333 #222222 #888888
-            urgent_workspace   #2f343a #900000 #ffffff
+            urgent_workspace   #2f343a #700070 #ffffff
     }
     
     # # light
@@ -207,7 +208,7 @@ bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
-exec_always feh --bg-scale ~/github/config/wallpaper/wall_5.jpg
+exec_always feh --bg-scale ~/github/config/wallpaper/wall_2.png
 
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
 exec_always xrandr --dpi 138
