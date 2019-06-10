@@ -160,16 +160,37 @@ client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color      
 bindsym $mod+m bar mode toggle
 bar {
 
-    # dark
+    # # dark adwaita
+    # colors {
+    #     background #2E2E2E
+    #         statusline #ffffff # status-letters
+    #         separator #aaaaaa
+    #         focused_workspace  #4c7899 #4d5aa9 #ffffff
+    #         active_workspace   #333333 #5f676a #ffffff
+    #         inactive_workspace #333333 #222222 #888888
+    #         urgent_workspace   #2f343a #700070 #ffffff
+    # }
+    # dark green
     colors {
-        background #282A36
+        background #2E2E2E
             statusline #ffffff # status-letters
             separator #aaaaaa
-            focused_workspace  #4c7899 #4d5aa9 #ffffff
+            focused_workspace  #333333 #87FF5F #444444
             active_workspace   #333333 #5f676a #ffffff
             inactive_workspace #333333 #222222 #888888
             urgent_workspace   #2f343a #700070 #ffffff
     }
+
+    # # dark purple
+    # colors {
+    #     background #282A36
+    #         statusline #ffffff # status-letters
+    #         separator #aaaaaa
+    #         focused_workspace  #4c7899 #4d5aa9 #ffffff
+    #         active_workspace   #333333 #5f676a #ffffff
+    #         inactive_workspace #333333 #222222 #888888
+    #         urgent_workspace   #2f343a #700070 #ffffff
+    # }
     
     # # light
     # colors {
@@ -216,7 +237,7 @@ exec--no-startup-id surf habitica.com
 
 # # For screenshots and recording
 bindsym Print 		exec --no-startup-id maim $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
-bindsym Shift+Print 	exec --no-startup-id maim --nodecorations 1 -s $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
+bindsym Shift+Print 	exec --no-startup-id maim --nodecorations 0 -s $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
 bindsym $mod+Print		exec --no-startup-id dmenurecord
 bindsym $mod+Scroll_Lock	exec --no-startup-id "killall screenkey || screenkey"
 bindsym $mod+Delete		exec $stoprec
@@ -291,12 +312,12 @@ workspace $workspace2 gaps inner 0
 workspace $workspace9 gaps outer 0
 workspace $workspace9 gaps outer 0
 
-set $mode_power [l]ogoff | [q]quit | [s]uspend
+set $mode_power [l]ogoff | [p]oweroff | [s]uspend
 set $screen [b]uilt-in | [h]dmi
 
 mode "$mode_power" {
     bindsym l exec i3-msg exit
-    bindsym q exec systemctl poweroff
+    bindsym p exec systemctl poweroff
     bindsym s exec systemctl suspend
     bindsym Return mode "default"
     bindsym Escape mode "default"
