@@ -232,7 +232,7 @@ bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
-exec_always feh --bg-scale ~/github/config/wallpaper/wall_6.jpg
+exec_always feh --bg-scale ~/github/config/wallpaper/wall_5.jpg
 
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
 exec_always xrandr --dpi 138
