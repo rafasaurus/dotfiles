@@ -1,7 +1,20 @@
 # install compton fork https://github.com/chjj/compton
+# useful setup https://github.com/kanishkarj/i3-config/blob/master/.config/compton.conf
 backend = "glx";
-vsync = "none";
+# Set VSync method. VSync methods currently available:
+# none: No VSync
+# drm: VSync with DRM_IOCTL_WAIT_VBLANK. May only work on some drivers.
+# opengl: Try to VSync with SGI_video_sync OpenGL extension. Only work on some drivers.
+# opengl-oml: Try to VSync with OML_sync_control OpenGL extension. Only work on some drivers.
+# opengl-swc: Try to VSync with SGI_swap_control OpenGL extension. Only work on some drivers. Works only with GLX backend. Known to be most effective on many drivers. Does not  actually control paint timing, only buffer swap is affected, so it doesn’t have the effect of --sw-opti unlike other methods. Experimental.
+# opengl-mswc: Try to VSync with MESA_swap_control OpenGL extension. Basically the same as opengl-swc above, except the extension we use.
+# (Note some VSync methods may not be enabled at compile time.)
+vsync = "opengl-swc";
  
+# Specify refresh rate of the screen.
+# If not specified or 0, compton will try detecting this with X RandR extension.
+refresh-rate = 0;
+
 glx-swap-method = 2;
 xrender-sync = true;
 xrender-sync-fence = true;
@@ -55,10 +68,12 @@ shadow-ignore-shaped = false;
 xinerama-shadow-crop = false;
 
 # Opacity
-menu-opacity = 10.0;                     # The opacity for menus. (default 1.0)
+menu-opacity = 1;                     # The opacity for menus. (default 1.0)
 inactive-opacity = 1.0;                 # Opacity of inactive windows. (0.1 - 1.0)
 frame-opacity = 0.7;                   # Opacity of window titlebars and borders. (0.1 - 1.0)
-inactive-opacity-override = true;       # Inactive opacity set by 'inactive-opacity' overrides value of _NET_WM_OPACITY.
+inactive-opacity-override = false;       # Inactive opacity set by 'inactive-opacity' overrides value of _NET_WM_OPACITY.
+active-opacity = 1;
+alpha-step = 0.06;
  
 # Fading
 fading = false;                 # Fade windows during opacity changes.
@@ -68,12 +83,34 @@ fade-out-step = 0.1;            # Opacity change between steps while fading out.
 # no-fading-openclose = true;   # Fade windows in/out when opening/closing.
  
 # Other
-inactive-dim = 0.13;            # Dim inactive windows. (0.0 - 1.0, defaults to 0).
+inactive-dim = 0.0;             # Dim inactive windows. (0.0 - 1.0, defaults to 0).
 mark-wmwin-focused = true;      # Try to detect WM windows and mark them as active.
-mark-ovredir-focused = true;
-detect-rounded-corners = true;
+mark-ovredir-focused = true;    # Mark all non-WM but override-redirect windows active (e.g. menus).
+detect-rounded-corners = true;  # Detect rounded corners and treat them as rectangular when --shadow-ignore-shaped is on.
 
 # make all hidden windows completely transparent
 opacity-rule = [
+  "80:class_g = 'i3-bar' && !_NET_WM_STATE@:32a",
+  "60:class_g = 'i3-frame' && !_NET_WM_STATE@:32a",
+  "85:class_g = 'Nautilus'", 
+  "85:class_g = 'nautilus'", 
+  # "60:window_type = 'dock' && class_g = 'i3bar'"
   "0:_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"
 ];
+
+# Limit compton to repaint at most once every 1 / refresh_rate second to boost performance.
+# This should not be used with --vsync drm/opengl/opengl-oml as they essentially does --sw-opti's job already,
+# unless you wish to specify a lower refresh rate than the actual value.
+sw-opti = true;
+
+# Unredirect all windows if a full-screen opaque window is detected, to maximize performance for full-screen windows, like games.
+# Known to cause flickering when redirecting/unredirecting windows.
+# paint-on-overlay may make the flickering less obvious.
+unredir-if-possible = true;
+
+
+# Enable DBE painting mode, intended to use with VSync to (hopefully) eliminate tearing.
+# Reported to have no effect, though.
+dbe = false;
+# Painting on X Composite overlay window. Recommended.
+paint-on-overlay = true;
