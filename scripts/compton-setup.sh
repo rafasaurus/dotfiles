@@ -4,3 +4,5 @@ sudo apt install -y libxcomposite-dev libxdamage-dev libxrandr-dev libxinerama-d
 git clone https://github.com/chjj/compton
 cd compton 
 sudo make install -j4
+mkdir -p ~/.scripts 
+cp compton.sh ~/.scripts

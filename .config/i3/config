@@ -217,6 +217,9 @@ bar {
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +2% #increase sound volume
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -2% #decrease sound volume
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+bindsym $mod+F4 exec --no-startup-id pactl set-sink-volume 0 +2% #increase sound volume
+bindsym $mod+F3 exec --no-startup-id pactl set-sink-volume 0 -2% #decrease sound volume
+bindsym $mod+F2 exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 
 # Sreen brightness controls
 bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
@@ -235,7 +238,7 @@ exec_always feh --bg-scale ~/github/config/wallpaper/wall_5.jpg
 
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
 exec_always xrandr --dpi 138
-exec--no-startup-id surf habitica.com
+# exec--no-startup-id surf habitica.com
 
 # # For screenshots and recording
 bindsym Print 		exec --no-startup-id maim $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
@@ -253,7 +256,8 @@ bindsym $mod+Return 		exec $term
 # exec xcompmgr -c -n # -f for fade
 # setup from reddit
 # https://www.reddit.com/r/unixporn/comments/3crspe/xfce4_sorry_for_xfce4numix_post_9435_but_i_like/
-exec_always --no-startup-id compton --config ~/.config/compton/config --vsync opengl --mark-wmwin-focused --mark-ovredir-focused -b
+# exec_always --no-startup-id compton --config ~/.config/compton/config --vsync opengl --mark-wmwin-focused --mark-ovredir-focused -b
+exec_always bash ~/.scripts/compton.sh
 
 assign [class="St"] $workspace1
 assign [class="Spotify"] $workspace10
@@ -277,18 +281,19 @@ for_window [class="slam.py"] floating disable
 exec_always --no-startup-id /home/rafael/github/config/i3-alternating-layout/alternating_layouts.py
 exec --no-startup-id dropbox start
 # exec --no-startup-id anki
-# exec_always setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'us,am' -variant ',phonetic'
-exec_always setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'us,ru,am' -variant ',phonetic,phonetic'
+# exec_always setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'us,am' -variant ',phonetic' && xset r rate 240 50
 
-# keyboard cursor speed
-exec_always xset r rate 240 50
+# language and keyboard cursor speed
+exec_always setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'us,ru,am' -variant ',phonetic,phonetic' && xset r rate 240 50
+bindsym $mod+F1 exec "setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'us,ru,am' -variant ',phonetic,phonetic' && xset r rate 240 50"
+
 exec pa-applet
 exec nm-applet
 exec blueman-applet
 exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
 
 # exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-for_window [class="^.*"] border pixel 8
+for_window [class="^.*"] border pixel 1
 
 smart_borders on
 # smart_gaps on
@@ -318,13 +323,14 @@ workspace $workspace2 gaps outer 0
 workspace $workspace9 gaps inner 0
 workspace $workspace9 gaps outer 0
 
-set $mode_power [l]ogoff | [p]oweroff | [s]uspend
+set $mode_power [l]ock | [p]oweroff | [s]uspend | [o]logout
 set $screen [b]uilt-in | [h]dmi
 
 mode "$mode_power" {
-    bindsym l exec i3-msg exit
+    bindsym o exec i3-msg exit
     bindsym p exec systemctl poweroff
-    bindsym s exec systemctl suspend
+    bindsym s exec betterlockscreen --lock blur && systemctl suspend
+    bindsym l exec betterlockscreen --lock blur
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
@@ -338,4 +344,3 @@ mode "$screen" {
 # bindsym --release XF86PowerOff mode "$mode_power"
 bindsym --release $mod+Shift+p mode "$mode_power"
 bindsym $mod+x mode "$screen"
-# bindsym $mod+y exec surf habitica.com
