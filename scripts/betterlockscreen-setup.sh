@@ -1,5 +1,4 @@
-!#/bin/bash
-
+#!/bin/bash
 # install i3lock-color
 git clone https://github.com/PandorasFox/i3lock-color
 cd i3lock-color
@@ -13,7 +12,6 @@ mkdir -p build && cd build/
   --prefix=/usr \
   --sysconfdir=/etc \
   --disable-sanitizers
-
 sudo make -j4 install
 
 # install betterlockscreen
