@@ -344,3 +344,5 @@ mode "$screen" {
 # bindsym --release XF86PowerOff mode "$mode_power"
 bindsym --release $mod+Shift+p mode "$mode_power"
 bindsym $mod+x mode "$screen"
+#TODO not the best solution
+bindsym Caps_Lock exec --no-startup-id ~/.scripts/caps_state.sh && ~/.scripts/caps_state.sh
