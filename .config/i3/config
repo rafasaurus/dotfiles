@@ -38,7 +38,7 @@ floating_modifier $mod
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run
+bindsym $mod+Shift+z exec dmenu_run
 bindsym $mod+o exec --no-startup-id "rofi -show drun -opacity \\"85\\" -font \\"DejaVu 17\\" -run-shell-command '{terminal} -e \\" {cmd}; read -n 1 -s\\"'"
 
 # There also is the (new) i3-dmenu-desktop which only displays applications
@@ -74,7 +74,7 @@ bindsym $mod+Shift+Right move right
 # bindsym $mod+h split h
 
 # split in vertical orientation
-bindsym $mod+v split v
+# bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
@@ -156,10 +156,10 @@ client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color      
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-bindsym $mod+m bar mode toggle
+# bindsym $mod+m bar mode toggle
 bar {
     # This allows the use of colors with an additional alpha channe
-    i3bar_command i3bar -t
+    # i3bar_command i3bar -t
     # # dark adwaita
     # colors {
     #     background #2E2E2E
@@ -205,7 +205,7 @@ bar {
     #         inactive_workspace #dddddd #dddddd #111111
     #         urgent_workspace   #2f343a #900000 #ffffff
     # }
-    font pango:mono 12
+    font pango:mono 10
         status_command i3status
         tray_output primary
         position top
@@ -221,6 +221,10 @@ bindsym $mod+F4 exec --no-startup-id pactl set-sink-volume 0 +2% #increase sound
 bindsym $mod+F3 exec --no-startup-id pactl set-sink-volume 0 -2% #decrease sound volume
 bindsym $mod+F2 exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 
+bindsym $mod+u exec --no-startup-id pactl set-sink-volume 0 +2% #increase sound volume
+bindsym $mod+d exec --no-startup-id pactl set-sink-volume 0 -2% #decrease sound volume
+bindsym $mod+m exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+
 # Sreen brightness controls
 bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
 bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
@@ -234,7 +238,9 @@ bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
-exec_always feh --bg-scale ~/github/config/wallpaper/wall_5.jpg
+# exec_always feh --bg-scale ~/github/config/wallpaper/wall_9.jpg
+set $wallpaper_folder ~/github/config/wallpaper
+exec_always --no-startup-id feh --randomize --bg-scale --slideshow-delay 0.0001 $wallpaper_folder
 
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
 exec_always xrandr --dpi 138
@@ -242,7 +248,7 @@ exec_always xrandr --dpi 138
 
 # # For screenshots and recording
 bindsym Print 		exec --no-startup-id maim $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
-bindsym Shift+Print 	exec --no-startup-id maim --nodecorations 0 -s $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
+bindsym Shift+Print 	exec --no-startup-id maim -o --nodecorations 2 -s $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
 bindsym $mod+Print		exec --no-startup-id dmenurecord
 bindsym $mod+Scroll_Lock	exec --no-startup-id "killall screenkey || screenkey"
 bindsym $mod+Delete		exec $stoprec
@@ -281,11 +287,20 @@ for_window [class="slam.py"] floating disable
 exec_always --no-startup-id /home/rafael/github/config/i3-alternating-layout/alternating_layouts.py
 exec --no-startup-id dropbox start
 # exec --no-startup-id anki
-# exec_always setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'us,am' -variant ',phonetic' && xset r rate 240 50
 
-# language and keyboard cursor speed
-exec_always setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'us,ru,am' -variant ',phonetic,phonetic' && xset r rate 240 50
-bindsym $mod+F1 exec "setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'us,ru,am' -variant ',phonetic,phonetic' && xset r rate 240 50"
+# Language and Keyboard Cursor Speed
+#TODO not the best solution
+bindsym Caps_Lock exec --no-startup-id ~/.scripts/caps_state.sh && ~/.scripts/caps_state.sh && sleep 50
+bindsym $mod+Tab exec ~/.scripts/setxkmap.sh
+# bindsym $mod+n exec setxkbmap -layout 'us' && xset r rate 240 50
+# bindsym $mod+b exec setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'am,us' -variant 'phonetic,' && xset r rate 240 50
+# bindsym $mod+v exec setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'ru,us' -variant 'phonetic,' && xset r rate 240 50
+bindsym $mod+n exec setxkbmap -layout 'am' -variant 'phonetic' && xset r rate 240 50
+bindsym $mod+b exec setxkbmap -layout 'ru' -variant 'phonetic' && xset r rate 240 50
+# setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'us,ru,am' -variant ',phonetic,phonetic' && xset r rate 240 50
+# setxkbmap -layout 'us,ru,am' -variant ',phonetic,phonetic' && xset r rate 240 50
+# exec_always --no-startup-id ~/.scripts/caps_state.sh
+# xec_always --no-startup-id ~/.scripts/setxkmap.sh
 
 exec pa-applet
 exec nm-applet
@@ -293,7 +308,7 @@ exec blueman-applet
 exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
 
 # exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-for_window [class="^.*"] border pixel 1
+for_window [class="^.*"] border pixel 3
 
 smart_borders on
 # smart_gaps on
@@ -308,8 +323,8 @@ gaps outer 10
 bindsym $mod+s			gaps inner current plus 10
 bindsym $mod+Shift+s		gaps inner current minus 10
 
-bindsym $mod+Tab workspace next
-bindsym $mod+Shift+Tab workspace prev
+# bindsym $mod+Tab workspace next
+# bindsym $mod+Shift+Tab workspace prev
 
 bindsym $mod+t			split toggle
 bindsym $mod+Shift+t		gaps inner current set 15; gaps outer current set 15
@@ -344,5 +359,3 @@ mode "$screen" {
 # bindsym --release XF86PowerOff mode "$mode_power"
 bindsym --release $mod+Shift+p mode "$mode_power"
 bindsym $mod+x mode "$screen"
-#TODO not the best solution
-bindsym Caps_Lock exec --no-startup-id ~/.scripts/caps_state.sh && ~/.scripts/caps_state.sh
