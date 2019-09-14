@@ -13,6 +13,7 @@
 # i3 config file (v4)
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
+# for rounded corners https://github.com/resloved/i3
 
 set $mod Mod4
 
@@ -59,10 +60,10 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+h move left
-bindsym $mod+Shift+j move down
-bindsym $mod+Shift+k move up
-bindsym $mod+Shift+l move right
+bindsym $mod+Shift+h move left 40
+bindsym $mod+Shift+j move down 40
+bindsym $mod+Shift+k move up 40
+bindsym $mod+Shift+l move right 40
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -140,7 +141,7 @@ bindsym $mod+Shift+u		resize shrink height 10 px or 10 ppt
 bindsym $mod+Shift+i		resize grow height 10 px or 10 ppt
 bindsym $mod+Shift+o		resize grow width 10 px or 10 ppt
 
-set $bg-color 	         #70ff8699
+set $bg-color            #F080A7FF
 set $inactive-bg-color   #2f343f00
 set $text-color          #03040f00
 set $inactive-text-color #676E7D00
@@ -157,6 +158,7 @@ client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color      
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 # bindsym $mod+m bar mode toggle
+exec_always pkill i3status i3bar
 bar {
     # This allows the use of colors with an additional alpha channe
     # i3bar_command i3bar -t
@@ -175,14 +177,20 @@ bar {
     colors {
         # background #2E2E2E
         background #000000
-            statusline #ffffff # status-letters
-            separator #aaaaaa
-            focused_workspace  #333333 #87FF5F #444444
+            statusline         #cccccc # status-letters
+            separator          #aaaaaa
+                               #border #bg     #letter
+            focused_workspace  #F080A7 #F080A7 #333333
             active_workspace   #333333 #5f676a #ffffff
             inactive_workspace #333333 #222222 #888888
             urgent_workspace   #2f343a #700070 #ffffff
     }
-
+    font pango:DejaVu Sans Mono, Icons 12
+        status_command i3status
+        tray_output primary
+        position top
+        modifier None
+        mode dock
     # # dark purple
     # colors {
     #     background #282A36
@@ -205,17 +213,15 @@ bar {
     #         inactive_workspace #dddddd #dddddd #111111
     #         urgent_workspace   #2f343a #900000 #ffffff
     # }
-    font pango:mono 10
-        status_command i3status
-        tray_output primary
-        position top
-        modifier None
-        mode dock
 }
 
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +2% #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -2% #decrease sound volume
+# bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +2% #increase sound volume
+# bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -2% #decrease sound volume
+
+bindsym XF86AudioRaiseVolume exec --no-startup-id amixer -D pulse sset Master 4%+ #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id amixer -D pulse sset Master 4%- #decrease sound volume
+
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 bindsym $mod+F4 exec --no-startup-id pactl set-sink-volume 0 +2% #increase sound volume
 bindsym $mod+F3 exec --no-startup-id pactl set-sink-volume 0 -2% #decrease sound volume
@@ -238,9 +244,9 @@ bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
-# exec_always feh --bg-scale ~/github/config/wallpaper/wall_9.jpg
+exec_always feh --bg-scale ~/github/config/wallpaper/wall_8.png
 set $wallpaper_folder ~/github/config/wallpaper
-exec_always --no-startup-id feh --randomize --bg-scale --slideshow-delay 0.0001 $wallpaper_folder
+# exec_always --no-startup-id feh --randomize --bg-scale --slideshow-delay 0.0001 $wallpaper_folder
 
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
 exec_always xrandr --dpi 138
@@ -308,7 +314,7 @@ exec blueman-applet
 exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
 
 # exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-for_window [class="^.*"] border pixel 3
+for_window [class="^.*"] border pixel 5
 
 smart_borders on
 # smart_gaps on
@@ -317,6 +323,8 @@ smart_borders on
 
 gaps inner 25
 gaps outer 10
+# border_radius 4
+
 # gaps horizontal 40
 # gaps outer 60
 
@@ -359,3 +367,4 @@ mode "$screen" {
 # bindsym --release XF86PowerOff mode "$mode_power"
 bindsym --release $mod+Shift+p mode "$mode_power"
 bindsym $mod+x mode "$screen"
+bindsym $mod+r exec xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
