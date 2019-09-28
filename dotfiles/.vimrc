@@ -38,6 +38,7 @@ Plug 'junegunn/goyo.vim'
 Plug 'rking/ag.vim'
 Plug 'dracula/vim'
 " Plug 'pignacio/vim-yapf-format'
+Plug 'rafi/awesome-vim-colorschemes'
 
 call plug#end()
 
@@ -143,6 +144,8 @@ map <leader>ag :Ag!
 let g:lightline = {'colorscheme': 'wombat'}
 " let g:lightline = {'colorscheme': 'powerline'}
 command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
+" ctr + ] forward
+" ctr + t backward
 " command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q /usr/include .
 " command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q --fields=+l --languages=python --python-kinds=-iv -f ./tags
 " call neomake#configure#automake('nrwi', 500)
@@ -153,3 +156,16 @@ color pablo
 " Run xrdb whenever Xdefaults or Xresources are updated.
 autocmd BufWritePost ~/.Xresources,~/.Xdefaults !xrdb %
 set nu
+color darkblue
+" autocmd VimEnter * call LoadSession()
+" autocmd VimLeave * call SaveSession()
+"
+" function! SaveSession()
+"     execute 'mksession! $HOME/.vim/sessions/session.vim'
+" endfunction
+"
+" function! LoadSession()
+"     if argc() == 0
+"         execute 'source $HOME/.vim/sessions/session.vim'
+"     endif
+" endfunction

@@ -159,6 +159,7 @@ client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color      
 # finds out, if available)
 # bindsym $mod+m bar mode toggle
 exec_always pkill i3status i3bar
+# exec_always --no-startup-id polybar mybar -r
 bar {
     # This allows the use of colors with an additional alpha channe
     # i3bar_command i3bar -t
@@ -227,9 +228,9 @@ bindsym $mod+F4 exec --no-startup-id pactl set-sink-volume 0 +2% #increase sound
 bindsym $mod+F3 exec --no-startup-id pactl set-sink-volume 0 -2% #decrease sound volume
 bindsym $mod+F2 exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 
-bindsym $mod+u exec --no-startup-id pactl set-sink-volume 0 +2% #increase sound volume
-bindsym $mod+d exec --no-startup-id pactl set-sink-volume 0 -2% #decrease sound volume
-bindsym $mod+m exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+# bindsym $mod+u exec --no-startup-id pactl set-sink-volume 0 +2% #increase sound volume
+# bindsym $mod+d exec --no-startup-id pactl set-sink-volume 0 -2% #decrease sound volume
+# bindsym $mod+m exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 
 # Sreen brightness controls
 bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
@@ -246,7 +247,7 @@ bindsym XF86AudioPrev exec playerctl previous
 
 exec_always feh --bg-scale ~/github/config/wallpaper/wall_8.png
 set $wallpaper_folder ~/github/config/wallpaper
-# exec_always --no-startup-id feh --randomize --bg-scale --slideshow-delay 0.0001 $wallpaper_folder
+exec_always --no-startup-id feh --randomize --bg-scale --slideshow-delay 0.0001 $wallpaper_folder
 
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
 exec_always xrandr --dpi 138
@@ -262,7 +263,7 @@ bindsym XF86Launch1		exec --no-startup-id xset dpms force off
 
 # export TERMINAL="st"
 set $term --no-startup-id $TERMINAL
-bindsym $mod+Return 		exec $term
+bindsym $mod+Return 		exec st
 
 # compositor setup
 # exec xcompmgr -c -n # -f for fade

@@ -5,25 +5,27 @@
 ! ██╔╝░██╗██║░░██║███████╗███████║╚██████╔╝╚██████╔╝██║░░██║╚██████╗███████╗███████║
 ! ╚═╝░░╚═╝╚═╝░░╚═╝╚══════╝╚══════╝░╚═════╝░░╚═════╝░╚═╝░░╚═╝░╚═════╝╚══════╝╚══════╝
 
-*.alpha: 210
-! *.font:	LeagueMono-SemiBold.:pixelsize=23:antialias=true:autohint=true;
-*.font: monospace:pixelsize=24:antialias=true:autohint=true;
+*.alpha: 0.78
+! *.font:	LeagueMono-ExtraBold.:pixelsize=23:antialias=true:autohint=true;
+*.font: AnonymousPro-Bold:pixelsize=24:antialias=true:autohint=true;
 *.cursorColor:	#EEFFFF
 ! *.font:     xft:LeagueMono-Bold:pixelsize=14
 ! colors: https://github.com/elenapan/dotfiles/tree/master/.xfiles
 ! skyfall
-*background:  #282F37
-*foreground:  #F1FCF9
-*cursorColor: #F1FCF9
+*background:  #222222
+*foreground:  #87FF5F
 ! *color0:      #1D1F21
+! *color0:      #151515
 *color0:      #151515
 *color1:      #DB86BA
-*color2:      #74DD91
+*color2:      #33AA45
 *color3:      #E49186
 *color4:      #75DBE1
 *color5:      #B4A1DB
 *color6:      #9EE9EA
-*color7:      #F1FCF9
+! bash $
+! *color7:      #F1FCF9
+*color7:      #00FF00
 *color8:      #465463
 *color9:      #D04E9D
 *color10:     #4BC66D
@@ -52,3 +54,8 @@ rofi.line-margin:     0
 rofi.lines: 10
 rofi.terminal: st
 rofi.case-sensitive: false
+rofi.opacity: 0
+rofi.fake-transparency: false
+
+Xft.dpi: 100
+Xcursor.size: 30
