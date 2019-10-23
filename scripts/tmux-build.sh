@@ -1,7 +1,6 @@
-VERSION=2.8
+VERSION=2.9
 echo "***WARNING***: this script will override existing tmux config"
-sudo apt-get -y remove tmux
-sudo apt-get -y install wget tar libevent-dev libncurses-dev
+sudo pacman -S wget tar libevent ncurses
 wget https://github.com/tmux/tmux/releases/download/${VERSION}/tmux-${VERSION}.tar.gz
 tar xf tmux-${VERSION}.tar.gz
 rm -f tmux-${VERSION}.tar.gz

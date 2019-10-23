@@ -2,7 +2,6 @@
 # install i3lock-color
 git clone https://github.com/PandorasFox/i3lock-color
 cd i3lock-color
-sudo apt install libpam0g-dev
 
 autoreconf --force --install
 rm -rf build/

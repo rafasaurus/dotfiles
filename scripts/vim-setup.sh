@@ -8,7 +8,7 @@ AUTOLOAD_DIR="$BASE_DIR/autoload"
 mkdir -p $PLUGIN_DIR
 mkdir -p $COLORS_DIR
 mkdir -p $AUTOLOAD_DIR
-sudo apt install wget curl vim -y
+
 wget https://raw.githubusercontent.com/rafasaurus/config/master/dotfiles/.vimrc -O $HOME/.vimrc
 wget https://raw.githubusercontent.com/dracula/vim/master/colors/dracula.vim -O $HOME/.vim/colors/dracula.vim 
 

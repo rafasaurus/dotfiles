@@ -7,9 +7,9 @@ mkdir -p $FONTS_DIR
 git clone https://github.com/theleagueof/league-mono/
 cp league-mono/ttf/* $FONTS_DIR
 rm -rf league-mono
+
 # st
 git clone https://github.com/lukesmithxyz/st
-sudo apt install -y libx11-dev libxft-dev dmenu golang
 sudo make -C st install
 rm -rf st
 # xresources
