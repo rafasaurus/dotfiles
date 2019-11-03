@@ -5,9 +5,9 @@
 ! ██╔╝░██╗██║░░██║███████╗███████║╚██████╔╝╚██████╔╝██║░░██║╚██████╗███████╗███████║
 ! ╚═╝░░╚═╝╚═╝░░╚═╝╚══════╝╚══════╝░╚═════╝░░╚═════╝░╚═╝░░╚═╝░╚═════╝╚══════╝╚══════╝
 
-*.alpha: 0.78
-! *.font:	LeagueMono-ExtraBold.:pixelsize=23:antialias=true:autohint=true;
-*.font: AnonymousPro-Bold:pixelsize=24:antialias=true:autohint=true;
+*.alpha: 0.88
+*.font:	mono:pixelsize=23:antialias=true:autohint=true;
+! *.font: AnonymousPro-Bold:pixelsize=24:antialias=true:autohint=true;
 *.cursorColor:	#EEFFFF
 ! *.font:     xft:LeagueMono-Bold:pixelsize=14
 ! colors: https://github.com/elenapan/dotfiles/tree/master/.xfiles
@@ -57,5 +57,5 @@ rofi.case-sensitive: false
 rofi.opacity: 0
 rofi.fake-transparency: false
 
-Xft.dpi: 100
+Xft.dpi: 105
 Xcursor.size: 30
