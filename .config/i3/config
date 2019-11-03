@@ -95,14 +95,14 @@ bindsym $mod+Shift+space floating toggle
 bindsym $mod+a focus parent
 
 # focus the child container
-#bindsym $mod+d focus child
+bindsym $mod+c focus child
 
 set $workspace1 "1:term"
 set $workspace2 "2:web"
 set $workspace3 "3:chat"
 set $workspace4 "4:office"
 set $workspace8 "8:anki"
-set $workspace9 "9:habitica"
+set $workspace9 "9:organize"
 set $workspace10 "10:music"
 # switch to workspace
 bindsym $mod+1 workspace $workspace1
@@ -142,10 +142,10 @@ bindsym $mod+Shift+i		resize grow height 10 px or 10 ppt
 bindsym $mod+Shift+o		resize grow width 10 px or 10 ppt
 
 set $bg-color            #F080A7FF
-set $inactive-bg-color   #2f343f00
-set $text-color          #03040f00
-set $inactive-text-color #676E7D00
-set $urgent-bg-color     #05292500
+set $inactive-bg-color   #2f343fFF
+set $text-color          #03040fFF
+set $inactive-text-color #676E7DFF
+set $urgent-bg-color     #052925FF
 
 # window colors
 #                       border              background         text                 indicator
@@ -161,67 +161,30 @@ client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color      
 exec_always pkill i3status i3bar
 # exec_always --no-startup-id polybar mybar -r
 bar {
-    # This allows the use of colors with an additional alpha channe
-    # i3bar_command i3bar -t
-    # # dark adwaita
-    # colors {
-    #     background #2E2E2E
-    #         statusline #ffffff # status-letters
-    #         separator #aaaaaa
-    #         focused_workspace  #4c7899 #4d5aa9 #ffffff
-    #         active_workspace   #333333 #5f676a #ffffff
-    #         inactive_workspace #333333 #222222 #888888
-    #         urgent_workspace   #2f343a #700070 #ffffff
-    # }
-    # dark green
-    height 30
-    colors {
-        # background #2E2E2E
-        background #000000
-            statusline         #cccccc # status-letters
-            separator          #aaaaaa
-                               #border #bg     #letter
-            focused_workspace  #F080A7 #F080A7 #333333
-            active_workspace   #333333 #5f676a #ffffff
-            inactive_workspace #333333 #222222 #888888
-            urgent_workspace   #2f343a #700070 #ffffff
-    }
     font pango:DejaVu Sans Mono, Icons 12
         status_command i3status
         tray_output primary
         position top
         modifier None
         mode dock
-    # # dark purple
-    # colors {
-    #     background #282A36
-    #         statusline #ffffff # status-letters
-    #         separator #aaaaaa
-    #         focused_workspace  #4c7899 #4d5aa9 #ffffff
-    #         active_workspace   #333333 #5f676a #ffffff
-    #         inactive_workspace #333333 #222222 #888888
-    #         urgent_workspace   #2f343a #700070 #ffffff
-    # }
-    
-    # # light
-    # colors {
-    #     background #EEFFFF
-    #         statusline #000000 # status-letters
-    #         separator #101010
-    #
-    #         focused_workspace  #66aa99 #88ccbb #ffffff
-    #         active_workspace   #333333 #5f676a #ffffff
-    #         inactive_workspace #dddddd #dddddd #111111
-    #         urgent_workspace   #2f343a #900000 #ffffff
-    # }
+    # Dark purple
+    colors {
+        background #282A3600
+            statusline #ffffff # status-letters
+            separator #aaaaaa
+            focused_workspace  #4c7899 #4d5aa9 #ffffff
+            active_workspace   #333333 #5f676a #ffffff
+            inactive_workspace #333333 #222222 #888888
+            urgent_workspace   #2f343a #700070 #ffffff
+    }
 }
 
 # Pulse Audio controls
-# bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +2% #increase sound volume
-# bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -2% #decrease sound volume
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +2% #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -2% #decrease sound volume
 
-bindsym XF86AudioRaiseVolume exec --no-startup-id amixer -D pulse sset Master 4%+ #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id amixer -D pulse sset Master 4%- #decrease sound volume
+# bindsym XF86AudioRaiseVolume exec --no-startup-id amixer -D pulse sset Master 4%+ #increase sound volume
+# bindsym XF86AudioLowerVolume exec --no-startup-id amixer -D pulse sset Master 4%- #decrease sound volume
 
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 bindsym $mod+F4 exec --no-startup-id pactl set-sink-volume 0 +2% #increase sound volume
@@ -251,7 +214,6 @@ exec_always --no-startup-id feh --randomize --bg-scale --slideshow-delay 0.0001 
 
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
 exec_always xrandr --dpi 138
-# exec--no-startup-id surf habitica.com
 
 # # For screenshots and recording
 bindsym Print 		exec --no-startup-id maim $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
@@ -279,7 +241,7 @@ assign [class="spotify"] $workspace10
 assign [class="Surf"] $workspace9
 assign [class="Rhythmbox"] $workspace10
 assign [class="Chromium-browser"] $workspace2
-assign [class="Firefox"] $workspace2
+assign [class="firefox"] $workspace2
 assign [class="TelegramDesktop"] $workspace3
 assign [class="Slack"] $workspace3
 assign [class="Slack"] $workspace3
@@ -290,7 +252,8 @@ assign [class="libreoffice"] $workspace4
 assign [class="(?i)libreoffice-startcenter"] $workspace4
 assign [class="(?i)libreoffice-calc"] $workspace4
 assign [class="Anki"] $workspace8
-for_window [class="slam.py"] floating disable
+# Custom borders
+assign [class="TelegramDesktop"] border pixel 0
 exec_always --no-startup-id /home/rafael/github/config/i3-alternating-layout/alternating_layouts.py
 exec --no-startup-id dropbox start
 # exec --no-startup-id anki
@@ -310,12 +273,14 @@ bindsym $mod+b exec setxkbmap -layout 'ru' -variant 'phonetic' && xset r rate 24
 # xec_always --no-startup-id ~/.scripts/setxkmap.sh
 
 exec pa-applet
+exec volumeicon
 exec nm-applet
 exec blueman-applet
 exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
 
 # exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-for_window [class="^.*"] border pixel 5
+for_window [class="^.*"] border pixel 7
+for_window [class="firefox"] border pixel 1
 
 smart_borders on
 # smart_gaps on
@@ -369,3 +334,13 @@ mode "$screen" {
 bindsym --release $mod+Shift+p mode "$mode_power"
 bindsym $mod+x mode "$screen"
 bindsym $mod+r exec xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
+# Experimental changes
+exec clipmenud &
+bindsym $mod+v exec clipmenu
+
+# focus_follows_mouse no
+workspace_auto_back_and_forth yes
+force_display_urgency_hint 4000 ms
+
+bindsym $mod+F9 exec --no-startup-id ~/.scripts/i3cmds/dmenumount
+bindsym $mod+F10 exec --no-startup-id ~/.scripts/i3cmds/dmenuumount

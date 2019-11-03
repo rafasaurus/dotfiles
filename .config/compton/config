@@ -90,8 +90,8 @@ alpha-step = 0.06;
 menu-opacity = 0.8;                       # The opacity for menus. (default 1.0)
 inactive-opacity = 1;                 # Opacity of inactive windows. (0.1 - 1.0)
 active-opacity = 1;
-frame-opacity = 0.1;                    # Opacity of window titlebars and borders. (0.1 - 1.0)
-# inactive-opacity-override = false;      # Inactive opacity set by 'inactive-opacity' overrides value of _NET_WM_OPACITY.
+frame-opacity = 1;
+inactive-opacity-override = false;      # Inactive opacity set by 'inactive-opacity' overrides value of _NET_WM_OPACITY.
  
 ##### FADE ########################################
 
@@ -111,7 +111,7 @@ detect-rounded-corners = true;  # Detect rounded corners and treat them as recta
 # make all hidden windows completely transparent
 opacity-rule = [
   "80:class_g = 'i3-bar' && !_NET_WM_STATE@:32a",
-  "60:class_g = 'i3-frame' && !_NET_WM_STATE@:32a",
+  # "60:class_g = 'i3-frame' && !_NET_WM_STATE@:32a",
   "85:class_g = 'Nautilus'", 
   "85:class_g = 'nautilus'", 
   "80:class_g = 'code-oss'",
