@@ -1,80 +1,46 @@
 #!/bin/sh
-# Aliases
-alias performance="echo \"pstate-frequency --set g powersave\" && sudo pstate-frequency --set -g performance" \
-    powersave="echo \"pstate-frequency --set g powersave\" && sudo pstate-frequency --set -g powersave" \
-    xm="xmodmap.sh" \
+alias ka="killall" \
+	mkd="mkdir -pv" \
+	mpv="mpv --input-ipc-server=/tmp/mpvsoc$(date +%s)" \
+	calcurse="calcurse -D ~/.config/calcurse" \
+	magit="nvim -c MagitOnly" \
+	p="sudo pacman" \
+	SS="sudo systemctl" \
+	f="$FILE" \
+	g="git" \
+	trem="transmission-remote" \
+	e="$EDITOR" \
+	v="$EDITOR" \
+	x="sxiv -ft *" \
+	sdn="sudo shutdown -h now" \
+	gua="git remote | xargs -L1 git push --all" \
+	ls="ls -hN --color=auto --group-directories-first" \
 	grep="grep --color=auto" \
 	diff="diff --color=auto" \
-    rxm="resetXmodmap.sh" \
-    w3m="/usr/bin/w3m" \
-    sl="ls" \
-    r="ranger" \
-    i="sudo apt-get install" \
-    upd="sudo apt update -y" \
-    upg="sudo apt upgrade -y" \
-    open="xdg-open" \
-    red="redshift -O" \
-    ured="redshift -x" \
-    jlinkexe='/opt/SEGGER/JLink/JLinkExe' \
-    weather='curl -4 http://wttr.in/' \
-    vim="nvim" \
-    ll='ls -alF' \
-    la='ls -A' \
-    l='ls -CF' \
-    opeth="open ~/Pictures/opeth/2019-03-09_23-26-16.png &" \
-    xo="xdg-open" \
-    cp='rsync -aP' \
-    cal='cal -A 2' \
-    youtube-dl-mp3='youtube-dl --extract-audio --audio-format mp3' \
-    youtube-dl-playlist='youtube-dl -i -f mp4 --yes-playlist' \
-    CC=clang \
-    CXX=/usr/bin/clang++ \
-    smart='sudo smartctl -a /dev/nvme0' \
-    f='vim `fzf`'
+	ccat="highlight --out-format=ansi" \
+	yt="youtube-dl --add-metadata -i -o '%(upload_date)s-%(title)s.%(ext)s'" \
+	yta="yt -x -f bestaudio/best" \
+    yt_playlist="youtube-dl -citk –format mp4 –yes-playlist -c" \
+    yt_best="youtube-dl -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --merge-output-format mp4" \
+    yt_480="youtube-dl -f 135+250" \
+    yt_720="youtube-dl -f 136+250" \
+	YT="youtube-viewer" \
+	ref="shortcuts >/dev/null; source ~/.config/shortcutrc" \
+	upc="sudo pacman -Syu; pkill -RTMIN+8 i3blocks" \
+	lsp="pacman -Qett --color=always | less" \
+	ffmpeg="ffmpeg -hide_banner" \
+    ta='tmux attach -t' \
+    tad='tmux attach -d -t' \
+    ts='tmux new-session -s' \
+    tl='tmux list-sessions' \
+    tksv='tmux kill-server' \
+    tkss='tmux kill-session -t' \
+    red='redshift -O' \
+    ured='redshift -x' \
+    la='ls -a'
 
+pgrep -x dmenu && exit
+export EDITOR=vim 
 command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d" # Use neovim for vim if present.
 
-# Variables
-export EDITOR="vim"
-export NDK="/home/rafael/Android/Sdk/ndk/20.0.5594570/"
-export HOST_TAG="linux-x86_64"
-export PATH=$PATH:$HOME/workspace/ardupilot/Tools/autotest
-export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:$HOME/github/ORB_SLAM/
-export HISTFILE=~/.bash_eternal_history
-export HISTTIMEFORMAT="[%F %T] "
-export PYTHONPATH="${PYTHONPATH}:/opt/movidius/caffe/python"
-# unified bash history across tmux, and other terminal emulators
-export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
-export PATH=$PATH:/opt/telegram
-export PATH=$PATH:$HOME/.scripts
-export TERM=xterm-256color
-
-# Extract archive
-function extract {
-    if [ -z "$1" ]; then
-        echo "Usage: extract <path/file_name>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|ex|tar.bz2|tar.gz|tar.xz>"
-    else
-        if [ -f $1 ] ; then
-            case $1 in
-                *.tar.bz2)   tar xvjf ./$1    ;;
-                .tar.gz)    tar xvzf ./$1    ;;
-                *.tar.xz)    tar xvJf ./$1    ;;
-                *.lzma)      unlzma ./$1      ;;
-                *.bz2)       bunzip2 ./$1     ;;
-                *.rar)       unrar x -ad ./$1 ;;
-                *.gz)        gunzip ./$1      ;;
-                *.tar)       tar xvf ./$1     ;;
-                *.tbz2)      tar xvjf ./$1    ;;
-                *.tgz)       tar xvzf ./$1    ;;
-                *.zip)       unzip ./$1       ;;
-                *.Z)         uncompress ./$1  ;;
-                *.7z)        7z x ./$1        ;;
-                *.xz)        unxz ./$1        ;;
-                *.exe)       cabextract ./$1  ;;
-                *)           echo "extract: '$1' - unknown archive method" ;;
-            esac
-        else
-            echo "$1 - file does not exist"
-        fi
-    fi
-}
+vf() { fzf | xargs -r -I % $EDITOR % ;}

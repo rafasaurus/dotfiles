@@ -1,4 +1,4 @@
-VERSION=2.9
+VERSION=2.8
 echo "***WARNING***: this script will override existing tmux config"
 sudo pacman -S wget tar libevent ncurses
 wget https://github.com/tmux/tmux/releases/download/${VERSION}/tmux-${VERSION}.tar.gz
