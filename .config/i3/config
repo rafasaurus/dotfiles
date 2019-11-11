@@ -254,7 +254,7 @@ assign [class="(?i)libreoffice-calc"] $workspace4
 assign [class="Anki"] $workspace8
 # Custom borders
 assign [class="TelegramDesktop"] border pixel 0
-exec_always --no-startup-id /home/rafael/github/config/i3-alternating-layout/alternating_layouts.py
+exec_always --no-startup-id ~/github/config/i3-alternating-layout/alternating_layouts.py
 exec --no-startup-id dropbox start
 # exec --no-startup-id anki
 
@@ -324,15 +324,9 @@ mode "$mode_power" {
     bindsym Escape mode "default"
 }
 
-mode "$screen" {
-    bindsym b exec --no-startup-id ~/github/config/.screenlayout/built-in.sh
-    bindsym h exec --no-startup-id ~/github/config/.screenlayout/1080p_primary.sh
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-}
 # bindsym --release XF86PowerOff mode "$mode_power"
 bindsym --release $mod+Shift+p mode "$mode_power"
-bindsym $mod+x mode "$screen"
+bindsym $mod+x exec .scripts/tools/screen.sh
 bindsym $mod+r exec xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
 # Experimental changes
 exec clipmenud &
