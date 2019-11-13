@@ -17,21 +17,8 @@
 
 set $mod Mod4
 
-# Font for window titles. Will also be used by the bar unless a different font
-# is used in the bar {} block below.
-# font pango:monospace font pango: Taskbar, Cantarell 9
-
-# This font is widely installed, provides lots of unicode glyphs, right-to-left
-# text rendering and scalability on retina/hidpi displays (thanks to pango).
-#font pango:DejaVu Sans Mono 8
-
-# Before i3 v4.8, we used to recommend this one as the default:
-# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
-# The font above is very space-efficient, that is, it looks good, sharp and
-# clear in small sizes. However, its unicode glyph coverage is limited, the old
-# X core fonts rendering does not support right-to-left and this being a bitmap
-# font, it doesn’t scale on retina/hidpi displays.
-
+font pango:mono 9
+font pango:mono Taskbar, Cantarell 9
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
@@ -40,7 +27,7 @@ bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
 bindsym $mod+Shift+z exec dmenu_run
-bindsym $mod+o exec --no-startup-id "rofi -show drun -opacity \\"85\\" -font \\"DejaVu 17\\" -run-shell-command '{terminal} -e \\" {cmd}; read -n 1 -s\\"'"
+bindsym $mod+o exec --no-startup-id "rofi -show drun -opacity \\"85\\" -font \\"LeagueMono-Bold 23\\" -run-shell-command '{terminal} -e \\" {cmd}; read -n 1 -s\\"'"
 
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
@@ -89,7 +76,7 @@ bindsym $mod+e layout toggle split
 bindsym $mod+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-# bindsym $mod+space focus mode_toggle
+bindsym $mod+space focus mode_toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
@@ -157,11 +144,11 @@ client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color      
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-# bindsym $mod+m bar mode toggle
+bindsym $mod+m bar mode toggle
 exec_always pkill i3status i3bar
 # exec_always --no-startup-id polybar mybar -r
 bar {
-    font pango:DejaVu Sans Mono, Icons 12
+    font pango:monospace, Icons 12
         status_command i3status
         tray_output primary
         position top
@@ -199,7 +186,6 @@ bindsym $mod+F2 exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
 bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
 
-
 # Media player controls
 bindsym XF86AudioPlay exec playerctl play
 bindsym XF86AudioPause exec playerctl pause
@@ -210,10 +196,11 @@ exec_always feh --bg-scale ~/github/config/wallpaper/wall_8.png
 set $wallpaper_folder ~/github/config/wallpaper
 exec_always --no-startup-id feh --randomize --bg-scale --slideshow-delay 0.0001 $wallpaper_folder
 
-exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
+# Uncoment this line if you are using gnome-shell under the hood
+# exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
 exec_always xrandr --dpi 138
 
-# # For screenshots and recording
+# For screenshots and recording
 bindsym Print 		exec --no-startup-id maim $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
 bindsym Shift+Print 	exec --no-startup-id maim -o --nodecorations 2 -s $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
 bindsym $mod+Print		exec --no-startup-id dmenurecord
@@ -221,15 +208,10 @@ bindsym $mod+Scroll_Lock	exec --no-startup-id "killall screenkey || screenkey"
 bindsym $mod+Delete		exec $stoprec
 bindsym XF86Launch1		exec --no-startup-id xset dpms force off
 
-# export TERMINAL="st"
-set $term --no-startup-id $TERMINAL
-bindsym $mod+Return 		exec st
+set $TERMINAL st
+bindsym $mod+Return exec $TERMINAL
 
 # compositor setup
-# exec xcompmgr -c -n # -f for fade
-# setup from reddit
-# https://www.reddit.com/r/unixporn/comments/3crspe/xfce4_sorry_for_xfce4numix_post_9435_but_i_like/
-# exec_always --no-startup-id compton --config ~/.config/compton/config --vsync opengl --mark-wmwin-focused --mark-ovredir-focused -b
 exec_always bash ~/.scripts/compton.sh
 
 assign [class="St"] $workspace1
