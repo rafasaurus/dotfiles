@@ -199,8 +199,6 @@ bindsym $mod+F2 exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
 bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
 
-# Touchpad controls
-bindsym XF86TouchpadToggle exec /some/path/toggletouchpad.sh # toggle touchpad
 
 # Media player controls
 bindsym XF86AudioPlay exec playerctl play
@@ -259,9 +257,8 @@ exec --no-startup-id dropbox start
 # exec --no-startup-id anki
 
 # Language and Keyboard Cursor Speed
-#TODO not the best solution
+# TODO not the best solution
 bindsym Caps_Lock exec --no-startup-id ~/.scripts/caps_state.sh && ~/.scripts/caps_state.sh && sleep 50
-bindsym $mod+Tab exec ~/.scripts/setxkmap.sh
 # bindsym $mod+n exec setxkbmap -layout 'us' && xset r rate 240 50
 # bindsym $mod+b exec setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'am,us' -variant 'phonetic,' && xset r rate 240 50
 # bindsym $mod+v exec setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'ru,us' -variant 'phonetic,' && xset r rate 240 50
@@ -312,10 +309,10 @@ workspace $workspace2 gaps outer 0
 workspace $workspace9 gaps inner 0
 workspace $workspace9 gaps outer 0
 
-set $mode_power [l]ock | [p]oweroff | [s]uspend | [o]logout
 set $screen [b]uilt-in | [h]dmi
 
 bindsym --release $mod+Shift+p exec ~/.scripts/tools/power.sh
+bindsym XF86PowerOff exec ~/.scripts/tools/power.sh
 bindsym $mod+x exec .scripts/tools/screen.sh
 bindsym $mod+r exec xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
 # Experimental changes
