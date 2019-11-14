@@ -1,0 +1,2 @@
+#!/bin/sh
+`printf "xdg-open\nviewnior\nvlc\nnautilus" | dmenu -i -p "Open with.." ` $1
