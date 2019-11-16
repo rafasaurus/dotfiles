@@ -14,9 +14,7 @@ sudo make -C st install
 rm -rf st
 # xresources
 wget https://raw.githubusercontent.com/rafasaurus/config/master/dotfiles/.Xresources -O $HOME/.Xresources
-if [  -n "$(uname -a | grep Ubuntu)" ]; then
-    sudo cp st.desktop /usr/share/applications
-fi
+sudo cp st.desktop /usr/share/applications
 
 mkdir -p $HOME/gocode
 export GOPATH=$HOME/gocode
