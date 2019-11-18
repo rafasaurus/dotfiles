@@ -294,9 +294,9 @@ workspace $workspace9 gaps outer 0
 
 set $screen [b]uilt-in | [h]dmi
 
-bindsym --release $mod+Shift+p exec ~/.scripts/tools/power
-bindsym XF86PowerOff exec ~/.scripts/tools/power
-bindsym $mod+x exec .scripts/tools/screen
+bindsym --release $mod+Shift+p exec ~/.scripts/commands/power
+bindsym XF86PowerOff exec ~/.scripts/commands/power
+bindsym $mod+x exec .scripts/commands/screen
 bindsym $mod+r exec xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
 # Experimental changes
 exec clipmenud &
