@@ -1,5 +1,5 @@
 #!/bin/bash
-# requires xdotool package
+# requires xdotool package: default in Arch Linux
 state="$(xset q | grep Caps | awk 'BEGIN{FS=" "} {print  $4}')"
 if [ "$state" = "on" ];
 then 
