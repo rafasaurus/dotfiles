@@ -1,4 +1,11 @@
-" a-vim-config
+"        _                    
+" __   _(_)_ __ ___  _ __ ___ 
+" \ \ / / | '_ ` _ \| '__/ __|
+"  \ V /| | | | | | | | | (__ 
+"   \_/ |_|_| |_| |_|_|  \___|
+"                             
+"
+set encoding=UTF-8
 let vim_plug_just_installed = 0
 let vim_plug_path = expand('~/.vim/autoload/plug.vim')
 if !filereadable(vim_plug_path)
@@ -14,71 +21,80 @@ if vim_plug_just_installed " manually load vim-plug the first time
 endif
 
 call plug#begin('~/.vim/plugged')
-
-" Plug 'scrooloose/syntastic'
-" Plug 'neomake/neomake'
-
-" npm install -g livedown
-Plug 'mrtazz/simplenote.vim'
-Plug 'shime/vim-livedown'
-Plug 'tfnico/vim-gradle'
-Plug 'xuhdev/vim-latex-live-preview'
-Plug 'GGalizzi/cake-vim'
 Plug 'airblade/vim-gitgutter'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
-Plug 'easymotion/vim-easymotion'
-Plug 'terryma/vim-multiple-cursors'
+Plug 'rafi/awesome-vim-colorschemes'
 Plug 'itchyny/lightline.vim'
 Plug 'tomtom/tcomment_vim'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'mboughaba/i3config.vim'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'terryma/vim-multiple-cursors'
 Plug 'junegunn/goyo.vim'
-Plug 'rking/ag.vim'
-Plug 'dracula/vim'
-" Plug 'pignacio/vim-yapf-format'
-Plug 'rafi/awesome-vim-colorschemes'
-
+Plug 'coldfix/hexHighlight'
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/syntastic'
+" WORKS WITH NERDTREE:
+Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
-if vim_plug_just_installed
-    echo "Installing Bundles, please ignore key map error messages"
-    :PlugInstall
-endif
+" PLUGIN CONFIGS:
+let g:lightline = {'colorscheme': 'wombat'}
+let g:syntastic_python_checkers = ['pylint']
+" T-Comment
+map <leader>c <c-_><c-_> 
 
-filetype plugin on
-filetype indent on
-autocmd VimLeave * call system("xsel -ib", getreg('+')) " Prevent Vim from clearing the clipboard on exit
-
-" tabs and spaces handling
+" Tabs and Spaces
 set expandtab
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
-set nocompatible " no vi-compatible
+" Enable the current millenium
+set nocompatible
+" Search for every subdirectory
+set path+=**
+set wildmenu
+
+syntax enable
+" Default file browser
+filetype plugin on
+filetype indent on
 set incsearch " search as characters are entered
 set hlsearch " highlight matches
-" set cursorline  " highlight current line
 set showmatch " highlight matching [{()}]
-syntax on
 set scrolloff=2 " keep cursor 3 lines away from screen border
-set wildmenu
-set path+=** " search for every subdirectory
 set laststatus=2 " for powerline
-set noswapfile
-set timeoutlen=300 " faster insert-normal switch
-set ttimeoutlen=0
 
-" ============== better backup, swap and undos storage ==============
+" CREATE THE TAGS FILE INSTALL CTAGS FIRST:
+command! MakeTags !ctags -R .
+" - Use ^] to jump to tag under cursor
+" - Use ^t to jump back up the tags stack
+" - Use ^t for ambigious tags
+
+" SHORTCUTS FOR TABS:
+nnoremap tn :tabnew<Space>
+nnoremap tk :tabnext<CR>
+nnoremap tj :tabprev<CR>
+nnoremap th :tabfirst<CR>
+nnoremap tl :tablast<CR>
+
+" SAVE XRESOURCES IN EVERY WRITE AND RELOAD:
+autocmd BufWritePost ~/.Xresources,~/.Xdefaults !xrdb %
+autocmd VimLeave * call system("xsel -ib", getreg('+')) " Prevent Vim from clearing the clipboard on exit
+
+" RUNING MAKE WITGH PYTHON:
+autocmd Filetype python set makeprg=python2\ %:S
+" NOW WE CAN:
+"   -   Run :make
+"   -   :cl to list errors
+"   -   cc# to jump to error by number
+"   -   :cn and :cp to navigate forward and backward
+
+" BETTER BACKUP AND RESTORE MECHANISM:
 set directory=~/.vim/dirs/tmp     " directory to place swap files in
 set backup                        " make backup files
 set backupdir=~/.vim/dirs/backups " where to put backup files
 set undofile                      " persistent undos - undo after you re-open the file
 set undodir=~/.vim/dirs/undos
-
 let g:yankring_history_dir = '~/.vim/dirs/' " store yankring history file there too
-
 if !isdirectory(&backupdir) " create needed directories if they don't exist
     call mkdir(&backupdir, "p")
 endif
@@ -88,86 +104,20 @@ endif
 if !isdirectory(&undodir)
     call mkdir(&undodir, "p")
 endif
-if has("autocmd") " to open the file where you left of
+
+" OPEN THE FILE WHERE YOU LEFT OF:
+if has("autocmd")
     au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | 
 endif
-" split
-map <silent> <C-q> <m-w>v
-map <silent> <C-s> <c-w>s
-map <silent> <C-h> <c-w>h
-map <silent> <C-j> <c-w>j
-map <silent> <C-k> <c-w>k
-map <silent> <C-l> <c-w>l
-" resize split
-nnoremap <C-left> :vertical resize -5<cr>
-nnoremap <C-down> :resize +5<cr>
-nnoremap <C-up> :resize -5<cr>
-nnoremap <C-right> :vertical resize +5<cr>
-" clipboard copy
+" RESIZE SPLIT:
+nnoremap <C-h> :vertical resize -5<cr>
+nnoremap <C-j> :resize +5<cr>
+nnoremap <C-k> :resize -5<cr>
+nnoremap <C-l> :vertical resize +5<cr>
+" CLIPBOARD COPY:
 map qq "+
 map qw "+
-map <C-h> <Home>
-map <C-l> <End> 
-nnoremap tn :tabnew<Space>
-nnoremap tk :tabnext<CR>
-nnoremap tj :tabprev<CR>
-nnoremap th :tabfirst<CR>
-nnoremap tl :tablast<CR>
-" latex preview
-map <leader>t :LLPStartPreview
-" livedownvim
-nmap <leader>m :LivedownToggle<CR>
-" fuzzy finder
-map <leader>fz :Files<CR> 
-" T-Comment
-map <leader>c <c-_><c-_> 
-map  <Leader>f <Plug>(easymotion-bd-f) " <Leader>f{char} to move to {char}
-nmap <Leader>f <Plug>(easymotion-overwin-f)
-nmap <Leader> <Plug>(easymotion-overwin-f2) " s{char}{char} to move to {char}{char}
-map <Leader>l <Plug>(easymotion-bd-jk) " Move to line
-nmap <Leader>l <Plug>(easymotion-overwin-line)
-map  <Leader>w <Plug>(easymotion-bd-w) " Move to word
-nmap <Leader>w <Plug>(easymotion-overwin-w)
-highlight Comment ctermfg=green
-map <leader>ag :Ag!
-" e    to open file and close the quickfix window
-" o    to open (same as enter)
-" go   to preview file (open but maintain focus on ag.vim results)
-" t    to open in new tab
-" T    to open in new tab silently
-" h    to open in horizontal split
-" H    to open in horizontal split silently
-" v    to open in vertical split
-" gv   to open in vertical split silently
-" q    to close the quickfix window
 
-let g:lightline = {'colorscheme': 'wombat'}
-" let g:lightline = {'colorscheme': 'powerline'}
-command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
-" ctr + ] forward
-" ctr + t backward
-" command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q /usr/include .
-" command! MakeTags !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q --fields=+l --languages=python --python-kinds=-iv -f ./tags
-" call neomake#configure#automake('nrwi', 500)
-" let g:neomake_python_enabled_makers = ['flake8']
-:noremap <leader>u :w<Home>silent <End> !urlview<CR>&
-" color dracula
-color pablo
-" Run xrdb whenever Xdefaults or Xresources are updated.
-autocmd BufWritePost ~/.Xresources,~/.Xdefaults !xrdb %
-set nu
-
-autocmd VimEnter * call LoadSession()
-autocmd VimLeave * call SaveSession()
-
-function! SaveSession()
-    execute 'mksession! $HOME/.vim/sessions/session.vim'
-endfunction
-
-function! LoadSession()
-    if argc() == 0
-        execute 'source $HOME/.vim/sessions/session.vim'
-    endif
-endfunction
-
-color PaperColor
+set number
+set relativenumber
+color OceanicNext
