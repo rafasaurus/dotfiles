@@ -89,6 +89,7 @@ set $workspace1 "1:term"
 set $workspace2 "2:web"
 set $workspace3 "3:chat"
 set $workspace4 "4:office"
+set $workspace5 "5:media"
 set $workspace8 "8:anki"
 set $workspace9 "9:organize"
 set $workspace10 "10:music"
@@ -97,7 +98,7 @@ bindsym $mod+1 workspace $workspace1
 bindsym $mod+2 workspace $workspace2
 bindsym $mod+3 workspace $workspace3
 bindsym $mod+4 workspace $workspace4
-bindsym $mod+5 workspace 5
+bindsym $mod+5 workspace $workspace5
 bindsym $mod+6 workspace 6
 bindsym $mod+7 workspace 7
 bindsym $mod+8 workspace $workspace8
@@ -109,7 +110,7 @@ bindsym $mod+Shift+1 move container to workspace $workspace1
 bindsym $mod+Shift+2 move container to workspace $workspace2
 bindsym $mod+Shift+3 move container to workspace $workspace3
 bindsym $mod+Shift+4 move container to workspace $workspace4
-bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+5 move container to workspace $workspace5
 bindsym $mod+Shift+6 move container to workspace 6
 bindsym $mod+Shift+7 move container to workspace 7
 bindsym $mod+Shift+8 move container to workspace $workspace8
@@ -129,7 +130,7 @@ bindsym $mod+Shift+u		resize shrink height 10 px or 10 ppt
 bindsym $mod+Shift+i		resize grow height 10 px or 10 ppt
 bindsym $mod+Shift+o		resize grow width 10 px or 10 ppt
 
-set $bg-color            #F080A7FF
+set $bg-color            #AFD700
 set $inactive-bg-color   #2f343fFF
 set $text-color          #03040fFF
 set $inactive-text-color #676E7DFF
@@ -146,11 +147,11 @@ client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color      
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bindsym $mod+m bar mode toggle
-exec_always pkill i3status i3bar
+exec_always pkill py3status i3bar
 # exec_always --no-startup-id polybar mybar -r
 bar {
     font pango:monospace, Icons 12
-        status_command i3status
+        status_command py3status
         tray_output primary
         position top
         modifier None
@@ -231,6 +232,8 @@ assign [class="libreoffice-calc"] $workspace4
 assign [class="libreoffice"] $workspace4
 assign [class="(?i)libreoffice-startcenter"] $workspace4
 assign [class="(?i)libreoffice-calc"] $workspace4
+assign [class="Xfce4-terminal"] $workspace10
+assign [class="vlc"] $workspace5
 assign [class="Anki"] $workspace8
 # Custom borders
 assign [class="TelegramDesktop"] border pixel 0
@@ -308,3 +311,21 @@ force_display_urgency_hint 4000 ms
 
 bindsym $mod+F9 exec --no-startup-id ~/.scripts/i3cmds/dmenumount
 bindsym $mod+F10 exec --no-startup-id ~/.scripts/i3cmds/dmenuumount
+# for_window [class="^.*"] border pixel 7
+
+# #---Dropdown Windows---# #
+# General dropdown window traits. The order can matter.
+for_window [instance="dropdown_*"] floating enable
+for_window [instance="dropdown_*"] move scratchpad
+for_window [instance="dropdown_*"] sticky enable
+for_window [instance="dropdown_*"] scratchpad show
+for_window [instance="dropdown_*"] move position center
+
+# Bindings to make the webcam float and stick.
+for_window [class="vlc"] floating enable
+for_window [class="vlc"] sticky enable
+for_window [class="vlc"] border pixel 1
+for_window [class="vlc"] resize set 300 200
+no_focus [class="vlc"]
+
+bindsym $mod+u			sticky toggle
