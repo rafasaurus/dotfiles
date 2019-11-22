@@ -22,9 +22,14 @@ order += "volume master"
 # order += "load"
 order += "cpu_usage"
 order += "cpu_temperature 0"
+order += "sysdata"
 # order += "cpu_temperature 1"
-order += "cpu_frequency 0"
+# order += "cpu_temperature 2"
+order += "memory"
 order += "disk /"
+# order += "backlight"
+# order += "keyboard_layout"
+order += "net_rate"
 # order += "ipv6"
 # order += "run_watch DHCP"
 # order += "run_watch VPN"
@@ -53,18 +58,28 @@ load {
 cpu_usage {
 	format = " CPU: %usage "
 }
-# cpu_frequency 0 {
-#     format = "lscpu | grep CPU\ MHz"
-# }
+
+sysdata {
+    cpu_freq_unit = 'MHz '
+    format = " [{cpu_freq_avg}] Mhz"
+    cache_timeout = 1
+    high_threshold = 2000
+}
+
 cpu_temperature 0 {
 	format = " %degrees°C "
-	path = "/sys/devices/platform/coretemp.0/hwmon/hwmon2/temp2_input"
+	path = "/sys/devices/platform/coretemp.0/hwmon/hwmon4/temp1_input"
 	max_threshold = 70
 }
 
 cpu_temperature 1 {
 	format = " %degrees°C "
-	path = "/sys/devices/platform/coretemp.0/hwmon/hwmon2/temp3_input"
+	path = "/sys/devices/platform/coretemp.0/hwmon/hwmon4/temp2_input"
+	max_threshold = 70
+}
+cpu_temperature 2 {
+	format = " %degrees°C "
+	path = "/sys/devices/platform/coretemp.0/hwmon/hwmon4/temp3_input"
 	max_threshold = 70
 }
 
@@ -101,4 +116,30 @@ battery 0 {
     integer_battery_capacity = true
 	threshold_type = "time"
 	path = "/sys/class/power_supply/BAT0/uevent"
+}
+
+memory {
+        format = "M:%percentage_used"
+        threshold_degraded = "10%"
+        format_degraded = "MEMORY: %free"
+}
+
+backlight {
+    cache_timeout = 0   
+    format = " L: {level}% "
+}
+
+keyboard_layout {
+    cache_timeout = 5
+    format = " {layout}"
+    color = "#FFFFFF"
+    cache_timeout = 0.1
+}
+
+net_rate {
+    # format = "{down} {up}"
+    format = "{total}"
+    precision = 0
+    format_no_connection = ""
+    cache_timeout = 0.85
 }
