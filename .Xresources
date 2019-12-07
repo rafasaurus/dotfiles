@@ -6,7 +6,7 @@
 ! ╚═╝░░╚═╝╚═╝░░╚═╝╚══════╝╚══════╝░╚═════╝░░╚═════╝░╚═╝░░╚═╝░╚═════╝╚══════╝╚══════╝
 
 *.alpha: 0.88
-*.font:	mono:pixelsize=23:antialias=true:autohint=true;
+*.font:	mono:pixelsize=17:antialias=true:autohint=true;
 ! *.font: AnonymousPro-Bold:pixelsize=24:antialias=true:autohint=true;
 *.cursorColor:	#EEFFFF
 ! *.font:     xft:LeagueMono-Bold:pixelsize=14
@@ -41,6 +41,7 @@
 ! rofi.color-active: #4d1b2b34, #6699cc, #4d343d46, #4d6699cc, #d8dee9
 ! rofi.color-urgent: #4d1b2b34, #ec5f67, #4d343d46, #4dec5f67, #d8dee9
 
+rofi.font: mono 14
 rofi.modi: run,ssh,window
 rofi.separator-style: solid
 rofi.show-icons: true

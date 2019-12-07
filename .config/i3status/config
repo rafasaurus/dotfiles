@@ -17,10 +17,11 @@ general {
 	interval = 2
 }
 
-order += "wireless wlp58s0"
+# order += "wireless wlp58s0"
 order += "volume master"
 # order += "load"
 order += "cpu_usage"
+order += "ethernet enp0s20f0u1"
 order += "cpu_temperature 0"
 order += "sysdata"
 # order += "cpu_temperature 1"
@@ -40,6 +41,10 @@ order += "tztime local"
 wireless wlp58s0 {
     format_up = "W:(%quality at %essid, %bitrate)%ip"
     format_down = "W:down"
+}
+ethernet enp0s20f0u1 {
+    format_up = "E: %ip (%speed)"
+    format_down = "E:down"
 }
 
 volume master {
@@ -87,7 +92,7 @@ disk "/" {
 	format = " %avail:/ " 
 }
 
-wireless wlp2s0 {
+wireless wlp58s0 {
 	format_up = " W: (%quality at %essid) %ip "
 	format_down = " WiFi Down "
 }
