@@ -168,31 +168,6 @@ bar {
     }
 }
 
-# Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +2% #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -2% #decrease sound volume
-
-# bindsym XF86AudioRaiseVolume exec --no-startup-id amixer -D pulse sset Master 4%+ #increase sound volume
-# bindsym XF86AudioLowerVolume exec --no-startup-id amixer -D pulse sset Master 4%- #decrease sound volume
-
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
-bindsym $mod+F4 exec --no-startup-id pactl set-sink-volume 0 +2% #increase sound volume
-bindsym $mod+F3 exec --no-startup-id pactl set-sink-volume 0 -2% #decrease sound volume
-bindsym $mod+F2 exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
-
-# bindsym $mod+u exec --no-startup-id pactl set-sink-volume 0 +2% #increase sound volume
-# bindsym $mod+d exec --no-startup-id pactl set-sink-volume 0 -2% #decrease sound volume
-# bindsym $mod+m exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
-
-# Sreen brightness controls
-bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
-bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
-
-# Media player controls
-bindsym XF86AudioPlay exec playerctl play-pause
-bindsym XF86AudioNext exec playerctl next
-bindsym XF86AudioPrev exec playerctl previous
-
 exec_always feh --bg-scale ~/github/config/wallpaper/wall_8.png
 set $wallpaper_folder ~/github/config/wallpaper
 exec_always --no-startup-id feh --randomize --bg-scale --slideshow-delay 0.0001 $wallpaper_folder
@@ -200,14 +175,6 @@ exec_always --no-startup-id feh --randomize --bg-scale --slideshow-delay 0.0001 
 # Uncoment this line if you are using gnome-shell under the hood
 # exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
 exec_always xrandr --dpi 138
-
-# For screenshots and recording
-bindsym Print 		exec --no-startup-id maim $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
-bindsym Shift+Print 	exec --no-startup-id maim -o --nodecorations 2 -s $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
-bindsym $mod+Print		exec --no-startup-id dmenurecord
-bindsym $mod+Scroll_Lock	exec --no-startup-id "killall screenkey || screenkey"
-bindsym $mod+Delete		exec $stoprec
-bindsym XF86Launch1		exec --no-startup-id xset dpms force off
 
 set $TERMINAL st
 bindsym $mod+Return exec $TERMINAL
@@ -241,19 +208,6 @@ exec_always --no-startup-id ~/github/config/i3-alternating-layout/alternating_la
 exec --no-startup-id dropbox start
 # exec --no-startup-id anki
 
-# Language and Keyboard Cursor Speed
-# TODO not the best solution
-bindsym Caps_Lock exec --no-startup-id ~/.scripts/caps_state.sh && ~/.scripts/caps_state.sh && sleep 50
-# bindsym $mod+n exec setxkbmap -layout 'us' && xset r rate 240 50
-# bindsym $mod+b exec setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'am,us' -variant 'phonetic,' && xset r rate 240 50
-# bindsym $mod+v exec setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'ru,us' -variant 'phonetic,' && xset r rate 240 50
-bindsym $mod+n exec setxkbmap -layout 'am' -variant 'phonetic' && xset r rate 240 50
-bindsym $mod+b exec setxkbmap -layout 'ru' -variant 'phonetic' && xset r rate 240 50
-# setxkbmap -option grp:switch,grp:alt_space_toggle,grp_led:scroll,compose:menu -layout 'us,ru,am' -variant ',phonetic,phonetic' && xset r rate 240 50
-# setxkbmap -layout 'us,ru,am' -variant ',phonetic,phonetic' && xset r rate 240 50
-# exec_always --no-startup-id ~/.scripts/caps_state.sh
-# xec_always --no-startup-id ~/.scripts/setxkmap.sh
-
 exec pa-applet
 exec volumeicon
 exec nm-applet
@@ -283,11 +237,8 @@ bindsym $mod+Shift+s		gaps inner current minus 10
 # bindsym $mod+Shift+Tab workspace prev
 
 # bindsym $mod+t			    split toggle
-bindsym $mod+t			    exec ~/.scripts/tools/tools 
 bindsym $mod+Shift+t		gaps inner current set 15; gaps outer current set 15
 bindsym $mod+Shift+d		gaps inner current set 0; gaps outer current set 0
-
-bindsym $mod+Shift+f		exec --no-startup-id firefox
 
 # no gaps for workspaces
 workspace $workspace2 gaps inner 0
@@ -297,20 +248,13 @@ workspace $workspace9 gaps outer 0
 
 set $screen [b]uilt-in | [h]dmi
 
-bindsym --release $mod+Shift+p exec ~/.scripts/commands/power
-bindsym XF86PowerOff exec ~/.scripts/commands/power
-bindsym $mod+x exec .scripts/commands/screen
-bindsym $mod+r exec xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
 # Experimental changes
 exec clipmenud &
-bindsym $mod+v exec clipmenu
 
 # focus_follows_mouse no
 workspace_auto_back_and_forth yes
 force_display_urgency_hint 4000 ms
 
-bindsym $mod+F9 exec --no-startup-id ~/.scripts/i3cmds/dmenumount
-bindsym $mod+F10 exec --no-startup-id ~/.scripts/i3cmds/dmenuumount
 # for_window [class="^.*"] border pixel 7
 
 # #---Dropdown Windows---# #
@@ -323,9 +267,9 @@ for_window [instance="dropdown_*"] move position center
 
 # Bindings to make the webcam float and stick.
 for_window [class="vlc"] floating enable
-for_window [class="vlc"] sticky enable
-for_window [class="vlc"] border pixel 1
+for_window [class="vlc"] sticky disable
+for_window [class="vlc"] border pixel 2
 for_window [class="vlc"] resize set 300 200
 no_focus [class="vlc"]
 
-bindsym $mod+u			sticky toggle
+bindsym $mod+u sticky toggle
