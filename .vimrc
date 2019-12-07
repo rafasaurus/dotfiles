@@ -121,3 +121,6 @@ map qw "+
 set number
 set relativenumber
 color OceanicNext
+" Update bindekeys when sxhdrc is updated
+autocmd BufWritePost *sxhkdrc !pkill sxhkd; setsid sxhkd &
+autocmd BufWritePost ~/.Xresources,~/.Xdefaults !xrdb %
