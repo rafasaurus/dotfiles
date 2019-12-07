@@ -1,0 +1,40 @@
+# install xbindkeys and sxkhd
+# TODO
+# check dwm keybindings for already grabbed ones
+XF86AudioMute
+    pactl set-sink-mute 0 toggle
+XF86AudioPlay
+    playerctl play-pause
+XF86AudioNext
+    playerctl next
+XF86AudioPrev
+    playerctl previous
+XF86AudioRaiseVolume
+    pactl set-sink-volume 0 +2% #increase sound volume
+XF86AudioLowerVolume
+    pactl set-sink-volume 0 -2% #decrease sound volume
+XF86MonBrightnessUp
+    xbacklight -inc 20 # increase screen brightness
+XF86MonBrightnessDown
+    xbacklight -dec 20 # decrease screen brightness
+Print
+    maim $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
+shift+Print
+    maim -o --nodecorations 2 -s $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
+
+Caps_Lock
+    ~/.scripts/caps_state.sh && ~/.scripts/caps_state.sh && sleep 50
+super+n
+    setxkbmap -layout 'am' -variant 'phonetic' && xset r rate 240 50
+super+b
+    setxkbmap -layout 'ru' -variant 'phonetic' && xset r rate 240 50
+super+shift+p
+    ~/.scripts/commands/power
+XF86PowerOff
+    ~/.scripts/commands/power
+super+x
+    ~/.scripts/commands/screen
+super+o
+    rofi -show drun
+super+r
+    xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
