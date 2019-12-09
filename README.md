@@ -1,12 +1,8 @@
-##### tmux
-for tmux plugin you should install [tpm](https://github.com/tmux-plugins/tpm)
-```
-    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-```
-press `shift + I` for installation of plugins
+rafasaurus's dotfiles
+---------------------
 
-##### noevim setup
-```
-ln -s ~/.vimrc ~/.nvimrc
-ln -s ~/.vim ~/.nvim
-```
+Uses GNU Stow – https://www.gnu.org/software/stow/
+
+Usage: 
+cd ~
+git clone https://github.com/rafasaurus/dotfiles
