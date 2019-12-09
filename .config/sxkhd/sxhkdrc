@@ -21,7 +21,6 @@ Print
     maim $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
 shift+Print
     maim -o --nodecorations 2 -s $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
-
 Caps_Lock
     ~/.scripts/caps_state.sh && ~/.scripts/caps_state.sh && sleep 50
 super+n

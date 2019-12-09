@@ -3,7 +3,7 @@
 # This file runs when a DM logs you into a graphical session.
 # If you use startx/xinit like a Chad, this file will also be sourced.
 
-feh --bg-scale ~/github/config/wallpaper/wall_4.png # setting background
+feh --bg-scale ~/wallpaper/wall_5.jpg # setting background
 compton --config ~/.config/compton/config --vsync opengl --mark-wmwin-focused --mark-ovredir-focused -b # for window blur effect
 dwmbar &		# script for updating the status bar
 dunst &			# dunst for notifications

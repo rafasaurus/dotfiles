@@ -20,8 +20,8 @@ alias ka="killall" \
 	ccat="highlight --out-format=ansi" \
 	yt="youtube-dl --add-metadata -i -o '%(upload_date)s-%(title)s.%(ext)s'" \
 	yta="yt -x -f bestaudio/best" \
-    yt_playlist="youtube-dl -citk –format mp4 –yes-playlist -c" \
-    yt_best="youtube-dl -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --merge-output-format mp4" \
+    yt_playlist="youtube-dl -f 136+250 -citk –format mp4 –yes-playlist -c" \
+    yt_best="youtube-dl -f 248+250" \
     yt_480="youtube-dl -f 135+250" \
     yt_720="youtube-dl -f 136+250" \
 	YT="youtube-viewer" \
@@ -37,10 +37,15 @@ alias ka="killall" \
     tkss='tmux kill-session -t' \
     red='redshift -O' \
     ured='redshift -x' \
-    la='ls -a'
+    la='ls -a' \
+    battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0'
 
 pgrep -x dmenu && exit
 export EDITOR=vim 
 command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d" # Use neovim for vim if present.
+
+PATH=$PATH:$HOME/.scripts/tools
+PATH=$PATH:$HOME/.gem/ruby/2.6.0/bin
+export PATH
 
 vf() { fzf | xargs -r -I % $EDITOR % ;}
