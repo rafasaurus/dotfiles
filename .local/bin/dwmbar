@@ -6,9 +6,37 @@
 # Set the deliminter character.
 delim="|"
 
+getNet(){
+
+   RXBN='cat /sys/class/net/$INTERFACE/statistics/rx_bytes'
+   TXBN='cat /sys/class/net/$INTERFACE/statistics/tx_bytes'
+
+   RXR='echo '
+   RXR=`echo "($RXBN - $RXB) / 1024 / $SLEEP" | xargs printf "%.2f"`
+   TXR=`echo "($TXBN - $TXB) / 1024 / $SLEEP" | xargs printf "%.2f"`
+   echo -ne "up : $RXR kB/s down : $TXR kB/s "
+
+}
+
+mem(){
+  mem=`free | awk '/Mem/ {printf "%d MiB/%d MiB\n", $3 / 1024.0, $2 / 1024.0 }'`
+  echo -e "🖪 $mem"
+}
+
+cpu(){
+  read cpu a b c previdle rest < /proc/stat
+  prevtotal=$((a+b+c+previdle))
+  sleep 0.5
+  read cpu a b c idle rest < /proc/stat
+  total=$((a+b+c+idle))
+  cpu=$((100*( (total-prevtotal) - (idle-previdle) ) / (total-prevtotal) ))
+  echo -e "💻 $cpu% cpu"
+}
+
 # testweather checks to see if the most recent forecast is up to date.  If it
 # isn't, it downloads a new weather forecast, then signals to update the
 # statusbar. Gets weather report from wttr.in.
+location=stepanakert
 testweather() { \
 	[ "$(stat -c %y "$HOME/.local/share/weatherreport" 2>/dev/null | cut -d' ' -f1)" != "$(date '+%Y-%m-%d')" ] &&
 		ping -q -c 1 1.1.1.1 >/dev/null &&
@@ -25,6 +53,10 @@ status() { \
 	# Get current mpd track filename or artist - title if possible.
 	mpc -f "[[%artist% - ]%title%]|[%file%]" 2>/dev/null | grep -v "volume:" | head -n 1 && echo "$delim"
 
+    mem
+    echo "$delim"
+    cpu
+    echo "$delim"
 	# If the weather report is current, show daily precipitation chance,
 	# low and high.  Don't even bother to understand this one unless you
 	# have all day. Takes the weather report format from wttr.in and makes
@@ -40,9 +72,9 @@ status() { \
 
 	echo "$delim"
 
-	# # Wifi quality percentage and  icon if ethernet is connected.
-	# grep "^\s*w" /proc/net/wireless | awk '{ print "", int($3 * 100 / 70) "%" }'
-	# sed "s/down//;s/up//" /sys/class/net/e*/operstate
+	# Wifi quality percentage and  icon if ethernet is connected.
+	grep "^\s*w" /proc/net/wireless | awk '{ print "", int($3 * 100 / 70) "%" }'
+	sed "s/down//;s/up//" /sys/class/net/e*/operstate
 
 	# Show unread mail if mutt-wizard is installed.
 	command -v mw >/dev/null 2>&1 &&
@@ -53,6 +85,8 @@ status() { \
 	# Will show all batteries with approximate icon for remaining power.
 	for x in /sys/class/power_supply/BAT?/capacity;
 	do
+    echo `cat $x`%;
+    echo $(( $(cat /sys/class/power_supply/BAT0/current_now)/1000 * $(cat /sys/class/power_supply/BAT0/voltage_now) / 1000000)) | sed 's/..$/.&/'
 	case "$(cat $x)" in
 		100|9[0-9])	echo "" ;;
 		8[0-9]|7[0-9])	echo "" ;;
@@ -81,5 +115,5 @@ while :; do
 	# Sleep for a minute after changing the status bar before updating it
 	# again. Note that the `refbar` "refreshes" the statusbar by killing
 	# this command. Feel free to change the time interval if you want.
-	sleep 1m
+	sleep 1s
 done
