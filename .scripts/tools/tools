@@ -1,0 +1,11 @@
+#!/bin/sh
+choices="cpupower\nfan_max\nfan_min\nfan_default"
+
+chosen=$(echo -e "$choices" | dmenu -p "Choose what to do ?" -i -l 15)
+case "$chosen" in
+    cpupower) sudo -A cpupower-gui;;
+    fan_max) i8kfan - 2 &;;
+    fan_min) i8kfan - 1 &;;
+    fan_default) i8kfan - 0 &;;
+    logout) i3-msg exit;;
+esac
