@@ -1,7 +1,7 @@
 #!/bin/sh
 choices="primary\nhdmi\narandr"
 
-chosen=$(echo -e "$choices" | dmenu -i -p "Choose screen option")
+chosen=$(echo -e "$choices" | dmenu -i -p "Choose screen option" -l 15)
 case "$chosen" in
     primary) bash ~/.screenlayout/built-in.sh;;
     hdmi) bash ~/.screenlayout/1080p_primary.sh;;

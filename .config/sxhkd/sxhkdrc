@@ -1,23 +1,24 @@
 # install xbindkeys and sxkhd
-# TODO
-# check dwm keybindings for already grabbed ones
-refbar=~/.local/bin/refbar
 
 XF86AudioMute
-    pactl set-sink-mute 0 toggle && refbar
+    pactl set-sink-mute 0 toggle
 XF86AudioPlay
-    playerctl play-pause && refbar
+    playerctl play-pause
 XF86AudioNext
-    playerctl next && refbar
+    playerctl next
 XF86AudioPrev
-    playerctl previous && refbar
+    playerctl previous
 XF86AudioRaiseVolume
-    pactl set-sink-volume 0 +2% && refbar #increase sound volume
+    amixer -D pulse sset Master 5%+
 XF86AudioLowerVolume
-    pactl set-sink-volume 0 -2% && refbar #decrease sound volume
+    amixer -D pulse sset Master 5%-
 XF86MonBrightnessUp
     xbacklight -inc 20 # increase screen brightness
+super+v
+    xbacklight -inc 20 # increase screen brightness
 XF86MonBrightnessDown
+    xbacklight -dec 20 # decrease screen brightness
+super+c
     xbacklight -dec 20 # decrease screen brightness
 Print
     maim $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
@@ -36,6 +37,10 @@ XF86PowerOff
 super+x
     ~/.scripts/commands/screen
 super+o
-    rofi -show drun
+    rofi -show drun -columns 2 -show-icons -padding 18 -modi drun -theme ~/.config/rofi/customdark.rasi
 super+r
     xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
+super+a
+    ~/.scripts/tools/cabl
+super+d
+    ~/.scripts/tools/tools
