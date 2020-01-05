@@ -1,114 +1,33 @@
-# install compton fork https://github.com/tryone144/compton
-# useful setup https://github.com/kanishkarj/i3-config/blob/master/.config/compton.conf
-backend = "glx";
-# Set VSync method. VSync methods currently available:
-# none: No VSync
-# drm: VSync with DRM_IOCTL_WAIT_VBLANK. May only work on some drivers.
-# opengl: Try to VSync with SGI_video_sync OpenGL extension. Only work on some drivers.
-# opengl-oml: Try to VSync with OML_sync_control OpenGL extension. Only work on some drivers.
-# opengl-swc: Try to VSync with SGI_swap_control OpenGL extension. Only work on some drivers. Works only with GLX backend. Known to be most effective on many drivers. Does not  actually control paint timing, only buffer swap is affected, so it doesn’t have the effect of --sw-opti unlike other methods. Experimental.
-# opengl-mswc: Try to VSync with MESA_swap_control OpenGL extension. Basically the same as opengl-swc above, except the extension we use.
-# (Note some VSync methods may not be enabled at compile time.)
-vsync = "opengl-mswc";
- 
-# Specify refresh rate of the screen.
-# If not specified or 0, compton will try detecting this with X RandR extension.
-refresh-rate = 0;
-
-glx-swap-method = 2;
-xrender-sync = true;
-xrender-sync-fence = true;
-
-blur-method = "kawase";
-blur-strength = 11;
-blur-kern = "3x3box";
-blur-background = true;
-blur-background-fixed = true;
-blur-background-exclude = [
-	"window_type = 'dock'",
-	"window_type = 'desktop'",
+## Shadow
+shadow = true;
+no-dnd-shadow = true;
+no-dock-shadow = false;
+clear-shadow = true;
+shadow-radius = 30;
+shadow-offset-x = -30;
+shadow-offset-y = -30;
+shadow-opacity = .85;
+shadow-exclude = [
+	"name = 'Notification'",
+	"class_g = 'dwm'",
+	"class_g ?= 'Notify-osd'",
+	"class_g = 'Cairo-clock'",
+	"class_g = 'slop'",
 	"_GTK_FRAME_EXTENTS@:c"
 ];
 
-##### SHADOW ######################################
-# shadow = true;
-# no-dnd-shadow = true;
-# no-dock-shadow = true;
-# clear-shadow = true;
-# shadow-radius = 10;
-# shadow-offset-x = -10;
-# shadow-offset-y = -10;
-# shadow-opacity = 0.7;
-# shadow-red = 0.0;
-# shadow-green = 0.0;
-# shadow-blue = 0.0;
 
-shadow = true;
-no-dnd-shadow = true;
-no-dock-shadow = true;
-clear-shadow = true;
-
-# Soft
-shadow-radius = 8;
-shadow-offset-x = -10;
-shadow-offset-y = 8;
-shadow-opacity = 0.6;
-
-# # Sharp
-# shadow-radius = 0;
-# hadow-offset-x = 16;
-# shadow-offset-y = 16;
-# shadow-opacity = 0.2;
-
-shadow-exclude = [
-    "! name~=''",
-    "name = 'Notification'",
-    "name = 'Plank'",
-    "name = 'Docky'",
-    "name = 'Kupfer'",
-    "name = 'xfce4-notifyd'",
-    "name *= 'VLC'",
-    "name *= 'compton'",
-    "name *= 'Chromium'",
-    "name *= 'Chrome'",
-    "name *= 'Firefox'",
-    "class_g = 'Conky'",
-    "class_g = 'Kupfer'",
-    "class_g = 'Synapse'",
-    "class_g ?= 'Notify-osd'",
-    "class_g ?= 'Cairo-dock'",
-    "class_g ?= 'Xfce4-notifyd'",
-    "class_g ?= 'Xfce4-power-manager'",
-    "class_g = 'Subl3'"
-];
-# Avoid drawing shadow on all shaped windows (see also: --detect-rounded-corners)
-shadow-ignore-shaped = false;
-xinerama-shadow-crop = false;
-
-# Opacity
-alpha-step = 0.06;
-menu-opacity = 0.8;                       # The opacity for menus. (default 1.0)
-inactive-opacity = 1;                 # Opacity of inactive windows. (0.1 - 1.0)
-active-opacity = 1;
-frame-opacity = 1;
-inactive-opacity-override = false;      # Inactive opacity set by 'inactive-opacity' overrides value of _NET_WM_OPACITY.
- 
-##### FADE ########################################
-
+## fading
 fading = true;
-#fade-delta = 5;
-fade-in-step = 0.09;
-fade-out-step = 0.09;
-#no-fading-openclose = true;
-no-fading-destroyed-argb = true;
- 
-# Other
-inactive-dim = 0.0;             # Dim inactive windows. (0.0 - 1.0, defaults to 0).
-mark-wmwin-focused = true;      # Try to detect WM windows and mark them as active.
-mark-ovredir-focused = true;    # Mark all non-WM but override-redirect windows active (e.g. menus).
-detect-rounded-corners = true;  # Detect rounded corners and treat them as rectangular when --shadow-ignore-shaped is on.
+fade-delta = 0.25;
+fade-in-step = 0.02;
+fade-out-step = 0.02;
+fade-exclude = [
+];
 
-# make all hidden windows completely transparent
+## opacity
+active-opacity = 1.0;
+frame-opacity = 0.7;
 opacity-rule = [
   "80:class_g = 'i3-bar' && !_NET_WM_STATE@:32a",
   # "60:class_g = 'i3-frame' && !_NET_WM_STATE@:32a",
@@ -117,9 +36,10 @@ opacity-rule = [
   "80:class_g = 'code-oss'",
   "80:class_g = 'Org.gnome.Nautilus'",
   "75:class_g = 'Rhythmbox'",
-  "75:class_g = 'Rofi'",
+  # "75:class_g = 'Rofi'",
   # "80:class_g = 'i3bar'",
-  "83:class_g = 'TelegramDesktop'",
+  "100:class_g = 'Maim'",
+  "80:class_g = 'TelegramDesktop'",
   "75:class_g = 'Spotify'",
   "90:class_g = 'Slack'",
   "80:class_g = 'processing-app-Base'",
@@ -127,19 +47,38 @@ opacity-rule = [
   "0:_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"
 ];
 
-# Limit compton to repaint at most once every 1 / refresh_rate second to boost performance.
-# This should not be used with --vsync drm/opengl/opengl-oml as they essentially does --sw-opti's job already,
-# unless you wish to specify a lower refresh rate than the actual value.
-sw-opti = true;
-
-# Unredirect all windows if a full-screen opaque window is detected, to maximize performance for full-screen windows, like games.
-# Known to cause flickering when redirecting/unredirecting windows.
-# paint-on-overlay may make the flickering less obvious.
-unredir-if-possible = true;
-
-
-# Enable DBE painting mode, intended to use with VSync to (hopefully) eliminate tearing.
-# Reported to have no effect, though.
+## other
+backend = "glx";
+mark-wmwin-focused = true;
+mark-ovredir-focused = true;
+detect-rounded-corners = true;
+detect-client-opacity = true;
+refresh-rate = 0;
+vsync = "none";
 dbe = false;
-# Painting on X Composite overlay window. Recommended.
 paint-on-overlay = true;
+focus-exclude = [ "class_g = 'Cairo-clock'" ,
+	"class_g = 'CoverGloobus'",
+	"class_g = 'Tilda'",
+	"class_g = 'Firefox'",
+	"class_g = 'Firefox-esr'"
+];
+detect-transient = true;
+detect-client-leader = true;
+invert-color-include = [ ];
+glx-copy-from-front = false;
+glx-swap-method = "undefined";
+wintypes:
+{
+  tooltip = { fade = true; shadow = true; opacity = 0.75; focus = true; };
+};
+
+## blur
+blur-background = true;
+blur-background-frame = true;
+blur-background-fixed = false;
+blur-kern = "3x3box";
+blur-method = "kawase";
+blur-strength = 20;
+#blur-background-exclude = [ "window_type = 'dock'",
+#                           "window_type = 'desktop'" ];
