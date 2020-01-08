@@ -31,14 +31,16 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'junegunn/goyo.vim'
 Plug 'coldfix/hexHighlight'
 Plug 'scrooloose/nerdtree'
-Plug 'scrooloose/syntastic'
+Plug 'dense-analysis/ale'
+Plug 'rking/ag.vim'
 " WORKS WITH NERDTREE:
 Plug 'ryanoasis/vim-devicons'
+Plug 'junegunn/fzf'
 call plug#end()
 
 " PLUGIN CONFIGS:
 let g:lightline = {'colorscheme': 'wombat'}
-let g:syntastic_python_checkers = ['pylint']
+" let g:syntastic_python_checkers = ['pylint']
 " T-Comment
 map <leader>c <c-_><c-_> 
 
@@ -81,7 +83,7 @@ autocmd BufWritePost ~/.Xresources,~/.Xdefaults !xrdb %
 autocmd VimLeave * call system("xsel -ib", getreg('+')) " Prevent Vim from clearing the clipboard on exit
 
 " RUNING MAKE WITGH PYTHON:
-autocmd Filetype python set makeprg=python2\ %:S
+" autocmd Filetype python set makeprg=python2\ %:S
 " NOW WE CAN:
 "   -   Run :make
 "   -   :cl to list errors
@@ -114,13 +116,29 @@ nnoremap <C-h> :vertical resize -5<cr>
 nnoremap <C-j> :resize +5<cr>
 nnoremap <C-k> :resize -5<cr>
 nnoremap <C-l> :vertical resize +5<cr>
+
+nnoremap <leader>n :NERDTreeToggle<cr>
+nnoremap <leader><space> :noh<cr>
+nnoremap <leader><tab> :FZF<CR>
+
 " CLIPBOARD COPY:
 map qq "+
 map qw "+
 
 set number
 set relativenumber
-color OceanicNext
+" color default
 " Update bindekeys when sxhdrc is updated
 autocmd BufWritePost *sxhkdrc !pkill sxhkd; setsid sxhkd &
 autocmd BufWritePost ~/.Xresources,~/.Xdefaults !xrdb %
+set timeout 
+set timeoutlen=150
+
+" set t_Co=256
+" set background=dark
+color OceanicNext
+highlight Normal ctermbg=NONE
+highlight nonText ctermbg=NONE
+let b:ale_linters = ['flake8', 'pylint']
+" Disable warnings about trailing whitespace for Python files.
+let b:ale_warn_about_trailing_whitespace = 0
