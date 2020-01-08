@@ -4,7 +4,7 @@
 # If you use startx/xinit like a Chad, this file will also be sourced.
 
 feh --bg-scale ~/wallpaper/wall_5.jpg # setting background
-# compton --config ~/.config/compton/config --vsync opengl --mark-wmwin-focused --mark-ovredir-focused -b # for window blur effect
+compton --config ~/.config/compton/config --vsync opengl --mark-wmwin-focused --mark-ovredir-focused -b # for window blur effect
 slstatus &		# script for updating the status bar
 dunst &			# dunst for notifications
 sxhkd &			# Bind keys with sxhkd

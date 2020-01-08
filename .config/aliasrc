@@ -39,6 +39,8 @@ alias ka="killall" \
     ured='redshift -x' \
     la='ls -a' \
     battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0'
+    vim='nvim'
+    
 
 pgrep -x dmenu && exit
 export EDITOR=vim 

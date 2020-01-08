@@ -1,5 +1,6 @@
 # install xbindkeys and sxkhd
-
+alt+Return
+    st
 XF86AudioMute
     pactl set-sink-mute 0 toggle
 XF86AudioPlay
@@ -13,34 +14,34 @@ XF86AudioRaiseVolume
 XF86AudioLowerVolume
     amixer -D pulse sset Master 5%-
 XF86MonBrightnessUp
-    xbacklight -inc 20 # increase screen brightness
-super+v
-    xbacklight -inc 20 # increase screen brightness
+    xbacklight -inc 5 # increase screen brightness
+alt+v
+    xbacklight -inc 5 # increase screen brightness
 XF86MonBrightnessDown
-    xbacklight -dec 20 # decrease screen brightness
-super+c
-    xbacklight -dec 20 # decrease screen brightness
+    xbacklight -dec 5 # decrease screen brightness
+alt+c
+    xbacklight -dec 5 # decrease screen brightness
 Print
     maim $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
 shift+Print
     maim -o --nodecorations 2 -s $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
 Caps_Lock
     ~/.scripts/tools/caps_state.sh && ~/.scripts/tools/caps_state.sh && sleep 50
-super+n
+alt+n
     setxkbmap -layout 'am' -variant 'phonetic' && xset r rate 240 50
-super+b
+alt+b
     setxkbmap -layout 'ru' -variant 'phonetic' && xset r rate 240 50
-super+shift+p
+alt+shift+p
     ~/.scripts/commands/power
 XF86PowerOff
     ~/.scripts/commands/power
-super+x
+alt+x
     ~/.scripts/commands/screen
-super+o
+alt+o
     rofi -show drun -columns 2 -show-icons -padding 18 -modi drun -theme ~/.config/rofi/customdark.rasi
-super+r
+alt+r
     xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
-super+a
+alt+a
     ~/.scripts/tools/cabl
-super+d
+alt+d
     ~/.scripts/tools/tools

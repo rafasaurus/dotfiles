@@ -5,10 +5,10 @@
 ! ██╔╝░██╗██║░░██║███████╗███████║╚██████╔╝╚██████╔╝██║░░██║╚██████╗███████╗███████║
 ! ╚═╝░░╚═╝╚═╝░░╚═╝╚══════╝╚══════╝░╚═════╝░░╚═════╝░╚═╝░░╚═╝░╚═════╝╚══════╝╚══════╝
 
-*.alpha: 0.88
+*.alpha: 0.40
 *.font:	mono:pixelsize=17:antialias=true:autohint=true;
 ! *.font: mono:pixelsize=24:antialias=true:autohint=true;
-*.cursorColor:	#EEFFFF
+*.cursorColor:	#00FF00
 ! *.font:     xft:LeagueMono-Bold:pixelsize=14
 ! colors: https://github.com/elenapan/dotfiles/tree/master/.xfiles
 ! skyfall
