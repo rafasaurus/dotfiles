@@ -45,3 +45,9 @@ alt+a
     ~/.scripts/tools/cabl
 alt+d
     ~/.scripts/tools/tools
+button8
+    xte "keydown Alt_R" "keydown Tab" "keyup Alt_R" "keyup Tab" "sleep 1"
+button9
+    playerctl play-pause
+alt+e
+    ~/.scripts/tools/dmenuunicode
