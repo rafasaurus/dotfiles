@@ -30,11 +30,12 @@ active-opacity = 1.0;
 frame-opacity = 0.7;
 opacity-rule = [
   "80:class_g = 'i3-bar' && !_NET_WM_STATE@:32a",
+  # "0:class_g = focused";
   # "60:class_g = 'i3-frame' && !_NET_WM_STATE@:32a",
-  "85:class_g = 'Nautilus'", 
-  "85:class_g = 'nautilus'", 
+  # "85:class_g = 'Nautilus'", 
+  # "85:class_g = 'nautilus'", 
+  # "80:class_g = 'Org.gnome.Nautilus'",
   "80:class_g = 'code-oss'",
-  "80:class_g = 'Org.gnome.Nautilus'",
   "75:class_g = 'Rhythmbox'",
   # "75:class_g = 'Rofi'",
   # "80:class_g = 'i3bar'",
@@ -75,10 +76,10 @@ wintypes:
 
 ## blur
 blur-background = true;
-blur-background-frame = true;
+blur-background-frame = false;
 blur-background-fixed = false;
 blur-kern = "3x3box";
 blur-method = "kawase";
-blur-strength = 20;
+blur-strength = 15;
 #blur-background-exclude = [ "window_type = 'dock'",
 #                           "window_type = 'desktop'" ];

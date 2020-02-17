@@ -1,4 +1,4 @@
-"        _                    
+"mauimauer        _                    
 " __   _(_)_ __ ___  _ __ ___ 
 " \ \ / / | '_ ` _ \| '__/ __|
 "  \ V /| | | | | | | | | (__ 
@@ -33,9 +33,13 @@ Plug 'coldfix/hexHighlight'
 Plug 'scrooloose/nerdtree'
 Plug 'dense-analysis/ale'
 Plug 'rking/ag.vim'
+Plug 'JamshedVesuna/vim-markdown-preview'
 " WORKS WITH NERDTREE:
 Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/fzf'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'mbbill/undotree'
+" Plug 'spolu/dwm.vim'
 call plug#end()
 
 " PLUGIN CONFIGS:
@@ -142,3 +146,38 @@ highlight nonText ctermbg=NONE
 let b:ale_linters = ['flake8', 'pylint']
 " Disable warnings about trailing whitespace for Python files.
 let b:ale_warn_about_trailing_whitespace = 0
+
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+" markdown previewer settings
+let vim_markdown_preview_toggle=1
+" let vim_markdown_preview_toggle=2
+let vim_markdown_preview_hotkey='<C-m>'
+let vim_markdown_preview_browser='firefox'
+" let vim_markdown_preview_github=1
+let vim_markdown_preview_use_xdg_open=1
+
+" gitgutter settings
+set updatetime=650
+
+" " sync open file with NERDTree
+" " " Check if NERDTree is open or active
+" function! IsNERDTreeOpen()        
+"   return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+" endfunction
+" 
+" " Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
+" " file, and we're not in vimdiff
+" function! SyncTree()
+"   if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
+"     NERDTreeFind
+"     wincmd p
+"   endif
+" endfunction
