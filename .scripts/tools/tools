@@ -1,5 +1,5 @@
 #!/bin/sh
-choices="cpupower\nfan_max\nfan_min\nfan_default"
+choices="cpupower\nfan_max\nfan_min\nfan_default\nus"
 
 chosen=$(echo -e "$choices" | dmenu -p "Choose what to do ?" -i -l 15)
 case "$chosen" in
@@ -7,5 +7,5 @@ case "$chosen" in
     fan_max) i8kfan - 2 &;;
     fan_min) i8kfan - 1 &;;
     fan_default) i8kfan - 0 &;;
-    logout) i3-msg exit;;
+    us) setxkbmap -layout 'us' && xset r rate 240 50;
 esac
