@@ -16,7 +16,7 @@
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 # for rounded corners https://github.com/resloved/i3
 
-set $mod Mod4
+set $mod Mod1
 
 font pango:mono 9
 font pango:mono Taskbar, Cantarell 9

@@ -141,8 +141,8 @@ set timeoutlen=150
 " set t_Co=256
 " set background=dark
 color OceanicNext
-highlight Normal ctermbg=NONE
-highlight nonText ctermbg=NONE
+" highlight Normal ctermbg=NONE
+" highlight nonText ctermbg=NONE
 let b:ale_linters = ['flake8', 'pylint']
 " Disable warnings about trailing whitespace for Python files.
 let b:ale_warn_about_trailing_whitespace = 0

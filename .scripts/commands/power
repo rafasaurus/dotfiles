@@ -3,8 +3,8 @@ choices="lock\nsuspend\nshutdown\nlogout"
 
 chosen=$(echo -e "$choices" | dmenu -i -p "Choose what to do ?" -l 15)
 case "$chosen" in
-    lock) betterlockscreen --lock blur -r 1280x720;;
-    suspend) betterlockscreen -s --lock blur;;
+    lock) setxkbmap -layout 'us' && xset r rate 240 50; betterlockscreen --lock blur -r 1280x720 --show-layout;;
+    suspend) setxkbmap -layout 'us' && xset r rate 240 50; betterlockscreen -s --lock blur --show-layout;;
     shutdown) ~/.scripts/tools/prompt "Do you want to shutdown ?" "shutdown now";;
     logout) i3-msg exit;;
 esac
