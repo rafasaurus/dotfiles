@@ -9,10 +9,8 @@
 # here with the line below.
 
 [ -f ~/.xprofile ] && . ~/.xprofile
-
 # Here we start dwm.
 # The loop is just to enable dwm's "restart" feature (mod+Shift+F2).
 while :; do
-    ssh-agent dwm || break
+    ssh-agent dwm > ~/.dwm.log|| break
 done
-# exec i3

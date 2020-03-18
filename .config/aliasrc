@@ -38,8 +38,9 @@ alias ka="killall" \
     red='redshift -O' \
     ured='redshift -x' \
     la='ls -a' \
-    battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0'
-    vim='nvim'
+    battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0' \
+    docs='firefox-nightly /usr/share/doc/arch-wiki/html/en'
+    # vim='nvim'
     
 
 pgrep -x dmenu && exit

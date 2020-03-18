@@ -2,7 +2,7 @@
 stty -ixon # Disable ctrl-s and ctrl-q.
 shopt -s autocd #Allows you to cd into directory merely by typing the directory name.
 HISTSIZE= HISTFILESIZE=30000 # Infinite history.
-HISTFILE=~/.cache/zsh/history
+HISTFILE=~/.cache/bash/history
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 [ -f "$HOME/.config/aliasrc" ] && source "$HOME/.config/aliasrc"
@@ -32,3 +32,4 @@ copython() {
         -e "s/File \".*\.py\".*$/${boldyellow}&${norm}/g" \
         -e "s/\, line [[:digit:]]\+/${boldred}&${norm}/g"
     }
+neofetch

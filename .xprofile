@@ -3,8 +3,10 @@
 # This file runs when a DM logs you into a graphical session.
 # If you use startx/xinit like a Chad, this file will also be sourced.
 
-feh --bg-scale ~/wallpaper/wall_5.png # setting background
-compton --config ~/.config/compton/config --vsync opengl --mark-wmwin-focused --mark-ovredir-focused -b # for window blur effect
+# feh --bg-scale ~/wallpaper/wall_5.jpg # setting background
+feh --bg-scale ~/Dropbox/wallpaper/705837.png
+# compton --config ~/.config/compton/config --vsync opengl --mark-wmwin-focused --mark-ovredir-focused -b --xrender-sync --xrender-sync-fence # for window blur effect
+compton -CGb
 slstatus &		# script for updating the status bar
 dunst &			# dunst for notifications
 logid &
@@ -19,7 +21,7 @@ i8kfan - 0 &
 sxhkd &			# Bind keys with sxhkd
 dropbox &
 
-# xrandr --dpi 138 &
+xrandr --dpi 115 &
 if type chromium >/dev/null 2>/dev/null
 then
 	export BROWSER=chromium
