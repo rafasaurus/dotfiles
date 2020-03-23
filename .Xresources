@@ -11,36 +11,83 @@
 *.cursorColor:	#00FF00
 ! *.font:     xft:LeagueMono-Bold:pixelsize=14
 ! colors: https://github.com/elenapan/dotfiles/tree/master/.xfiles
-! skyfall
-! *background:  #2E2B35
-*background:  #1C1E26
-*foreground:  #87FF5F
-! *color0:      #1D1F21
-! *color0:      #151515
-*color0:      #151515
-*color1:      #DB86BA
-*color2:      #33AA45
-*color3:      #E49186
-*color4:      #75DBE1
-*color5:      #B4A1DB
-*color6:      #9EE9EA
-! bash $
-! *color7:      #F1FCF9
-*color7:      #00FF00
-*color8:      #465463
-*color9:      #D04E9D
-*color10:     #4BC66D
-*color11:     #DB695B
-*color12:     #3DBAC2
-*color13:     #825ECE
-*color14:     #62CDCD
-*color15:     #E0E5E5
+!
+!
 
-! rofi.color-enabled: false
-! rofi.color-window: #4d32302f, #4d32302f, #0032302f
-! rofi.color-normal: #0032302f, #d8dee9, #0032302f, #cc458588, #32302f
-! rofi.color-active: #4d1b2b34, #6699cc, #4d343d46, #4d6699cc, #d8dee9
-! rofi.color-urgent: #4d1b2b34, #ec5f67, #4d343d46, #4dec5f67, #d8dee9
+! mine
+#define base00     #151515
+#define base01     #DB86BA
+#define base02     #888888
+#define base03     #E49186
+#define base04     #75DBE1
+#define base05     #B4A1DB
+#define base06     #9EE9EA
+#define base07     #00FF00
+#define base08     #BD489B
+#define base09     #D04E9D
+#define base0A     #4BC66D
+#define base0B     #DB695B
+#define base0C     #3DBAC2
+#define base0D     #825ECE
+#define base0E     #62CDCD
+#define base0F     #E0E5E5
+! *background:  #1C1E26
+*foreground:  base05
+
+! /* !! gruvbox light: */
+! #define base00     #fbf1c7
+! #define base01     #cc241d
+! #define base02     #98971a
+! #define base03     #d79921
+! #define base04     #458588
+! #define base05     #b16286
+! #define base06     #689d6a
+! #define base07     #7c6f64
+! #define base08     #928374
+! #define base09     #9d0006
+! #define base0A     #79740e
+! #define base0B     #b57614
+! #define base0C     #076678
+! #define base0D     #8f3f71
+! #define base0E     #427b58
+! *.foreground: #282828
+
+
+! ! brogrammer: */
+! #define base00     #1f1f1f
+! #define base0A     #d6dbe5
+! #define base0B     #f81118
+! #define base08     #de352e
+! #define base0C     #2dc55e
+! #define base07     #1dd361
+! #define base0D     #ecba0f
+! #define base99     #f3bd09
+! #define base01     #2a84d2
+! #define base09     #1081d6
+! #define base03     #4e5ab7
+! #define base02     #5350b9
+! #define base06     #1081d6
+! #define base04     #0f7ddb
+! #define base05     #d6dbe5
+! #define base0E     #ffffff
+! *.foreground:  #d6dbe5
+
+*.background:   base00
+*.color0:       base00
+*.color1:       base01
+*.color2:       base02
+*.color3:       base03
+*.color4:       base04
+*.color5:       base05
+*.color6:       base06
+*.color7:       base07
+*.color8:       base08
+*.color9:       base09
+*.color10:      base0A
+*.color11:      base0B
+*.color12:      base0C
+*.color13:      base0D
+*.color14:      base0E
 
 rofi.font: mono 18
 rofi.modi: run,ssh,window
@@ -63,8 +110,17 @@ Xft.dpi: 105
 Xcursor.size: 30
 
 ! dwm 
-dwm.normbgcolor: #000000
-dwm.normfgcolor: #999999
-dwm.selbordercolor: #33AA45    
-dwm.selbgcolor: #00ff00
-dwm.selfgcolor: #000000
+! according to https://github.com/dylanaraps/pywal/blob/master/pywal/templates/colors-wal-dwm.h
+dwm.normbgcolor: base00
+dwm.normfgcolor: base0F
+dwm.selbordercolor: base08
+dwm.selbgcolor: base02
+dwm.selfgcolor: base0F
+
+! dmenu settings
+
+dmenu.selforeground:	    #FFFFFF
+dmenu.background:	        #000000
+dmenu.selbackground:	    #0C73C2
+dmenu.foreground:	        #A0A0A0
+dmenu.font:	                "DroidSansMono-9"
