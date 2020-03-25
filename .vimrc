@@ -5,6 +5,10 @@
 "   \_/ |_|_| |_| |_|_|  \___|
 "                             
 "
+" For neovim
+" mkdir -p ~/.local/share/nvim
+" ln -s ~/.vim ~/.local/share/nvim/site 
+" ln -s ~/.vimrc .config/nvim/init.vim
 set encoding=UTF-8
 let vim_plug_just_installed = 0
 let vim_plug_path = expand('~/.vim/autoload/plug.vim')
@@ -22,6 +26,7 @@ endif
 
 call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter'
+Plug 'dylanaraps/wal.vim'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'itchyny/lightline.vim'
 Plug 'tomtom/tcomment_vim'
@@ -37,7 +42,9 @@ Plug 'JamshedVesuna/vim-markdown-preview'
 " WORKS WITH NERDTREE:
 Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/fzf'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+if has('nvim')
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+endif
 Plug 'mbbill/undotree'
 " Plug 'spolu/dwm.vim'
 call plug#end()
@@ -84,6 +91,7 @@ nnoremap tl :tablast<CR>
 
 " SAVE XRESOURCES IN EVERY WRITE AND RELOAD:
 autocmd BufWritePost ~/.Xresources,~/.Xdefaults !xrdb %
+autocmd BufWritePost ~/.github/dwm !update-mime-database ~/.local/share/mime %
 autocmd VimLeave * call system("xsel -ib", getreg('+')) " Prevent Vim from clearing the clipboard on exit
 
 " RUNING MAKE WITGH PYTHON:
@@ -140,7 +148,9 @@ set timeoutlen=150
 
 " set t_Co=256
 " set background=dark
-color OceanicNext
+" color OceanicNext
+color darkblue
+color wal
 " highlight Normal ctermbg=NONE
 " highlight nonText ctermbg=NONE
 let b:ale_linters = ['flake8', 'pylint']
@@ -157,12 +167,12 @@ nmap <silent> gr <Plug>(coc-references)
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 " markdown previewer settings
-let vim_markdown_preview_toggle=1
-" let vim_markdown_preview_toggle=2
-let vim_markdown_preview_hotkey='<C-m>'
-let vim_markdown_preview_browser='firefox'
+"
 " let vim_markdown_preview_github=1
+let vim_markdown_preview_hotkey='<C-m>'
+let vim_markdown_preview_browser='chromium'
 let vim_markdown_preview_use_xdg_open=1
+" let vim_markdown_preview_temp_file=1
 
 " gitgutter settings
 set updatetime=650
