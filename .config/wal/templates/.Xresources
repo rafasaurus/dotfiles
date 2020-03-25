@@ -9,7 +9,8 @@
 *.font:	mono:pixelsize=17:antialias=true:autohint=true;
 *.cursorColor:	#00FF00
 
-*foreground: {foreground}
+! *foreground: {foreground}
+*foreground: #00ff00
 *background: {background}
 
 #define base00 {color0}

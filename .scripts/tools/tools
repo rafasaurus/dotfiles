@@ -1,5 +1,5 @@
 #!/bin/sh
-choices="cpupower\nfan_max\nfan_min\nfan_default\nus"
+choices="us\ncpupower\nfan_max\nfan_min\nfan_default"
 
 chosen=$(echo -e "$choices" | dmenu -p "Choose what to do ?" -i -l 15)
 case "$chosen" in

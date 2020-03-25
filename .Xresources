@@ -7,32 +7,44 @@
 
 *.alpha: 0.90
 *.font:	mono:pixelsize=17:antialias=true:autohint=true;
-! *.font: mono:pixelsize=24:antialias=true:autohint=true;
+
 *.cursorColor:	#00FF00
-! *.font:     xft:LeagueMono-Bold:pixelsize=14
-! colors: https://github.com/elenapan/dotfiles/tree/master/.xfiles
-!
-!
+
+#define base00 #070E16
+#define base01 #0386D2
+#define base02 #058FE9
+#define base03 #21A5EE
+#define base04 #52ABD4
+#define base05 #5AABE8
+#define base06 #A9C2D9
+#define base07 #e2e9eb
+#define base08 #9ea3a4
+#define base09 #0386D2
+#define base0A #058FE9
+#define base0B #21A5EE
+#define base0C #52ABD4
+#define base0D #5AABE8
+#define base0E #A9C2D9
+#define base0F #e2e9eb
 
 ! mine
-#define base00     #151515
-#define base01     #DB86BA
-#define base02     #888888
-#define base03     #E49186
-#define base04     #75DBE1
-#define base05     #B4A1DB
-#define base06     #9EE9EA
-#define base07     #00FF00
-#define base08     #BD489B
-#define base09     #D04E9D
-#define base0A     #4BC66D
-#define base0B     #DB695B
-#define base0C     #3DBAC2
-#define base0D     #825ECE
-#define base0E     #62CDCD
-#define base0F     #E0E5E5
+! #define base00     #151515
+! #define base01     #DB86BA
+! #define base02     #888888
+! #define base03     #E49186
+! #define base04     #75DBE1
+! #define base05     #B4A1DB
+! #define base06     #9EE9EA
+! #define base07     #00FF00
+! #define base08     #BD489B
+! #define base09     #D04E9D
+! #define base0A     #4BC66D
+! #define base0B     #DB695B
+! #define base0C     #3DBAC2
+! #define base0D     #825ECE
+! #define base0E     #62CDCD
+! #define base0F     #E0E5E5
 ! *background:  #1C1E26
-*foreground:  base05
 
 ! /* !! gruvbox light: */
 ! #define base00     #fbf1c7
@@ -70,8 +82,8 @@
 ! #define base04     #0f7ddb
 ! #define base05     #d6dbe5
 ! #define base0E     #ffffff
-! *.foreground:  #d6dbe5
 
+*.foreground:  base05
 *.background:   base00
 *.color0:       base00
 *.color1:       base01

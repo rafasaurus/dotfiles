@@ -38,7 +38,7 @@ XF86PowerOff
 alt+x
     ~/.scripts/commands/screen
 alt+o
-    rofi -show drun -columns 2 -show-icons -padding 18 -modi drun -theme ~/.config/rofi/customdark.rasi
+    rofi -show drun -columns 2 -show-icons -padding 18 -modi drun # -theme ~/.config/rofi/customdark.rasi
 alt+r
     xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
 alt+a

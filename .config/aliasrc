@@ -1,19 +1,13 @@
 #!/bin/sh
 alias ka="killall" \
 	mkd="mkdir -pv" \
-	mpv="mpv --input-ipc-server=/tmp/mpvsoc$(date +%s)" \
 	calcurse="calcurse -D ~/.config/calcurse" \
-	magit="nvim -c MagitOnly" \
 	p="sudo pacman" \
 	SS="sudo systemctl" \
 	f="$FILE" \
-	g="git" \
-	trem="transmission-remote" \
 	e="$EDITOR" \
 	v="$EDITOR" \
 	x="sxiv -ft *" \
-	sdn="sudo shutdown -h now" \
-	gua="git remote | xargs -L1 git push --all" \
 	ls="ls -hN --color=auto --group-directories-first" \
 	grep="grep --color=auto" \
 	diff="diff --color=auto" \
@@ -24,10 +18,6 @@ alias ka="killall" \
     yt_best="youtube-dl -f 248+250" \
     yt_480="youtube-dl -f 135+250" \
     yt_720="youtube-dl -f 136+250" \
-	YT="youtube-viewer" \
-	ref="shortcuts >/dev/null; source ~/.config/shortcutrc" \
-	upc="sudo pacman -Syu; pkill -RTMIN+8 i3blocks" \
-	lsp="pacman -Qett --color=always | less" \
 	ffmpeg="ffmpeg -hide_banner" \
     ta='tmux attach -t' \
     tad='tmux attach -d -t' \
@@ -39,9 +29,12 @@ alias ka="killall" \
     ured='redshift -x' \
     la='ls -a' \
     battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0' \
-    docs='firefox-nightly /usr/share/doc/arch-wiki/html/en'
-    # vim='nvim'
-    
+    doc='chromium /usr/share/doc/arch-wiki/html/en > /dev/null' \
+    minecraft='java -jar ~/software/TLauncher-2.67/TLauncher-2.67.jar' \
+    do='vim ~/todo' \
+    corona='curl https://corona-stats.online' \
+    weather='curl https://wttr.in/stepanakert' \
+    doc_ardupilot='chromium ~/github/adana/docs/docs/parameters.html' \
 
 pgrep -x dmenu && exit
 export EDITOR=vim 
@@ -49,6 +42,7 @@ command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d" # Use neovim fo
 
 PATH=$PATH:$HOME/.scripts/tools
 PATH=$PATH:$HOME/.scripts/commands
+PATH=$PATH:$HOME/.local/bin
 PATH=$PATH:$HOME/.gem/ruby/2.6.0/bin
 export PATH
 

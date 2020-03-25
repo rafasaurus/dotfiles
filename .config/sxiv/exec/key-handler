@@ -3,7 +3,7 @@ while read file
 do
     case "$1" in
         "w") setbg "$file" & ;;
-        "p") wal -i "$file" || sleep 3 && xrdb ~/.cache/wal/.Xresources & ;;
+        "p") wal -n -i "$file" || sleep 3 && xrdb ~/.cache/wal/.Xresources && setbg "$file" & ;;
         "c")
             [ -z "$destdir" ] && destdir="$(sed "s/\s.*#.*$//;/^\s*$/d" ~/.config/directories | awk '{print $2}' | dmenu -l 20 -i -p "Copy file(s) to where?" | sed "s|~|$HOME|g")"
             [ -z "$destdir" ] && exit
