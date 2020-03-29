@@ -4,6 +4,7 @@ do
     case "$1" in
         "w") setbg "$file" & ;;
         "p") wal -n -i "$file" || sleep 3 && xrdb ~/.cache/wal/.Xresources && setbg "$file" & ;;
+        "l") betterlockscreen -u $file --blur 2.9 --text "If you are reading this, then this is not your computer." && notify-send "betterlockscreen set" ;;
         "c")
             [ -z "$destdir" ] && destdir="$(sed "s/\s.*#.*$//;/^\s*$/d" ~/.config/directories | awk '{print $2}' | dmenu -l 20 -i -p "Copy file(s) to where?" | sed "s|~|$HOME|g")"
             [ -z "$destdir" ] && exit

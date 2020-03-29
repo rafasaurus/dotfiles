@@ -1,4 +1,8 @@
 #!/bin/sh
+
+# load colors from wal
+[[ -f $HOME/.cache/wal/colors.sh ]] && source "$HOME/.cache/wal/colors.sh"
+
 alias ka="killall" \
 	mkd="mkdir -pv" \
 	calcurse="calcurse -D ~/.config/calcurse" \
@@ -13,7 +17,7 @@ alias ka="killall" \
 	diff="diff --color=auto" \
 	ccat="highlight --out-format=ansi" \
 	yt="youtube-dl --add-metadata -i -o '%(upload_date)s-%(title)s.%(ext)s'" \
-	yta="yt -x -f bestaudio/best" \
+	yta="yt -x -f bestaudio/best --audio-format mp3" \
     yt_playlist="youtube-dl -f 136+250 -citk –format mp4 –yes-playlist -c" \
     yt_best="youtube-dl -f 248+250" \
     yt_480="youtube-dl -f 135+250" \
@@ -29,12 +33,13 @@ alias ka="killall" \
     ured='redshift -x' \
     la='ls -a' \
     battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0' \
-    doc='chromium /usr/share/doc/arch-wiki/html/en > /dev/null' \
+    doc='$BROWSER /usr/share/doc/arch-wiki/html/en > /dev/null' \
     minecraft='java -jar ~/software/TLauncher-2.67/TLauncher-2.67.jar' \
-    do='vim ~/todo' \
+    do='vim ~/Dropbox/todo' \
     corona='curl https://corona-stats.online' \
     weather='curl https://wttr.in/stepanakert' \
     doc_ardupilot='chromium ~/github/adana/docs/docs/parameters.html' \
+    dict='sdcv'
 
 pgrep -x dmenu && exit
 export EDITOR=vim 
