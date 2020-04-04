@@ -16,6 +16,7 @@ rm -rf st
 wget https://raw.githubusercontent.com/rafasaurus/config/master/.Xresources -O $HOME/.Xresources
 sudo cp st.desktop /usr/share/applications
 
+# this is used for getting URLs, with dmenu via modkey+l
 mkdir -p $HOME/gocode
 export GOPATH=$HOME/gocode
 go get -u mvdan.cc/xurls/cmd/xurls

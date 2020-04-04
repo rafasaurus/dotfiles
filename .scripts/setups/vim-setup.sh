@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+# installs all necessary plugins for vim
 BASE_DIR="$HOME/.vim"
 PLUGIN_DIR="$BASE_DIR/plugged"
 COLORS_DIR="$BASE_DIR/colors"
