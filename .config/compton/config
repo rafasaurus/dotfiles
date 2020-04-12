@@ -80,7 +80,7 @@ blur-background-frame = true;
 blur-background-fixed = true;
 blur-kern = "3x3box";
 blur-method = "kawase";
-blur-strength = 13;
+blur-strength = 7;
 blur-background-exclude = [ "window_type = 'dock'",
                           "window_type = 'desktop'",
                           "class_g = 'Nightly'",

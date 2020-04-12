@@ -24,8 +24,8 @@ qemu-system-x86_64 \
     -display gtk,gl=on \
     -device vfio-pci,sysfsdev=/sys/devices/pci0000:00/0000:00:02.0/62b5e1eb-1193-4ea8-9e22-5df5a5bc366a,x-igd-opregion=on,display=on \
     -drive file=/home/vm/qemu/windows_10.qcow2,format=qcow2,l2-cache-size=8M \
-    -cdrom /home/rafael/iso/en_windows_10_pro_rs4_version_1803_17134_191_updated_july_2018_x64_dvd.iso \
-    -netdev user, id=net0, hostfwd=tcp::2222-:22
+    # -cdrom /home/rafae l/iso/en_windows_10_pro_rs4_version_1803_17134_191_updated_july_2018_x64_dvd.iso \
+    # -netdev user, id=net0, hostfwd=tcp::2222-:22
     # -net nic -net user,restrict=on,smb=/home/rafael
 
 

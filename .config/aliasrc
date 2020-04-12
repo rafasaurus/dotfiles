@@ -35,11 +35,15 @@ alias ka="killall" \
     battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0' \
     doc='$BROWSER /usr/share/doc/arch-wiki/html/en > /dev/null' \
     minecraft='java -jar ~/software/TLauncher-2.67/TLauncher-2.67.jar' \
-    do='vim ~/Dropbox/todo' \
+    do='vim ~/Dropbox/todo.md' \
     corona='curl https://corona-stats.online' \
     weather='curl https://wttr.in/stepanakert' \
     doc_ardupilot='chromium ~/github/adana/docs/docs/parameters.html' \
-    dict='sdcv'
+    dict='"sdcv' \
+    books='ranger $HOME/Dropbox/books' \
+    nd='nordvpn disconnect' \
+    nc='nordvpn connect romania' \
+
 
 pgrep -x dmenu && exit
 export EDITOR=vim 

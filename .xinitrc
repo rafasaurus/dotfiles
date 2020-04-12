@@ -12,5 +12,5 @@
 # Here we start dwm.
 # The loop is just to enable dwm's "restart" feature (mod+Shift+F2).
 while :; do
-    ssh-agent dwm > ~/.dwm.log|| break
+    ssh-agent dwm > ~/.dwm.log || break
 done
