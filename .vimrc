@@ -26,9 +26,11 @@ endif
 
 call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter'
-Plug 'dylanaraps/wal.vim'
 Plug 'rafi/awesome-vim-colorschemes'
-Plug 'itchyny/lightline.vim'
+" Plug 'itchyny/lightline.vim'
+
+" quickscope https://www.youtube.com/watch?v=EsGSwNySNMU
+Plug 'unblevable/quick-scope'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -42,15 +44,14 @@ Plug 'JamshedVesuna/vim-markdown-preview'
 " WORKS WITH NERDTREE:
 Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/fzf'
-if has('nvim')
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
-endif
 Plug 'mbbill/undotree'
+Plug 'xolox/vim-notes'
+Plug 'xolox/vim-misc'
 " Plug 'spolu/dwm.vim'
 call plug#end()
 
 " PLUGIN CONFIGS:
-let g:lightline = {'colorscheme': 'wombat'}
+" let g:lightline = {'colorscheme': 'wombat'}
 " let g:syntastic_python_checkers = ['pylint']
 " T-Comment
 map <leader>c <c-_><c-_> 
@@ -92,6 +93,7 @@ nnoremap tl :tablast<CR>
 " SAVE XRESOURCES IN EVERY WRITE AND RELOAD:
 autocmd BufWritePost ~/.Xresources,~/.Xdefaults !xrdb %
 autocmd BufWritePost ~/.github/dwm !update-mime-database ~/.local/share/mime %
+autocmd BufRead ~/Dropbox/todo.md :Goyo
 autocmd VimLeave * call system("xsel -ib", getreg('+')) " Prevent Vim from clearing the clipboard on exit
 
 " RUNING MAKE WITGH PYTHON:
@@ -150,19 +152,11 @@ set timeoutlen=150
 " set background=dark
 " color OceanicNext
 color darkblue
-color wal
 " highlight Normal ctermbg=NONE
 " highlight nonText ctermbg=NONE
 let b:ale_linters = ['flake8', 'pylint']
 " Disable warnings about trailing whitespace for Python files.
 let b:ale_warn_about_trailing_whitespace = 0
-
-
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -191,3 +185,9 @@ set updatetime=650
 "     wincmd p
 "   endif
 " endfunction
+set spell
+set spelllang=en_us
+color PaperColor
+
+" " Quickscope Trigger a highlight in the appropriate direction when pressing these keys:
+" let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
