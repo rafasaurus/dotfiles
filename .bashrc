@@ -33,4 +33,6 @@ copython() {
         -e "s/File \".*\.py\".*$/${boldyellow}&${norm}/g" \
         -e "s/\, line [[:digit:]]\+/${boldred}&${norm}/g"
     }
-neofetch
+
+[ -f /usr/bin/neofetch ] && neofetch
+[ -f /usr/bin/fortune ] && fortune
