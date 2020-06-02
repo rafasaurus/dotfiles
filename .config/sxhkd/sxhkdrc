@@ -41,9 +41,9 @@ alt+shift+p
 XF86PowerOff
     ~/.scripts/commands/power
 alt+x
-    ~/.scripts/commands/screen
+    ~/.scripts/commands/scr
 alt+o
-    rofi -show drun -columns 2 -show-icons -padding 18 -modi drun -theme ~/.cache/wal/colors-rofi-light.rasi
+    rofi -show drun -columns 2 -show-icons -padding 18 -modi drun -theme ~/.cache/wal/colors-rofi-dark.rasi
 alt+r
     xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
 alt+a
@@ -55,4 +55,6 @@ button8
 button9
     playerctl play-pause
 alt+e
-    ~/.scripts/tools/dmenuunicode
+    dmenuunicode
+alt+{F9,F10}
+	{dmenumount, dmenuumount}
