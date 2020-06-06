@@ -3,7 +3,7 @@ choices="us\nam\nru"
 
 chosen=$(echo -e "$choices" | dmenu -p "Choose the kb layout ?" -i -l 15)
 case "$chosen" in
-    us) setxkbmap -layout 'us' && xset r rate 240 50 ;;
-    am) setxkbmap -layout 'am' -variant 'phonetic' && xset r rate 240 50 ;;
-    ru) setxkbmap -layout 'ru' -variant 'phonetic' && xset r rate 240 50 ;;
+    us) setxkbmap -layout 'us' && xset r rate 240 50 && notify-send "lng english" ;;
+    am) setxkbmap -layout 'am' -variant 'phonetic' && xset r rate 240 50 && notify-send "lng armenian" ;;
+    ru) setxkbmap -layout 'ru' -variant 'phonetic' && xset r rate 240 50 && notify-send "lng russian" ;;
 esac

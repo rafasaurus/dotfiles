@@ -26,7 +26,6 @@ endif
 
 call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter'
-Plug 'rafi/awesome-vim-colorschemes'
 " Plug 'itchyny/lightline.vim'
 
 " quickscope https://www.youtube.com/watch?v=EsGSwNySNMU
@@ -45,9 +44,12 @@ Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/fzf'
 Plug 'mbbill/undotree'
-Plug 'xolox/vim-notes'
-Plug 'xolox/vim-misc'
+" Plug 'xolox/vim-notes'
+" Plug 'xolox/vim-misc'
+Plug 'ChristianChiarulli/codi.vim'
 " Plug 'spolu/dwm.vim'
+Plug 'neoclide/coc.nvim'
+Plug 'gruvbox-community/gruvbox'
 call plug#end()
 
 " PLUGIN CONFIGS:
@@ -141,7 +143,6 @@ map qw "+
 
 set number
 set relativenumber
-" color default
 " Update bindekeys when sxhdrc is updated
 autocmd BufWritePost *sxhkdrc !pkill sxhkd; setsid sxhkd &
 autocmd BufWritePost ~/.Xresources,~/.Xdefaults !xrdb %
@@ -150,8 +151,6 @@ set timeoutlen=150
 
 " set t_Co=256
 " set background=dark
-" color OceanicNext
-color darkblue
 " highlight Normal ctermbg=NONE
 " highlight nonText ctermbg=NONE
 let b:ale_linters = ['flake8', 'pylint']
@@ -187,7 +186,14 @@ set updatetime=650
 " endfunction
 set spell
 set spelllang=en_us
-color PaperColor
+color gruvbox
 
 " " Quickscope Trigger a highlight in the appropriate direction when pressing these keys:
 " let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+
+" Codi plugin setup for REPL with vim
+highlight CodiVirtualText guifg=cyan
+
+let g:codi#virtual_text_prefix = "❯ "
+" set clipboard for nvim only
+set clipboard+=unnamedplus
