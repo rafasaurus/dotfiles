@@ -27,9 +27,9 @@ Print
 shift+Print
     maim -o --nodecorations 2 -s $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
 Caps_Lock
-    ~/.scripts/tools/caps_state.sh && ~/.scripts/tools/caps_state.sh && sleep 50
+    ~/.local/bin/scripts/tools/caps_state.sh && ~/.local/bin/scripts/tools/caps_state.sh && sleep 50
 alt+shift+l
-    ~/.scripts/commands/kblyt
+    ~/.local/bin/scripts/commands/kblyt
 alt+shift+u 
 	setxkbmap -layout 'us' && xset r rate 240 50 && notify-send "lng english"
 alt+shift+a 
@@ -37,19 +37,19 @@ alt+shift+a
 alt+shift+r
 	setxkbmap -layout 'ru' -variant 'phonetic' && xset r rate 240 50 && notify-send "lng russian"
 alt+shift+p
-    ~/.scripts/commands/power
+    ~/.local/bin/scripts/commands/power
 XF86PowerOff
-    ~/.scripts/commands/power
+    ~/.local/bin/scripts/commands/power
 alt+x
-    ~/.scripts/commands/scr
+    ~/.local/bin/scripts/commands/scr
 alt+o
     rofi -show drun -columns 2 -show-icons -padding 18 -modi drun -theme ~/.cache/wal/colors-rofi-dark.rasi
 alt+r
     xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
 alt+a
-    ~/.scripts/tools/cabl
+    ~/.local/bin/scripts/tools/cabl
 alt+d
-    ~/.scripts/tools/tools
+    ~/.local/bin/scripts/tools/tools
 button8
     xte "keydown Alt_R" "keydown Tab" "keyup Alt_R" "keyup Tab" "sleep 1"
 button9

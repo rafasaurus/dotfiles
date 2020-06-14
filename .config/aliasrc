@@ -16,7 +16,6 @@ alias ka="killall" \
 	grep="grep --color=auto" \
 	diff="diff --color=auto" \
 	ccat="highlight --out-format=ansi" \
-	yt="youtube-dl --add-metadata -i -o '%(upload_date)s-%(title)s.%(ext)s'" \
 	yta="yt -x -f bestaudio/best --audio-format mp3" \
     yt_playlist="youtube-dl -f 136+250 -citk –format mp4 –yes-playlist -c" \
     yt_best="youtube-dl -f 248+250" \
@@ -43,6 +42,10 @@ alias ka="killall" \
     books='ranger $HOME/Dropbox/books' \
     nd='nordvpn disconnect' \
     nc='nordvpn connect romania' \
+    tn='tmux new -s' \
+    cp='cp -iv'
+    inav='~/software/inav/INAV\ Configurator/inav-configurator'
+	# yt="youtube-dl --add-metadata -i -o '%(upload_date)s-%(title)s.%(ext)s'" \
 
 
 pgrep -x dmenu && exit

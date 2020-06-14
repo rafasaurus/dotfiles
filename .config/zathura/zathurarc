@@ -1,7 +1,7 @@
 set statusbar-h-padding 0
 set statusbar-v-padding 0
 set page-padding 1
-map D toggle_page_mode
+jap D toggle_page_mode
 map r reload
 map R rotate
 map i recolor
@@ -11,6 +11,8 @@ map z navigate next
 map x navigate previous
 set font "monospace 16"
 set selection-clipboard clipboard
+map K zoom in
+map J zoom out
 
 
 set default-bg "#000000" #00

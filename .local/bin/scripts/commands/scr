@@ -1,0 +1,11 @@
+#!/bin/sh
+choices="built-in\nbuilt-in_d620\nhdmi\nd620_1080\narandr"
+
+chosen=$(echo -e "$choices" | dmenu -i -p "Choose screen option" -l 15)
+case "$chosen" in
+    built-in) bash ~/.local/bin/screenlayout/built-in.sh;;
+    built-in_d620) bash ~/.local/bin/screenlayout/built-in_d620.sh;;
+    hdmi) bash ~/.local/bin/screenlayout/1080p_primary.sh;;
+    d620_1080) bash ~/.local/bin/screenlayout/1080p_primary_d620.sh;;
+    arandr) arandr;;
+esac
