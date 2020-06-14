@@ -5,7 +5,7 @@
 # feh --bg-scale ~/wallpaper/wall_5.jpg
 xwallpaper --zoom ~/.config/wall.png
 # ~/.local/bin/bg.sh ~/wallpaper/animated_4.mp4
-compton --config ~/.config/compton/config
+compton --config ~/.config/compton/config --vsync opengl --mark-wmwin-focused --mark-ovredir-focused -b --xrender-sync --xrender-sync-fence
 # compton -CGb --backend glx #--vsync opengl-swc --xrender-sync --xrender-sync-fence
 slstatus &		# script for updating the status bar
 dunst &			# dunst for notifications
