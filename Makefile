@@ -20,5 +20,28 @@ restow:
 .PHONY : delete
 delete :
 	stow -D --target $(HOME) --verbose $(stow_dirs) $(IGNORE_FLAGS)
-clean :
-	rm -rf ~/.local ~/.config
+
+install-prereqs :
+	sudo pacman -S stow \
+					vim nvim \
+					git \
+					rofi \
+					sxhkd \
+					arandr \
+					ranger \
+					dunst \
+					sxiv imagemagick \
+					ffmpeg \
+					networkmanager \
+					ttf-joypixels ttf-symbola \
+					pulseaudio pulseaudio-alsa alsa-utils \
+					maim \
+					unrar unzip \
+					youtube-dl \
+					zathura zathura-djvu \
+					poppler \
+					highlight \
+					fzf \
+					xorg-xbacklight xorg-xprop xorg-xinit xorg-xwininfo xorg-server \
+
+
