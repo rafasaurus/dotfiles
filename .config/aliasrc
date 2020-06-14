@@ -43,8 +43,8 @@ alias ka="killall" \
     nd='nordvpn disconnect' \
     nc='nordvpn connect romania' \
     tn='tmux new -s' \
-    cp='cp -iv'
-    inav='~/software/inav/INAV\ Configurator/inav-configurator'
+    cp='cp -iv' \
+    inav='~/software/inav/INAV\ Configurator/inav-configurator' \
 	# yt="youtube-dl --add-metadata -i -o '%(upload_date)s-%(title)s.%(ext)s'" \
 
 
@@ -55,6 +55,8 @@ command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d" # Use neovim fo
 PATH=$PATH:$HOME/.scripts/tools
 PATH=$PATH:$HOME/.scripts/commands
 PATH=$PATH:$HOME/.local/bin
+PATH=$PATH:$HOME/.local/bin/scripts
+PATH=$PATH:$HOME/.local/bin/screenlayout
 PATH=$PATH:$HOME/.gem/ruby/2.6.0/bin
 export PATH
 
