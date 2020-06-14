@@ -44,10 +44,7 @@ Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/fzf'
 Plug 'mbbill/undotree'
-" Plug 'xolox/vim-notes'
-" Plug 'xolox/vim-misc'
 Plug 'ChristianChiarulli/codi.vim'
-" Plug 'spolu/dwm.vim'
 Plug 'neoclide/coc.nvim'
 Plug 'gruvbox-community/gruvbox'
 call plug#end()
@@ -63,14 +60,14 @@ set expandtab
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
-" Enable the current millenium
+" ENABLE THE CURRENT MILLENIUM
 set nocompatible
-" Search for every subdirectory
+" SEARCH FOR EVERY SUBDIRECTORY
 set path+=**
 set wildmenu
 
 syntax enable
-" Default file browser
+" DEFAULT FILE BROWSER
 filetype plugin on
 filetype indent on
 set incsearch " search as characters are entered
@@ -98,8 +95,8 @@ autocmd BufWritePost ~/.github/dwm !update-mime-database ~/.local/share/mime %
 autocmd BufRead ~/Dropbox/todo.md :Goyo
 autocmd VimLeave * call system("xsel -ib", getreg('+')) " Prevent Vim from clearing the clipboard on exit
 
-" RUNING MAKE WITGH PYTHON:
-" autocmd Filetype python set makeprg=python2\ %:S
+" RUNING MAKE WITH PYTHON:
+autocmd Filetype python set makeprg=python3\ %:S
 " NOW WE CAN:
 "   -   Run :make
 "   -   :cl to list errors
@@ -137,7 +134,7 @@ nnoremap <leader>n :NERDTreeToggle<cr>
 nnoremap <leader><space> :noh<cr>
 nnoremap <leader><tab> :FZF<CR>
 
-" CLIPBOARD COPY:
+" CLIPBOARD COPY ALIAS:
 map qq "+
 map qw "+
 
@@ -159,41 +156,24 @@ let b:ale_warn_about_trailing_whitespace = 0
 
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
-" markdown previewer settings
-"
+
+" MARKDOWN PREVIEWER PETTINGS
 " let vim_markdown_preview_github=1
 let vim_markdown_preview_hotkey='<C-m>'
 let vim_markdown_preview_browser='chromium'
 let vim_markdown_preview_use_xdg_open=1
 " let vim_markdown_preview_temp_file=1
 
-" gitgutter settings
-set updatetime=650
+set updatetime=850
 
-" " sync open file with NERDTree
-" " " Check if NERDTree is open or active
-" function! IsNERDTreeOpen()        
-"   return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
-" endfunction
-" 
-" " Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
-" " file, and we're not in vimdiff
-" function! SyncTree()
-"   if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
-"     NERDTreeFind
-"     wincmd p
-"   endif
-" endfunction
 set spell
 set spelllang=en_us
 color gruvbox
+set background=light
 
-" " Quickscope Trigger a highlight in the appropriate direction when pressing these keys:
+" " QUICKSCOPE TRIGGER A HIGHLIGHT IN THE APPROPRIATE DIRECTION WHEN PRESSING THESE KEYS:
 " let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
-" Codi plugin setup for REPL with vim
+" CODI PLUGIN SETUP FOR REPL WITH VIM
 highlight CodiVirtualText guifg=cyan
-
 let g:codi#virtual_text_prefix = "❯ "
-" set clipboard for nvim only
-set clipboard+=unnamedplus
