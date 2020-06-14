@@ -216,3 +216,5 @@ timedatectl set-ntp true
 
 # add user to the group
 sudo usermod -a -G group $(whoami)
+# scan ports with nmap
+nmap -v -sT 192.168.1.18/24

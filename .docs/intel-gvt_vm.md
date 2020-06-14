@@ -71,4 +71,13 @@ qemu-img create -f qcow2 /home/rafael/vm/windows_10.qcow2 64G
 +++ GUI_REFRESH_INTERVAL_DEFAULT 16
 make install
 
-### for faster Mouse keyboard events
+### add
+```
+GRUB_CMDLINE_LINUX_DEFAULT="loglevel=1 i915.enable_gvt=1 kvm.ignore_msrs=1"
+```
+to /etc/default/grub
+
+then 
+```
+grub-mkconfig -o /boot/grub/grub.cfg
+```
