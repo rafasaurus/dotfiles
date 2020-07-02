@@ -1,0 +1,35 @@
+[Default Applications]
+x-scheme-handler/http=userapp-Pale Moon-8EVDK0.desktop
+x-scheme-handler/https=userapp-Pale Moon-8EVDK0.desktop
+x-scheme-handler/ftp=userapp-Pale Moon-8EVDK0.desktop
+x-scheme-handler/chrome=userapp-Pale Moon-8EVDK0.desktop
+text/html=userapp-Pale Moon-8EVDK0.desktop
+application/x-extension-htm=userapp-Pale Moon-8EVDK0.desktop
+application/x-extension-html=userapp-Pale Moon-8EVDK0.desktop
+application/x-extension-shtml=userapp-Pale Moon-8EVDK0.desktop
+application/xhtml+xml=userapp-Pale Moon-8EVDK0.desktop
+application/x-extension-xhtml=userapp-Pale Moon-8EVDK0.desktop
+application/x-extension-xht=userapp-Pale Moon-8EVDK0.desktop
+application/pdf=org.pwmt.zathura-pdf-mupdf.desktop
+application/ppdf=FoxitReader.desktop
+image/png=img.desktop;
+image/jpeg=img.desktop;
+image/gif=img.desktop;
+
+[Added Associations]
+text/x-patch=sublime_text_3.desktop;
+image/jpeg=sxiv.desktop;
+x-scheme-handler/http=userapp-Pale Moon-8EVDK0.desktop;
+x-scheme-handler/https=userapp-Pale Moon-8EVDK0.desktop;
+x-scheme-handler/ftp=userapp-Pale Moon-8EVDK0.desktop;
+x-scheme-handler/chrome=userapp-Pale Moon-8EVDK0.desktop;
+text/html=userapp-Pale Moon-8EVDK0.desktop;
+application/x-extension-htm=userapp-Pale Moon-8EVDK0.desktop;
+application/x-extension-html=userapp-Pale Moon-8EVDK0.desktop;
+application/x-extension-shtml=userapp-Pale Moon-8EVDK0.desktop;
+application/xhtml+xml=userapp-Pale Moon-8EVDK0.desktop;
+application/x-extension-xhtml=userapp-Pale Moon-8EVDK0.desktop;
+application/x-extension-xht=userapp-Pale Moon-8EVDK0.desktop;
+text/plain=sublime_text_3.desktop;
+video/mp4=vlc.desktop;
+application/pdf=org.pwmt.zathura-pdf-mupdf.desktop;
