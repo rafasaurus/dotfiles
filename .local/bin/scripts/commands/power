@@ -4,8 +4,8 @@ choices="lock\nsuspend\nshutdown\nreboot"
 chosen=$(echo -e "$choices" | dmenu -i -p "Choose what to do ?" -l 15)
 echo $chosen
 case "$chosen" in
-    lock) setxkbmap -layout 'us' && xset r rate 240 50; betterlockscreen --lock blur ;;
-    suspend) setxkbmap -layout 'us' && xset r rate 240 50; betterlockscreen -s blur;;
+    lock) setxkbmap -layout 'us' && xset r rate 240 50 ;;
+    suspend) setxkbmap -layout 'us' && xset r rate 240 50 ;;
     shutdown) ~/.scripts/tools/prompt "Do you want to shutdown ?" "shutdown now";;
     reboot) reboot;;
 esac
