@@ -1,0 +1,11 @@
+# Install this to /etc/systemd/system/slock.service
+[Unit]
+Description=Lock X using slock
+
+[Service]
+User=alex
+Environment=DISPLAY=:0
+ExecStart=/usr/bin/slock
+
+[Install]
+WantedBy=sleep.target
