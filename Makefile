@@ -16,19 +16,31 @@ IGNORE_FLAGS= --ignore "Makefile" \
 .PHONY : stow
 stow :
 	stow --target $(HOME) --verbose $(stow_dirs) $(IGNORE_FLAGS)
-	# sudo ln -s $(PWD)/.local/services/slock.service /etc/systemd/system/slock.service
-	# sudo systemctl enable slock.service
+	[[ -d $(HOME)/.config ]] || mkdir $(HOME)/.config # making .local directory
+	[[ -d $(HOME)/.local ]] || mkdir $(HOME)/.local # making .local directory
+	[[ -d $(HOME)/.local/share ]] || mkdir $(HOME)/.local/share # making .local/share directory
+	[[ -d $(HOME)/.local/bin ]] || mkdir $(HOME)/.local/bin # making .local/share directory
+	[[ -d $(HOME)/.local/share/applications ]] || mkdir $(HOME)/.local/share/applications # making .local/share directory
+
+.PHONY : install-services
+install-services :
+	sudo ln -sf $(PWD)/.local/services/slock.service /usr/lib/systemd/system/slock.service
+	sudo systemctl enable slock.service
+
+.PHONY : delete-services
+delete-services :
+	sudo rm /etc/systemd/system/slock.service
+	sudo systemctl disable slock.service
 
 .PHONY : restow
-restow:
+restow :
 	stow --target $(HOME) --verbose --restow $(stow_dirs) $(IGNORE_FLAGS)
 
 .PHONY : delete
 delete :
 	stow -D --target $(HOME) --verbose $(stow_dirs) $(IGNORE_FLAGS)
-	# sudo rm /etc/systemd/system/slock.service
-	# sudo systemctl disable slock.service
 
+.PHONY : install-prereqs
 install-prereqs :
 	sudo pacman -S stow \
 					vim nvim \

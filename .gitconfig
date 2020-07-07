@@ -1,0 +1,5 @@
+[user]
+	email = rafa.grigorian@gmail.com
+	name = rafasaurus
+[diff]
+    tool = vimdiff
