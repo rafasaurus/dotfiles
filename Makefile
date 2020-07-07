@@ -15,12 +15,12 @@ IGNORE_FLAGS= --ignore "Makefile" \
 
 .PHONY : stow
 stow :
-	stow --target $(HOME) --verbose $(stow_dirs) $(IGNORE_FLAGS)
 	[[ -d $(HOME)/.config ]] || mkdir $(HOME)/.config # making .local directory
 	[[ -d $(HOME)/.local ]] || mkdir $(HOME)/.local # making .local directory
 	[[ -d $(HOME)/.local/share ]] || mkdir $(HOME)/.local/share # making .local/share directory
 	[[ -d $(HOME)/.local/bin ]] || mkdir $(HOME)/.local/bin # making .local/share directory
 	[[ -d $(HOME)/.local/share/applications ]] || mkdir $(HOME)/.local/share/applications # making .local/share directory
+	stow --target $(HOME) --verbose $(stow_dirs) $(IGNORE_FLAGS)
 
 .PHONY : install-services
 install-services :
