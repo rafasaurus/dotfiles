@@ -5,7 +5,7 @@ IGNORE_FLAGS= --ignore "Makefile" \
 		--ignore "\.gitignore" \
 		--ignore "\.gitmodules" \
 		--ignore "\.git-prompt.sh" \
-		--ignore "dwm" \
+		--ignore ".suckless.d" \
 		--ignore "slstatus" \
 		--ignore "README" \
 		--ignore "utils" \
@@ -17,20 +17,23 @@ IGNORE_FLAGS= --ignore "Makefile" \
 stow :
 	[[ -d $(HOME)/.config ]] || mkdir $(HOME)/.config # making .local directory
 	[[ -d $(HOME)/.local ]] || mkdir $(HOME)/.local # making .local directory
-	[[ -d $(HOME)/.local/share ]] || mkdir $(HOME)/.local/share # making .local/share directory
-	[[ -d $(HOME)/.local/bin ]] || mkdir $(HOME)/.local/bin # making .local/share directory
-	[[ -d $(HOME)/.local/share/applications ]] || mkdir $(HOME)/.local/share/applications # making .local/share directory
+	[[ -d $(HOME)/.local/share ]] || mkdir -p $(HOME)/.local/share # making .local/share directory
+	[[ -d $(HOME)/.local/bin ]] || mkdir -p $(HOME)/.local/bin # making .local/share directory
+	[[ -d $(HOME)/.local/share/applications ]] || mkdir -p $(HOME)/.local/share/applications # making .local/share directory
+	[[ -d $(HOME)/.cache/zsh ]] || mkdir -p $(HOME)/.cache/zsh # making .local/share directory
 	stow --target $(HOME) --verbose $(stow_dirs) $(IGNORE_FLAGS)
 
 .PHONY : install-services
 install-services :
-	sudo ln -sf $(PWD)/.local/services/slock.service /usr/lib/systemd/system/slock.service
-	sudo systemctl enable slock.service
+	sudo ln -sf $(PWD)/.local/services/slock@.service /usr/lib/systemd/system/slock@.service
+	sudo systemctl enable slock@.service
+	sudo systemctl start slock@.service
 
 .PHONY : delete-services
 delete-services :
-	sudo rm /etc/systemd/system/slock.service
-	sudo systemctl disable slock.service
+	sudo rm /etc/systemd/system/slock@.service
+	sudo systemctl stop slock@.service
+	sudo systemctl disable slock@.service
 
 .PHONY : restow
 restow :
