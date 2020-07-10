@@ -48,6 +48,7 @@ zle-line-init() {
     echo -ne "\e[5 q"
 }
 zle -N zle-line-init
+
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
@@ -75,7 +76,7 @@ bindkey '^e' edit-command-line
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-source /home/rafael/.vim/plugged/fzf/shell/key-bindings.zsh
+[ -f "$HOME/.config/aliasrc" ] && source "$HOME/.config/aliasrc"
 
 # Mimir git prompt
 autoload -Uz add-zsh-hook
@@ -84,3 +85,5 @@ add-zsh-hook precmd prompt_mimir_cmd
 
 prompt_symbol='❯'
 PROMPT="%(?.%F{magenta}.%F{red})${prompt_symbol}%f "
+
+bindkey '^r' history-incremental-search-backward
