@@ -28,6 +28,8 @@ bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -v '^?' backward-delete-char
 
 # Change cursor shape for different vi modes.
+[ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
+
 function zle-keymap-select {
   # RPS1="${${KEYMAP/vicmd/-- NORMAL --}/(main|viins)/ -- INSERT --}"
   # RPS2=$RPS1
@@ -86,4 +88,6 @@ add-zsh-hook precmd prompt_mimir_cmd
 prompt_symbol='❯'
 PROMPT="%(?.%F{magenta}.%F{red})${prompt_symbol}%f "
 
-bindkey '^r' history-incremental-search-backward
+history() { fc -lim "*$@*" 1 }
+# In case fzf-history-widget does not work
+# bindkey '^r' history-incremental-search-backward
