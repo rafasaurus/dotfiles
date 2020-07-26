@@ -4,8 +4,8 @@ choices="lock\nsuspend\nshutdown\nreboot"
 chosen=$(echo -e "$choices" | dmenu -i -p "Choose what to do ?" -l 15)
 echo $chosen
 case "$chosen" in
-    lock) setxkbmap -layout 'us' && xset r rate 240 50 ;;
-    suspend) setxkbmap -layout 'us' && xset r rate 240 50 ;;
-    shutdown) ~/.scripts/tools/prompt "Do you want to shutdown ?" "shutdown now";;
-    reboot) reboot;;
+    lock) slock;;
+    suspend) nordvpn disconnect && slock systemctl suspend;;
+    shutdown) ~/.local/bin/scripts/tools/prompt "Do you want to shutdown ?" "shutdown now";;
+    reboot) ~/.local/bin/scripts/tools/prompt "Do you want to shutdown ?" "reboot";;
 esac
