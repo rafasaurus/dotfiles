@@ -10,8 +10,8 @@ IGNORE_FLAGS= --ignore "Makefile" \
 		--ignore "README" \
 		--ignore "utils" \
 		--ignore "wallpaper" \
-		--ignore ".gtkrc-2.0" \
-		--ignore ".local/services"
+		--ignore "todo"
+		# --ignore ".gtkrc-2.0" \
 
 .PHONY : stow
 stow :
@@ -22,18 +22,6 @@ stow :
 	[[ -d $(HOME)/.local/share/applications ]] || mkdir -p $(HOME)/.local/share/applications # making .local/share directory
 	[[ -d $(HOME)/.cache/zsh ]] || mkdir -p $(HOME)/.cache/zsh # making .local/share directory
 	stow --target $(HOME) --verbose $(stow_dirs) $(IGNORE_FLAGS)
-
-.PHONY : install-services
-install-services :
-	sudo ln -sf $(PWD)/.local/services/slock@.service /usr/lib/systemd/system/slock@.service
-	sudo systemctl enable slock@.service
-	sudo systemctl start slock@.service
-
-.PHONY : delete-services
-delete-services :
-	sudo rm /etc/systemd/system/slock@.service
-	sudo systemctl stop slock@.service
-	sudo systemctl disable slock@.service
 
 .PHONY : restow
 restow :
