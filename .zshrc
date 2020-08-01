@@ -91,3 +91,6 @@ PROMPT="%(?.%F{magenta}.%F{red})${prompt_symbol}%f "
 history() { fc -lim "*$@*" 1 }
 # In case fzf-history-widget does not work
 # bindkey '^r' history-incremental-search-backward
+
+[ -f /usr/bin/neofetch ] && neofetch
+[ -f /usr/bin/fortune ] && fortune

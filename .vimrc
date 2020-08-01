@@ -29,6 +29,7 @@ Plug 'airblade/vim-gitgutter'
 " Plug 'itchyny/lightline.vim'
 
 " quickscope https://www.youtube.com/watch?v=EsGSwNySNMU
+Plug 'srstevenson/vim-picker'
 Plug 'unblevable/quick-scope'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-surround'
@@ -42,10 +43,11 @@ Plug 'rking/ag.vim'
 Plug 'JamshedVesuna/vim-markdown-preview'
 " WORKS WITH NERDTREE:
 Plug 'ryanoasis/vim-devicons'
-Plug 'junegunn/fzf'
 Plug 'mbbill/undotree'
 Plug 'ChristianChiarulli/codi.vim'
 Plug 'neoclide/coc.nvim'
+Plug 'junegunn/fzf', { 'do': { ->fzf#install() } }
+Plug 'junegunn/fzf.vim'
 Plug 'gruvbox-community/gruvbox'
 call plug#end()
 
@@ -78,6 +80,7 @@ set laststatus=2 " for powerline
 
 " CREATE THE TAGS FILE INSTALL CTAGS FIRST:
 command! MakeTags !ctags -R .
+command! MakeTagsCppFull !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q /usr/include
 " - Use ^] to jump to tag under cursor
 " - Use ^t to jump back up the tags stack
 " - Use ^t for ambigious tags
@@ -92,11 +95,11 @@ nnoremap tl :tablast<CR>
 " SAVE XRESOURCES IN EVERY WRITE AND RELOAD:
 autocmd BufWritePost ~/.Xresources,~/.Xdefaults !xrdb %
 autocmd BufWritePost ~/.github/dwm !update-mime-database ~/.local/share/mime %
-autocmd BufRead ~/Dropbox/todo.md :Goyo
+autocmd BufRead ~/Dropbox/todo.txt :Goyo
 autocmd VimLeave * call system("xsel -ib", getreg('+')) " Prevent Vim from clearing the clipboard on exit
 
 " RUNING MAKE WITH PYTHON:
-autocmd Filetype python set makeprg=python3\ %:S
+autocmd Filetype python set makeprg=python2\ %:S
 " NOW WE CAN:
 "   -   Run :make
 "   -   :cl to list errors
@@ -177,3 +180,33 @@ set background=light
 " CODI PLUGIN SETUP FOR REPL WITH VIM
 highlight CodiVirtualText guifg=cyan
 let g:codi#virtual_text_prefix = "❯ "
+set background=light
+
+
+" ======== Ag command cheat sheet ========
+"
+"               e    to open file and close the quickfix window
+"               o    to open (same as enter)
+"               go   to preview file (open but maintain focus on ag.vim results)
+"               t    to open in new tab
+"               T    to open in new tab silently
+"               h    to open in horizontal split
+"               H    to open in horizontal split silently
+"               v    to open in vertical split
+"               gv   to open in vertical split silently
+"               q    to close the quickfix window
+"
+"
+" ======== vim picker command mappings ========
+nmap <unique> <leader>pe <Plug>(PickerEdit)
+nmap <unique> <leader>ps <Plug>(PickerSplit)
+nmap <unique> <leader>pt <Plug>(PickerTabedit)
+nmap <unique> <leader>pv <Plug>(PickerVsplit)
+nmap <unique> <leader>pb <Plug>(PickerBuffer)
+nmap <unique> <leader>p] <Plug>(PickerTag)
+nmap <unique> <leader>pw <Plug>(PickerStag)
+nmap <unique> <leader>po <Plug>(PickerBufferTag)
+nmap <unique> <leader>ph <Plug>(PickerHelp)
+
+let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
+let $FZF_DEFAULT_OPTS='--reverse'
