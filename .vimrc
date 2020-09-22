@@ -45,7 +45,7 @@ Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'ryanoasis/vim-devicons'
 Plug 'mbbill/undotree'
 Plug 'ChristianChiarulli/codi.vim'
-Plug 'neoclide/coc.nvim'
+" Plug 'neoclide/coc.nvim'
 Plug 'junegunn/fzf', { 'do': { ->fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'gruvbox-community/gruvbox'
@@ -172,7 +172,7 @@ set updatetime=850
 set spell
 set spelllang=en_us
 color gruvbox
-set background=light
+set background=dark
 
 " " QUICKSCOPE TRIGGER A HIGHLIGHT IN THE APPROPRIATE DIRECTION WHEN PRESSING THESE KEYS:
 " let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
@@ -180,7 +180,6 @@ set background=light
 " CODI PLUGIN SETUP FOR REPL WITH VIM
 highlight CodiVirtualText guifg=cyan
 let g:codi#virtual_text_prefix = "❯ "
-set background=light
 
 
 " ======== Ag command cheat sheet ========

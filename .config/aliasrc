@@ -16,7 +16,7 @@ alias ka="killall" \
 	grep="grep --color=auto" \
 	diff="diff --color=auto" \
 	ccat="highlight --out-format=ansi" \
-	yta="yt -x -f bestaudio/best --audio-format mp3" \
+	yta="youtube-dl -x -f bestaudio/best --audio-format mp3" \
     yt_playlist="youtube-dl -f 136+250 -citk –format mp4 –yes-playlist -c" \
     yt_best="youtube-dl -f 248+250" \
     yt_480="youtube-dl -f 135+250" \
@@ -34,7 +34,7 @@ alias ka="killall" \
     battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0' \
     doc='$BROWSER /usr/share/doc/arch-wiki/html/en > /dev/null' \
     minecraft='java -jar ~/software/TLauncher-2.67/TLauncher-2.67.jar' \
-    do='vim ~/Dropbox/todo.txt' \
+    do='vimdiff ~/Dropbox/todo.txt ~/Dropbox/done.txt' \
     corona='curl https://corona-stats.online' \
     weather='curl https://wttr.in/stepanakert' \
     doc_ardupilot='chromium ~/github/adana/docs/docs/parameters.html' \
@@ -46,6 +46,7 @@ alias ka="killall" \
     tn='tmux new -s' \
     cp='cp -iv' \
     inav='~/software/inav/INAV\ Configurator/inav-configurator' \
+    wallpaper='sxiv ~/Dropbox/wallpaper'
 	# yt="youtube-dl --add-metadata -i -o '%(upload_date)s-%(title)s.%(ext)s'" \
 
 
