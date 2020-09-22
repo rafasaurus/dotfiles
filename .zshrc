@@ -94,3 +94,4 @@ history() { fc -lim "*$@*" 1 }
 
 [ -f /usr/bin/neofetch ] && neofetch
 [ -f /usr/bin/fortune ] && fortune
+bindkey "^?" backward-delete-char
