@@ -34,7 +34,7 @@ delete :
 .PHONY : install-prereqs
 install-prereqs :
 	sudo pacman -S stow \
-					vim nvim \
+					vim neovim \
 					git \
 					rofi \
 					sxhkd \
@@ -44,7 +44,12 @@ install-prereqs :
 					sxiv imagemagick \
 					ffmpeg \
 					networkmanager \
-					ttf-joypixels ttf-symbola \
+					ttf-joypixels \
+					ttf-linux-libertine \
+					ttf-inconsolata \
+					ttf-font-awesome \
+					xwallpaper \
+					python-pip \
 					pulseaudio pulseaudio-alsa alsa-utils \
 					maim \
 					unrar unzip \
@@ -53,6 +58,11 @@ install-prereqs :
 					poppler \
 					highlight \
 					fzf \
-					xorg-xbacklight xorg-xprop xorg-xinit xorg-xwininfo xorg-server \
+					xorg-xbacklight xorg-xprop xorg-xinit xorg-xwininfo xorg-server\
+					openssh
+	 sudo pip install pywal
+	 # install manually
+	 # libxft-bgra-git
+	 # ttf-devicons
 
 
