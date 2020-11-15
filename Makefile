@@ -55,11 +55,13 @@ install-prereqs :
 					unrar unzip \
 					youtube-dl \
 					zathura zathura-djvu \
+					zathura-pdf-poppler \
 					poppler \
 					highlight \
 					fzf \
 					xorg-xbacklight xorg-xprop xorg-xinit xorg-xwininfo xorg-server\
-					openssh
+					openssh \
+					ttf-liberation\
 	 sudo pip install pywal
 	 # install manually
 	 # libxft-bgra-git
