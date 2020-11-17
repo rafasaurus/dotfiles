@@ -27,15 +27,15 @@ Print
 shift+Print
     maim -o --nodecorations 2 -s $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
 Caps_Lock
-    ~/.local/bin/scripts/tools/caps_state.sh && ~/.local/bin/scripts/tools/caps_state.sh && sleep 50
+    ~/.local/bin/scripts/tools/caps_state.sh
 alt+shift+l
     ~/.local/bin/scripts/commands/kblyt
 alt+shift+u 
-	setxkbmap -layout 'us' && xset r rate 240 50 && notify-send "lng english"
+    setxkbmap -layout 'us' && notify-send "lng english"
 alt+shift+a 
-	setxkbmap -layout 'am' -variant 'phonetic' && xset r rate 240 50 && notify-send "lng armenian"
+	setxkbmap -layout 'am' -variant 'phonetic' && notify-send "lng armenian"
 alt+shift+r
-	setxkbmap -layout 'ru' -variant 'phonetic' && xset r rate 240 50 && notify-send "lng russian"
+	setxkbmap -layout 'ru' -variant 'phonetic' && notify-send "lng russian"
 alt+shift+p
     ~/.local/bin/scripts/commands/power
 XF86PowerOff
