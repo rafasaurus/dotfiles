@@ -46,7 +46,9 @@ alias ka="killall" \
     tn='tmux new -s' \
     cp='cp -iv' \
     inav='~/software/inav/INAV\ Configurator/inav-configurator' \
-    wallpaper='sxiv ~/Dropbox/wallpaper'
+    wallpaper='sxiv ~/Dropbox/wallpaper' \
+    bton='bluetoothctl power on' \
+    btoff='bluetoothctl power off'
 	# yt="youtube-dl --add-metadata -i -o '%(upload_date)s-%(title)s.%(ext)s'" \
 
 
@@ -59,8 +61,10 @@ PATH=$PATH:$HOME/.scripts/commands
 PATH=$PATH:$HOME/.local/bin
 PATH=$PATH:$HOME/.local/bin/scripts
 PATH=$PATH:$HOME/.local/bin/scripts/tools
+PATH=$PATH:$HOME/.local/bin/scripts/commands
 PATH=$PATH:$HOME/.local/bin/screenlayout
 PATH=$PATH:$HOME/.gem/ruby/2.6.0/bin
+PATH=$PATH:/opt/gcc-arm-none-eabi-9-2019-q4-major/bin
 export PATH
 
 vf() { fzf | xargs -r -I % $EDITOR % ;}

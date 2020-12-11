@@ -26,8 +26,8 @@ Print
     maim $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
 shift+Print
     maim -o --nodecorations 2 -s $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
-Caps_Lock
-    ~/.local/bin/scripts/tools/caps_state.sh
+# Caps_Lock
+#     ~/.local/bin/scripts/tools/caps_state.sh
 alt+shift+l
     ~/.local/bin/scripts/commands/kblyt
 alt+shift+u 

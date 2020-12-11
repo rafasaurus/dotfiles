@@ -144,7 +144,7 @@ map qw "+
 set number
 set relativenumber
 " Update bindekeys when sxhdrc is updated
-autocmd BufWritePost *sxhkdrc !pkill sxhkd; setsid sxhkd &
+autocmd BufWritePost *sxhkdrc !pkill sxhkd; sleep 1; setsid sxhkd &
 autocmd BufWritePost ~/.Xresources,~/.Xdefaults !xrdb %
 set timeout 
 set timeoutlen=150
