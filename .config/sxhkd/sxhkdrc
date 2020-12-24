@@ -3,7 +3,7 @@
 alt+Return
     st
 XF86AudioMute
-    pactl set-sink-mute 0 toggle
+    pactl set-sink-mute 1 toggle && notify-send "mute toggle"
 XF86AudioPlay
     playerctl play-pause
 XF86AudioNext
@@ -58,3 +58,7 @@ alt+e
     dmenuunicode
 alt+{F9,F10}
 	{dmenumount, dmenuumount}
+alt+F7
+    ~/.local/bin/scripts/tools/translate urban selection && notify-send "translating..."
+alt+shift+F7
+    ~/.local/bin/scripts/tools/translate chtsh selection && notify-send "translating..."
