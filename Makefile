@@ -1,3 +1,9 @@
+#
+# Install manually
+# libxft-bgra-git
+# ttf-devicons
+#
+
 stow_dirs = $(wildcard .)
 IGNORE_FLAGS= --ignore "Makefile" \
 		--ignore ".docs" \
@@ -22,6 +28,12 @@ stow :
 	[[ -d $(HOME)/.local/share/applications ]] || mkdir -p $(HOME)/.local/share/applications # making .local/share directory
 	[[ -d $(HOME)/.cache/zsh ]] || mkdir -p $(HOME)/.cache/zsh # making .local/share directory
 	stow --target $(HOME) --verbose $(stow_dirs) $(IGNORE_FLAGS)
+	@echo ''
+	@echo ''
+	@echo '******************************************************'
+	@echo 'Please read what should be manually installed'
+	@echo '******************************************************'
+	@echo ''
 
 .PHONY : restow
 restow :
@@ -61,10 +73,13 @@ install-prereqs :
 					fzf \
 					xorg-xbacklight xorg-xprop xorg-xinit xorg-xwininfo xorg-server\
 					openssh \
-					ttf-liberation\
-	 sudo pip install pywal
-	 # install manually
-	 # libxft-bgra-git
-	 # ttf-devicons
+					ttf-liberation
+	sudo pip install pywal undervolt
+	@echo ''
+	@echo ''
+	@echo '******************************************************'
+	@echo 'Please read what should be manually installed'
+	@echo '******************************************************'
+	@echo ''
 
 
