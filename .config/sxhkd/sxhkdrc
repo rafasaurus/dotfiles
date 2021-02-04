@@ -3,7 +3,9 @@
 alt+Return
     st
 XF86AudioMute
-    pactl set-sink-mute 1 toggle && notify-send "mute toggle"
+    amixer -D pulse set Master toggle && notify-send "muted/unmuted"
+# XF86AudioMute
+#     pactl set-sink-mute 0 toggle || notify-send "Can't mute"
 XF86AudioPlay
     playerctl play-pause
 XF86AudioNext
@@ -31,11 +33,11 @@ shift+Print
 alt+shift+l
     ~/.local/bin/scripts/commands/kblyt
 alt+shift+u 
-    setxkbmap -layout 'us' && notify-send "lng english"
+    setxkbmap -layout 'us' && notify-send "lng english 🇺🇸"
 alt+shift+a 
-	setxkbmap -layout 'am' -variant 'phonetic' && notify-send "lng armenian"
+	setxkbmap -layout 'am' -variant 'phonetic' && notify-send "lng armenian 🇦🇲"
 alt+shift+r
-	setxkbmap -layout 'ru' -variant 'phonetic' && notify-send "lng russian"
+	setxkbmap -layout 'ru' -variant 'phonetic' && notify-send "lng russian 🇷🇺"
 alt+shift+p
     ~/.local/bin/scripts/commands/power
 XF86PowerOff
