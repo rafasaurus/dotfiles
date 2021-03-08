@@ -16,7 +16,6 @@ IGNORE_FLAGS= --ignore "Makefile" \
 		--ignore "README" \
 		--ignore "utils" \
 		--ignore "wallpaper" \
-		--ignore "todo"
 		# --ignore ".gtkrc-2.0" \
 
 .PHONY : stow
@@ -27,6 +26,7 @@ stow :
 	[[ -d $(HOME)/.local/bin ]] || mkdir -p $(HOME)/.local/bin # making .local/share directory
 	[[ -d $(HOME)/.local/share/applications ]] || mkdir -p $(HOME)/.local/share/applications # making .local/share directory
 	[[ -d $(HOME)/.cache/zsh ]] || mkdir -p $(HOME)/.cache/zsh # making .local/share directory
+	[[ -d $(HOME)/.todo ]] || mkdir $(HOME)/.todo
 	stow --target $(HOME) --verbose $(stow_dirs) $(IGNORE_FLAGS)
 	@echo ''
 	@echo ''
@@ -79,6 +79,7 @@ install-prereqs :
 	@echo ''
 	@echo '******************************************************'
 	@echo 'Please read what should be manually installed'
+	@echo 'Install Fira Code from aur'
 	@echo '******************************************************'
 	@echo ''
 
