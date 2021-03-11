@@ -46,34 +46,12 @@ delete :
 .PHONY : install-prereqs
 install-prereqs :
 	sudo pacman -S stow \
-					vim neovim \
-					git \
-					rofi \
-					sxhkd \
-					arandr \
-					ranger \
-					dunst \
-					sxiv imagemagick \
-					ffmpeg \
-					networkmanager \
-					ttf-joypixels \
-					ttf-linux-libertine \
-					ttf-inconsolata \
-					ttf-font-awesome \
-					xwallpaper \
-					python-pip \
-					pulseaudio pulseaudio-alsa alsa-utils \
-					maim \
-					unrar unzip \
-					youtube-dl \
-					zathura zathura-djvu \
-					zathura-pdf-poppler \
-					poppler \
-					highlight \
-					fzf \
-					xorg-xbacklight xorg-xprop xorg-xinit xorg-xwininfo xorg-server\
-					openssh \
-					ttf-liberation
+					base-devel vim neovim git rofi sxhkd arandr ranger dunst sxiv imagemagick ffmpeg \
+					networkmanager ttf-joypixels ttf-linux-libertine ttf-inconsolata \
+					ttf-font-awesome xwallpaper python-pip pulseaudio pulseaudio-alsa alsa-utils \
+					maim unrar unzip youtube-dl zathura zathura-djvu zathura-pdf-poppler \
+					poppler highlight fzf xorg-xbacklight xorg-xprop xorg-xinit xorg-xwininfo xorg-server\
+					openssh ttf-liberation
 	sudo pip install pywal undervolt
 	@echo ''
 	@echo ''
@@ -83,4 +61,8 @@ install-prereqs :
 	@echo '******************************************************'
 	@echo ''
 
-
+.PHONY : install-paru
+install-paru :
+	git clone https://aur.archlinux.org/paru.git
+	cd paru
+	makepkg -si
