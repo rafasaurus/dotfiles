@@ -8,6 +8,7 @@ left click to update" ;;
 	6) "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
 
+today=$(todo.sh listall | grep $(date +%Y-%m-%d) | wc -l)
 todo=$(todo.sh list | grep TODO | awk '{printf $4}')
 done=$(todo.sh listall | grep DONE | awk '{printf $4}')
-echo 🚀$todo/$done
+echo 🚀$todo/$today:$done
