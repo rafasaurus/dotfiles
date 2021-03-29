@@ -8,4 +8,6 @@ left click to update" ;;
 	6) "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
 
-todo.sh list  | grep TODO | awk '{printf "🚀"$4}'
+todo=$(todo.sh list | grep TODO | awk '{printf $4}')
+done=$(todo.sh listall | grep DONE | awk '{printf $4}')
+echo 🚀$todo/$done
