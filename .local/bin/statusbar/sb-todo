@@ -1,10 +1,9 @@
 #!/bin/sh
 
 case $BLOCK_BUTTON in
-	1) notify-send "🚀 updating todo list" ;;
+	1) notify-send "🚀 updating todo list";; 
 	2) setsid -f "$TERMINAL" -e vim ~/Dropbox/todo.txt || notify-send "🚀failed to open ~/Dropbox/todo.txt";;
-	3) notify-send "🚀 wheel click to open with vim
-left click to update" ;;
+	3) [ $(ps aux | ag "surf habitica.com" | wc -l) -eq 1 ] && surf habitica.com || notify-send "⛔habitica already running";;
 	6) "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
 
