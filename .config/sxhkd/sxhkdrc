@@ -3,7 +3,8 @@
 alt+Return
     st
 XF86AudioMute
-    amixer -D pulse set Master toggle && notify-send "muted/unmuted"
+    amixer -D pulse set Master toggle && kill -44 $(pidof dwmblocks)
+
 # XF86AudioMute
 #     pactl set-sink-mute 0 toggle || notify-send "Can't mute"
 XF86AudioPlay
@@ -13,9 +14,9 @@ XF86AudioNext
 XF86AudioPrev
     playerctl previous
 XF86AudioRaiseVolume
-    amixer -D pulse sset Master 5%+
+    amixer -D pulse sset Master 5%+ && kill -44 $(pidof dwmblocks)
 XF86AudioLowerVolume
-    amixer -D pulse sset Master 5%-
+    amixer -D pulse sset Master 5%- && kill -44 $(pidof dwmblocks)
 XF86MonBrightnessUp
     xbacklight -inc 5 # increase screen brightness
 alt+v
@@ -25,9 +26,9 @@ XF86MonBrightnessDown
 alt+c
     xbacklight -dec 5 # decrease screen brightness
 Print
-    maim $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
+    maim $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5
 shift+Print
-    maim -o --nodecorations 2 -s $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png
+    maim -o --nodecorations 2 -s $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5
 # Caps_Lock
 #     ~/.local/bin/scripts/tools/caps_state.sh
 alt+shift+l
@@ -47,7 +48,8 @@ alt+x
 alt+o
     rofi -show drun -columns 2 -show-icons -padding 18 -modi drun -theme ~/.cache/wal/colors-rofi-dark.rasi
 alt+r
-    xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
+    st -e cava
+#    xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
 alt+a
     ~/.local/bin/scripts/tools/cabl
 alt+d
