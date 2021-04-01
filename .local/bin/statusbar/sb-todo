@@ -1,10 +1,12 @@
 #!/bin/sh
 
+# loads aliases for statusbar
+source sb-essentials
 case $BLOCK_BUTTON in
 	1) notify-send "🚀 updating todo list";; 
-	2) setsid -f "$TERMINAL" -f monospace:size=15 -g 120x30+350+220 -n "popup" -e vim ~/Dropbox/todo.txt || notify-send "🚀failed to open ~/Dropbox/todo.txt";;
+	2) POPUP_TERMINAL vim ~/Dropbox/todo.txt || notify-send "🚀failed to open ~/Dropbox/todo.txt";;
 	3) [ $(ps aux | ag "surf habitica.com" | wc -l) -eq 1 ] && surf habitica.com || notify-send "⛔habitica already running";;
-	6) "$TERMINAL" -g 120x30+350+220 -n "popup" -e "$EDITOR" "$0" ;;
+	6) POPUP_TERMINAL -e "$EDITOR" "$0" ;;
 esac
 
 today=$(todo.sh listall | grep $(date +%Y-%m-%d) | wc -l)
