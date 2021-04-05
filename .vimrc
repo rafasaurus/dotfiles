@@ -217,5 +217,3 @@ augroup myCmds
 au!
 autocmd VimEnter * silent !echo -ne "\e[2 q"
 augroup END
-
-autocmd Filetype perl compiler perl
