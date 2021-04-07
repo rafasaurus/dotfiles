@@ -29,7 +29,10 @@ Plug 'airblade/vim-gitgutter'
 " Plug 'itchyny/lightline.vim'
 
 " quickscope https://www.youtube.com/watch?v=EsGSwNySNMU
-Plug 'srstevenson/vim-picker'
+" Plug 'srstevenson/vim-picker'
+Plug 'tpope/vim-scriptease'
+" cxiw to chan swap words, cxc to clear
+Plug 'tommcdo/vim-exchange'
 Plug 'unblevable/quick-scope'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-surround'
@@ -81,6 +84,7 @@ set laststatus=2 " for powerline
 " CREATE THE TAGS FILE INSTALL CTAGS FIRST:
 command! MakeTags !ctags -R .
 command! MakeTagsCppFull !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q /usr/include
+command! MakeTagsPython !ctags -R --languages=python shellescape(system(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"))
 " - Use ^] to jump to tag under cursor
 " - Use ^t to jump back up the tags stack
 " - Use ^t for ambigious tags
@@ -171,7 +175,7 @@ set updatetime=850
 
 set spell
 set spelllang=en_us
-color gruvbox
+" color gruvbox
 set background=dark
 
 " " QUICKSCOPE TRIGGER A HIGHLIGHT IN THE APPROPRIATE DIRECTION WHEN PRESSING THESE KEYS:
@@ -196,16 +200,16 @@ let g:codi#virtual_text_prefix = "❯ "
 "               q    to close the quickfix window
 "
 "
-" ======== vim picker command mappings ========
-nmap <unique> <leader>pe <Plug>(PickerEdit)
-nmap <unique> <leader>ps <Plug>(PickerSplit)
-nmap <unique> <leader>pt <Plug>(PickerTabedit)
-nmap <unique> <leader>pv <Plug>(PickerVsplit)
-nmap <unique> <leader>pb <Plug>(PickerBuffer)
-nmap <unique> <leader>p] <Plug>(PickerTag)
-nmap <unique> <leader>pw <Plug>(PickerStag)
-nmap <unique> <leader>po <Plug>(PickerBufferTag)
-nmap <unique> <leader>ph <Plug>(PickerHelp)
+" " ======== vim picker command mappings ========
+" nmap <unique> <leader>pe <Plug>(PickerEdit)
+" nmap <unique> <leader>ps <Plug>(PickerSplit)
+" nmap <unique> <leader>pt <Plug>(PickerTabedit)
+" nmap <unique> <leader>pv <Plug>(PickerVsplit)
+" nmap <unique> <leader>pb <Plug>(PickerBuffer)
+" nmap <unique> <leader>p] <Plug>(PickerTag)
+" nmap <unique> <leader>pw <Plug>(PickerStag)
+" nmap <unique> <leader>po <Plug>(PickerBufferTag)
+" nmap <unique> <leader>ph <Plug>(PickerHelp)
 
 let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
 let $FZF_DEFAULT_OPTS='--reverse'
@@ -217,3 +221,14 @@ augroup myCmds
 au!
 autocmd VimEnter * silent !echo -ne "\e[2 q"
 augroup END
+
+:imap kj <Esc>
+:imap jk <Esc>
+
+" todo.sh shortcuts
+command! -range Done call MoveSelectedLinesToFile('~/Dropbox/done.txt')
+command! -range Udone call MoveSelectedLinesToFile('~/Dropbox/todo.txt')
+fun! MoveSelectedLinesToFile(filename)
+    exec "'<,'>w! >>" . a:filename
+    norm gvd
+endfunc
