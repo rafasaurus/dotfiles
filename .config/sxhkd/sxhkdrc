@@ -26,18 +26,18 @@ XF86MonBrightnessDown
 alt+c
     xbacklight -dec 5 # decrease screen brightness
 Print
-    maim $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5
+    maim $HOME/Pictures/screenshots/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5
 shift+Print
-    maim -o --nodecorations 2 -s $HOME/Pictures/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5
+    maim -o --nodecorations 2 -s $HOME/Pictures/screenshots/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5
 # Caps_Lock
 #     ~/.local/bin/scripts/tools/caps_state.sh
 alt+shift+l
     ~/.local/bin/scripts/commands/kblyt
-alt+shift+u 
+alt+u 
     setxkbmap -layout 'us' && notify-send "lng english 🇺🇸"
-alt+shift+a 
+alt+a 
 	setxkbmap -layout 'am' -variant 'phonetic' && notify-send "lng armenian 🇦🇲"
-alt+shift+r
+alt+r
 	setxkbmap -layout 'ru' -variant 'phonetic' && notify-send "lng russian 🇷🇺"
 alt+shift+p
     ~/.local/bin/scripts/commands/power
@@ -47,10 +47,10 @@ alt+x
     ~/.local/bin/scripts/commands/scr
 alt+o
     rofi -show drun -columns 2 -show-icons -padding 18 -modi drun -theme ~/.cache/wal/colors-rofi-dark.rasi
-alt+r
+alt+shift+r
     st -e cava
 #    xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
-alt+a
+alt+shift+a
     ~/.local/bin/scripts/tools/cabl
 alt+d
     ~/.local/bin/scripts/tools/tools
