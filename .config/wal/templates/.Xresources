@@ -5,8 +5,9 @@
 ! ██╔╝░██╗██║░░██║███████╗███████║╚██████╔╝╚██████╔╝██║░░██║╚██████╗███████╗███████║
 ! ╚═╝░░╚═╝╚═╝░░╚═╝╚══════╝╚══════╝░╚═════╝░░╚═════╝░╚═╝░░╚═╝░╚═════╝╚══════╝╚══════╝
 
-*.alpha: 0.85
-*.font:	Liberation Mono:pixelsize=17:antialias=true:autohint=true;
+*.alpha: 0.83
+! *.font:	Fira Code:pixelsize=17:antialias=true:autohint=true;
+*.font:	monospace:pixelsize=17:antialias=true:autohint=true;
 *.cursorColor:	#00FF00
 
 ! *foreground: {foreground}
