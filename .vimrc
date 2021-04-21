@@ -175,7 +175,6 @@ set updatetime=850
 
 set spell
 set spelllang=en_us
-" color gruvbox
 set background=dark
 
 " " QUICKSCOPE TRIGGER A HIGHLIGHT IN THE APPROPRIATE DIRECTION WHEN PRESSING THESE KEYS:
@@ -232,3 +231,5 @@ fun! MoveSelectedLinesToFile(filename)
     exec "'<,'>w! >>" . a:filename
     norm gvd
 endfunc
+let g:neovide_cursor_vfx_mode = "railgun"
+" color gruvbox

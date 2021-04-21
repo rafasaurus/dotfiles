@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=2.8
+VERSION=2.9
 echo "***WARNING***: this script will override existing tmux config"
 sudo pacman -S wget tar libevent ncurses
 wget https://github.com/tmux/tmux/releases/download/${VERSION}/tmux-${VERSION}.tar.gz
@@ -12,4 +12,4 @@ sudo make install
 cd -
 sudo rm -rf /usr/local/src/tmux-*
 sudo mv tmux-${VERSION} /usr/local/src
-wget -O $HOME/.tmux.conf https://raw.githubusercontent.com/rafasaurus/config/master/.tmux.conf
+# wget -O $HOME/.tmux.conf https://raw.githubusercontent.com/rafasaurus/config/master/.tmux.conf

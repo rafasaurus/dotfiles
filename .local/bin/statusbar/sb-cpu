@@ -1,14 +1,16 @@
 #!/bin/sh
 
+source sb-essentials
 case $BLOCK_BUTTON in
 	1) notify-send "🖥 CPU hogs" "$(ps axch -o cmd:15,%cpu --sort=-%cpu | head)\\n(100% per core)" ;;
-	2) setsid -f "$TERMINAL" -e htop ;;
+    2) cpupower-gui ;;
+	# 2) POPUP_TERMINAL -e htop ;;
 	3) notify-send "🖥 CPU module " "\- Shows CPU temperature.
 - Click to show intensive processes.
 - Middle click to open htop." ;;
-	6) "$TERMINAL" -e "$EDITOR" "$0" ;;
+	6) POPUP_TERMINAL -e "$EDITOR" "$0" ;;
 esac
 
-clock=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq | awk '{if($NF+0>1000000)printf "%.1f GHz\n",$NF/1000000; else printf "%.f MHz\n",$NF}')
+clock=$(cat /sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq  | awk '{printf("%.1G\n", $1/1024000, fhz)}')
 temp=$(sensors | awk '/Core 0/ {print "🌡" $3}')
 echo $temp'|'$clock
