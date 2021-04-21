@@ -2,33 +2,29 @@
 
 # This file runs when a DM logs you into a graphical session.
 
-# feh --bg-scale ~/wallpaper/wall_5.jpg
 xwallpaper --zoom ~/.config/wall.png
-# ~/.local/bin/bg.sh ~/wallpaper/animated_4.mp4
-compton --config ~/.config/compton/config --vsync opengl --mark-wmwin-focused --mark-ovredir-focused -b --xrender-sync --xrender-sync-fence
-# picom --config ~/.config/compton/config -b --blur-method dual_kawase --blur-strength 20 --backend glx --experimental-backends
-
-# compton -CGb --backend glx #--vsync opengl-swc --xrender-sync --xrender-sync-fence
-slstatus &		# script for updating the status bar
-dunst &			# dunst for notifications
-logid &
-xset r rate 300 50 &	# Speed xrate up
+compton --config ~/.config/compton/config -b
+dwmblocks &
+dunst &
+xset r rate 300 50 &
 xmodmap $HOME/.Xmodmap &
-unclutter &		# Remove mouse when idle
-bluetoothctl power on &
-# i8kmon &
-# i8kfan - 0 &
+unclutter &
 sxhkd &			# Bind keys with sxhkd
 xrdb ~/.cache/wal/.Xresources # || xrdb ~/.Xresources # update x database
 bluetoothctl power on &
-# dropbox &
-# echo ~/.xprofile | entr notify-send "xprofile config changed" &
+com.gitlab.newsflash &
+dropbox &
+surf habitica.com &
+xrandr -s 1920x1080 --dpi 115 &
+pulseaudio &
+syncthing &
 
-xrandr --dpi 115 &
-if type chromium >/dev/null 2>/dev/null
+if type firefox >/dev/null 2>/dev/null
 then
-	export BROWSER=chromium
+	export BROWSER=firefox
 fi
 
-export BROWSER=chromium
+export BROWSER=firefox
+
+xrdb ~/.cache/wal/.Xresources # || xrdb ~/.Xresources # update x database
 notify-send "Welcome to Rice of RAFASAURUS"
