@@ -1,10 +1,11 @@
 #!/usr/bin/env sh
+
 while read file
 do
     case "$1" in
-        "v") bg.sh "${file%.*}.mp4" && wal -n -i "$file" && notify-send "mp4 done!" || notify-send "mp4 wallpaper failed" ;;
-        "w") wal -n -i "$file" --backend colorz || sleep 3 && xrdb ~/.cache/wal/.Xresources && setbg "$file" & ;;
-        "e") $TERMINAL -e vim ~/.config/sxiv/exec/key-handler & ;;
+        "w") wal -n -i "$file" --backend colorz || sleep 3 && xrdb ~/.cache/wal/.Xresources && setbg "$file" || notify-send "wallpaper failed";;
+        # "e") $TERMINAL -e vim ~/.config/sxiv/exec/key-handler & ;;
+        "e") neovide ~/.config/sxiv/exec/key-handler & ;;
         "o") pkill sxiv && sxiv -t `dirname "$file"` || notify-send "$file" ;;
         "c")
             [ -z "$destdir" ] && destdir="$(sed "s/\s.*#.*$//;/^\s*$/d" ~/.config/directories | awk '{print $2}' | dmenu -l 20 -i -p "Copy file(s) to where?" | sed "s|~|$HOME|g")"
