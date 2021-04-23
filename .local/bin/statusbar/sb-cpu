@@ -11,6 +11,6 @@ case $BLOCK_BUTTON in
 	6) POPUP_TERMINAL -e "$EDITOR" "$0" ;;
 esac
 
-clock=$(cat /sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq  | awk '{printf("%.1G\n", $1/1024000, fhz)}')
+clock=$(cat /sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq  | awk '{printf("%.1f\n", $1/1024000, fhz)}')
 temp=$(sensors | awk '/Core 0/ {print "🌡" $3}')
 echo $temp'|'$clock
