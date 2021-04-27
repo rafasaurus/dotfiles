@@ -3,7 +3,7 @@
 # This file runs when a DM logs you into a graphical session.
 
 xwallpaper --zoom ~/.config/wall.png
-# compton --config ~/.config/compton/config -b
+compton --config ~/.config/compton/config -b
 dwmblocks &
 dunst &
 xset r rate 300 50 &
@@ -17,7 +17,7 @@ dropbox &
 surf habitica.com &
 xrandr -s 1920x1080 --dpi 115 &
 pulseaudio &
-syncthing &
+syncthing --no-browser --no-console &
 
 if type firefox >/dev/null 2>/dev/null
 then
