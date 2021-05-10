@@ -3,6 +3,7 @@
 source sb-essentials
 
 clock=$(date '+%I')
+uptime=$(uptime -p | awk '{print $2*24+$4}')
 
 case "$clock" in
 	"00") icon="🕛" ;;
@@ -28,5 +29,4 @@ case $BLOCK_BUTTON in
 	6) POPUP_TERMINAL -e "$EDITOR" "$0" ;;
 esac
 
-# date "+%Y %b %d (%a) $icon%I:%M%p"
-date "+$icon%I:%M%p"
+echo $(date "+$icon%I:%M%p"):$uptime
