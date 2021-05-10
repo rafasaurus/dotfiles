@@ -3,7 +3,7 @@
 source sb-essentials
 
 clock=$(date '+%I')
-uptime=$(uptime -p | awk '{print $2*24+$4}')
+uptime=$(awk '{printf "%.d", $1/60/60}' /proc/uptime)
 
 case "$clock" in
 	"00") icon="🕛" ;;
