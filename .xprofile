@@ -17,14 +17,7 @@ dropbox &
 surf habitica.com &
 xrandr -s 1920x1080 --dpi 115 &
 pulseaudio &
-syncthing --no-browser --no-console &
-
-if type firefox >/dev/null 2>/dev/null
-then
-	export BROWSER=firefox
-fi
-
-export BROWSER=firefox
+syncthing --no-browser &
 
 xrdb ~/.cache/wal/.Xresources # || xrdb ~/.Xresources # update x database
 notify-send "Welcome to Rice of RAFASAURUS"

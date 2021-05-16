@@ -32,7 +32,8 @@ alias ka="killall" \
     wallpaper='sxiv ~/Dropbox/wallpaper' \
     bton='bluetoothctl power on' \
     btoff='bluetoothctl power off' \
-    paru='paru --bottomup' \ 
+    paru='paru --bottomup' \
+    study='mpv ~/Videos/study.mp4' \
 
 command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
 

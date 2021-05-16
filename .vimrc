@@ -136,7 +136,8 @@ nnoremap <C-h> :vertical resize -5<cr>
 nnoremap <C-j> :resize +5<cr>
 nnoremap <C-k> :resize -5<cr>
 nnoremap <C-l> :vertical resize +5<cr>
-
+nnoremap <leader>h :split<Space>
+nnoremap <leader>v :vsplit<Space>
 nnoremap <leader>n :NERDTreeToggle<cr>
 nnoremap <leader><space> :noh<cr>
 nnoremap <leader><tab> :FZF<CR>
@@ -224,12 +225,4 @@ augroup END
 :imap kj <Esc>
 :imap jk <Esc>
 
-" todo.sh shortcuts
-command! -range Done call MoveSelectedLinesToFile('~/Dropbox/done.txt')
-command! -range Udone call MoveSelectedLinesToFile('~/Dropbox/todo.txt')
-fun! MoveSelectedLinesToFile(filename)
-    exec "'<,'>w! >>" . a:filename
-    norm gvd
-endfunc
-let g:neovide_cursor_vfx_mode = "railgun"
-" color gruvbox
+color gruvbox

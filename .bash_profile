@@ -26,5 +26,5 @@ export BROWSER=chromium
 export VISUAL="/usr/bin/vim" # for crontab -e
 export EDITOR=vim 
 export TERMINAL=st
-export BROWSER=firefox
+export BROWSER=brave
 # [[ -f ~/.profile ]] && . ~/.profile
