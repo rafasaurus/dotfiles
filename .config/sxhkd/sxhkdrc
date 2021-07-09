@@ -31,15 +31,13 @@ shift+Print
     maim -o --nodecorations 2 -s $HOME/Pictures/screenshots/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5
 # Caps_Lock
 #     ~/.local/bin/scripts/tools/caps_state.sh
-alt+shift+l
-    ~/.local/bin/scripts/commands/kblyt
 alt+u 
     setxkbmap -layout 'us' && notify-send "lng english 🇺🇸"
 alt+a 
 	setxkbmap -layout 'am' -variant 'phonetic' && notify-send "lng armenian 🇦🇲"
 alt+r
 	setxkbmap -layout 'ru' -variant 'phonetic' && notify-send "lng russian 🇷🇺"
-alt+shift+p
+alt+Delete
     ~/.local/bin/scripts/commands/power
 XF86PowerOff
     ~/.local/bin/scripts/commands/power

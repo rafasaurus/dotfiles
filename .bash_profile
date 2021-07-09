@@ -25,6 +25,6 @@ export SUDO_ASKPASS="$HOME/.local/bin/dmenupass"
 export BROWSER=chromium
 export VISUAL="/usr/bin/vim" # for crontab -e
 export EDITOR=vim 
-export TERMINAL=st
-export BROWSER=brave
+export TERMINAL=alacritty
+export BROWSER=firefox
 # [[ -f ~/.profile ]] && . ~/.profile
