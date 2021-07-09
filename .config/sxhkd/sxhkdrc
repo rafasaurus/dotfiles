@@ -46,7 +46,7 @@ alt+x
 alt+o
     rofi -show drun -columns 2 -show-icons -padding 18 -modi drun -theme ~/.cache/wal/colors-rofi-dark.rasi
 alt+shift+o
-    locate -r pdf$ -r epub$ | dmenu -i -l 15 | xargs -d '\n' zathura
+    locate -r pdf$ -r epub$ | dmenu -i -l 15 | xargs -0 -r -d '\n' zathura
 alt+shift+r
     $TERMINAL -e cava
 #    xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
