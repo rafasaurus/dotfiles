@@ -1,2 +1,3 @@
 #!/bin/sh
+TERMINAL=st
 alias POPUP_TERMINAL="$TERMINAL -f monospace:size=15 -g 120x30+350+220 -n \"popup\""

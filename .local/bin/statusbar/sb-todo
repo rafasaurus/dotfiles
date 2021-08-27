@@ -3,7 +3,7 @@
 # loads aliases for statusbar
 source sb-essentials
 case $BLOCK_BUTTON in
-	1) notify-send "🚀 updating todo list";; 
+    1) notify-send -t 12000 "🚀 updating todo list\n $(todo.sh list)";; 
 	2) POPUP_TERMINAL zsh -c 'todo.sh list; zsh';;
 	3) [ $(ps aux | ag "surf habitica.com" | wc -l) -eq 1 ] && surf habitica.com || notify-send "⛔habitica already running";;
 	6) POPUP_TERMINAL -e "$EDITOR" "$0" ;;
