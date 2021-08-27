@@ -2,7 +2,7 @@
 # Install manually
 # libxft-bgra-git
 # ttf-devicons
-#
+# ttf-dejavu for monospaced
 
 stow_dirs = $(wildcard .)
 IGNORE_FLAGS= --ignore "Makefile" \
@@ -51,7 +51,7 @@ install-prereqs :
 					ttf-font-awesome xwallpaper python-pip pulseaudio pulseaudio-alsa alsa-utils \
 					maim unrar unzip youtube-dl zathura zathura-djvu zathura-pdf-poppler \
 					poppler highlight fzf xorg-xbacklight xorg-xprop xorg-xinit xorg-xwininfo xorg-server\
-					openssh ttf-liberation
+					openssh ttf-liberation ttf-dejavu
 	sudo pip install pywal undervolt
 	@echo ''
 	@echo ''
