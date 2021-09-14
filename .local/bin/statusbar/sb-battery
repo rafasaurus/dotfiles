@@ -3,6 +3,12 @@
 # Prints all batteries, their percentage remaining and an emoji corresponding
 # to charge status (🔌 for plugged up, 🔋 for discharging on battery, etc.).
 
+#!/bin/sh
+current=$(cat /sys/class/power_supply/BAT0/current_now)
+voltage=$(cat /sys/class/power_supply/BAT0/voltage_now)
+
+let wattage=$current/10000*$voltage/100000
+
 source sb-essentials
 
 case $BLOCK_BUTTON in
@@ -34,5 +40,5 @@ for battery in /sys/class/power_supply/BAT?*; do
 	# Will make a warn variable if discharging and low
 	[ "$status" = "🔋" ] && [ "$capacity" -le 25 ] && warn="❗"
 	# Prints the info
-	printf "%s%s%d%%" "$status" "$warn" "$capacity"; unset warn
+	printf "%s%s%d%% %dmW" "$status" "$warn" "$capacity" " $wattage"; unset warn
 done && exit 0
