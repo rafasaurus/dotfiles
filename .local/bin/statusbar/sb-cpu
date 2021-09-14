@@ -1,8 +1,21 @@
 #!/bin/sh
 
 source sb-essentials
+
+no_turbo=$(cat /sys/devices/system/cpu/intel_pstate/no_turbo)
+freq=$(cat /sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq  | awk '{printf("%.1f\n", $1/1024000, fhz)}')
+load=$(top -b -n1 | grep "Cpu(s)" | awk '{print $2 + $4}')
+
 case $BLOCK_BUTTON in
-	1) notify-send "🖥 CPU hogs" "$(ps axch -o cmd:15,%cpu --sort=-%cpu | head)\\n(100% per core)" ;;
+    1) if [ $no_turbo == '0' ]; then 
+	    notify-send "🖥 CPU hogs" "$(ps axch -o cmd:15,%cpu --sort=-%cpu | head)\\n(100% per core)"
+        echo 1 | sudo -A tee /sys/devices/system/cpu/intel_pstate/no_turbo
+        notify-send "turboboost disabled"
+    else
+	    notify-send "🖥 CPU hogs" "$(ps axch -o cmd:15,%cpu --sort=-%cpu | head)\\n(100% per core)"
+        echo 0 | sudo -A tee /sys/devices/system/cpu/intel_pstate/no_turbo
+        notify-send "turboboost enabled"
+    fi ;;
     2) cpupower-gui ;;
 	# 2) POPUP_TERMINAL -e htop ;;
 	3) notify-send "🖥 CPU module " "\- Shows CPU temperature.
@@ -11,8 +24,11 @@ case $BLOCK_BUTTON in
 	6) POPUP_TERMINAL -e "$EDITOR" "$0" ;;
 esac
 
-freq=$(cat /sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq  | awk '{printf("%.1f\n", $1/1024000, fhz)}')
-load=$(top -b -n1 | grep "Cpu(s)" | awk '{print $2 + $4}')
+if [ $no_turbo == '0' ]; then
+    turbo_icon='🥵'
+else
+    turbo_icon='🥶'
+fi
 
 temp=$(sensors | awk '/Core 0/ {print "🌡" $3}')
-echo $temp'|'$freq'|🏃'$load
+echo $temp'|'$freq'|🏃'$load'|'$turbo_icon
