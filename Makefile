@@ -16,6 +16,7 @@ IGNORE_FLAGS= --ignore "Makefile" \
 		--ignore "README" \
 		--ignore "utils" \
 		--ignore "wallpaper" \
+		--ignore "etc" \
 		# --ignore ".gtkrc-2.0" \
 
 .PHONY : stow
@@ -32,6 +33,7 @@ stow :
 	@echo ''
 	@echo '******************************************************'
 	@echo 'Please read what should be manually installed'
+	@echo 'Primarily udevs and fonts'
 	@echo '******************************************************'
 	@echo ''
 
@@ -66,3 +68,11 @@ install-paru :
 	git clone https://aur.archlinux.org/paru.git
 	cd paru
 	makepkg -si
+.PHONY : install-udev
+install-udev :
+	sudo cp -r etc/udev/rules.d/ /etc/udev/rules.d/
+	sudo udevadm control --reload-rules && sudo udevadm trigger
+
+.PHONY : uninstall-udev
+uninstall-udev :
+	sudo rm -r /etc/udev/rules.d/*
