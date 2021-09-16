@@ -1,0 +1,2 @@
+RUN+="/bin/chgrp turboboost /sys/devices/system/cpu/intel_pstate/no_turbo"
+RUN+="/bin/chmod g+w /sys/devices/system/cpu/intel_pstate/no_turbo"
