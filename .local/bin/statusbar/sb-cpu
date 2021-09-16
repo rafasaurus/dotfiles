@@ -9,12 +9,11 @@ load=$(top -b -n1 | grep "Cpu(s)" | awk '{print $2 + $4}')
 case $BLOCK_BUTTON in
     1) if [ $no_turbo == '0' ]; then 
 	    notify-send "🖥 CPU hogs" "$(ps axch -o cmd:15,%cpu --sort=-%cpu | head)\\n(100% per core)"
-        echo 1 | sudo -A tee /sys/devices/system/cpu/intel_pstate/no_turbo
-        notify-send "turboboost disabled"
+        # for permision please install turboboost.rule from udev
+        echo 1 | tee /sys/devices/system/cpu/intel_pstate/no_turbo && notify-send "turboboost disabled"
     else
 	    notify-send "🖥 CPU hogs" "$(ps axch -o cmd:15,%cpu --sort=-%cpu | head)\\n(100% per core)"
-        echo 0 | sudo -A tee /sys/devices/system/cpu/intel_pstate/no_turbo
-        notify-send "turboboost enabled"
+        echo 0 | tee /sys/devices/system/cpu/intel_pstate/no_turbo && notify-send "turboboost enabled"
     fi ;;
     2) cpupower-gui ;;
 	# 2) POPUP_TERMINAL -e htop ;;
