@@ -1,0 +1,1 @@
+KERNEL=="zram0", ATTR{disksize}="8G" RUN="/usr/bin/mkswap /dev/zram0", TAG+="systemd"
