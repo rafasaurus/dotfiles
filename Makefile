@@ -48,12 +48,12 @@ delete :
 .PHONY : install-prereqs
 install-prereqs :
 	sudo pacman -S stow \
-					base-devel vim neovim git rofi sxhkd arandr ranger dunst sxiv imagemagick ffmpeg \
-					networkmanager ttf-joypixels ttf-linux-libertine ttf-inconsolata \
-					ttf-font-awesome xwallpaper python-pip pulseaudio pulseaudio-alsa alsa-utils \
-					maim unrar unzip youtube-dl zathura zathura-djvu zathura-pdf-poppler \
-					poppler highlight fzf xorg-xbacklight xorg-xprop xorg-xinit xorg-xwininfo xorg-server\
-					openssh ttf-liberation ttf-dejavu
+		base-devel vim neovim git rofi sxhkd arandr ranger dunst sxiv imagemagick ffmpeg \
+		networkmanager ttf-joypixels ttf-linux-libertine ttf-inconsolata \
+		ttf-font-awesome xwallpaper python-pip pulseaudio pulseaudio-alsa alsa-utils \
+		maim unrar unzip youtube-dl zathura zathura-djvu zathura-pdf-poppler \
+		poppler highlight fzf xorg-xbacklight xorg-xprop xorg-xinit xorg-xwininfo xorg-server\
+		openssh ttf-liberation ttf-dejavu
 	sudo pip install pywal undervolt
 	@echo ''
 	@echo ''
@@ -70,7 +70,7 @@ install-paru :
 	makepkg -si
 .PHONY : install-udev
 install-udev :
-	sudo cp -r etc/udev/rules.d/ /etc/udev/rules.d/
+	sudo cp -r etc/udev/rules.d/* /etc/udev/rules.d/
 	sudo udevadm control --reload-rules && sudo udevadm trigger
 
 .PHONY : uninstall-udev
