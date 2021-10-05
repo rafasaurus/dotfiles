@@ -6,6 +6,7 @@
 #!/bin/sh
 current=$(cat /sys/class/power_supply/BAT0/current_now)
 voltage=$(cat /sys/class/power_supply/BAT0/voltage_now)
+time_left=$(upower -d | grep "time to empty:" | awk '{print $4}' | head -1)
 
 let wattage=$current/10000*$voltage/100000
 
@@ -19,8 +20,8 @@ case $BLOCK_BUTTON in
 ⚡: charged
 ❗: battery very low!
 - Scroll to change adjust xbacklight." ;;
-	4) xbacklight -inc 10 ;;
-	5) xbacklight -dec 10 ;;
+	# 4) xbacklight -inc 10 ;;
+	# 5) xbacklight -dec 10 ;;
 	6) POPUP_TERMINAL -e "$EDITOR" "$0" ;;
 esac
 
@@ -40,5 +41,5 @@ for battery in /sys/class/power_supply/BAT?*; do
 	# Will make a warn variable if discharging and low
 	[ "$status" = "🔋" ] && [ "$capacity" -le 25 ] && warn="❗"
 	# Prints the info
-	printf "%s%s%d%% %dmW" "$status" "$warn" "$capacity" " $wattage"; unset warn
+	printf "%s%s%d%% %dmW%s hours" "$status" "$warn" "$capacity" " $wattage" " $time_left"; unset warn
 done && exit 0
