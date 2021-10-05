@@ -18,8 +18,11 @@ ffmpeg -i input.mov -vf "setpts=0.2*PTS" -an output.mov
 ```
 make video out of images
 ```
- ffmpeg -y -r 25 -f concat -safe 0 -i tovid.txt -c:v libx264 -vf fps=25,format=yuv420p out.mp4
+    ffmpeg -y -r 25 -f concat -safe 0 -i tovid.txt -c:v libx264 -vf fps=25,format=yuv420p out.mp4
+or 
+    ffmpeg -r 5 -start_number 0 -pattern_type glob -i '*.jpg' -c:v libx264 -r 30 -pix_fmt yuv420p 5fps.mp4
 ```
+
 inside tovid.txt
 *   file 'file0 path'
 *   file 'file1 path'

@@ -1,6 +1,6 @@
 cmake -DBUILD_TIFF=ON \
     -DBUILD_opencv_java=OFF \
-    -DOPENCV_EXTRA_MODULES_PATH=/home/rafael/opencv/opencv_contrib-3.4.2/modules \
+    -DOPENCV_EXTRA_MODULES_PATH=~/opencv/opencv_contrib-3.4.15/modules \
     -DWITH_CUDA=OFF \
     -DENABLE_AVX=ON \
     -DWITH_OPENGL=ON \
@@ -17,7 +17,4 @@ cmake -DBUILD_TIFF=ON \
     -DINSTALL_PYTHON_EXAMPLES=OFF \
     -DINSTALL_C_EXAMPLES=OFF \
     -DCMAKE_BUILD_TYPE=RELEASE \
-    -DCMAKE_INSTALL_PREFIX=$(python3 -c "import sys; print(sys.prefix)") \
-    -DPYTHON_EXECUTABLE=$(which python3) \
-    -DPYTHON_INCLUDE_DIR=$(python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
-    -DPYTHON_PACKAGES_PATH=$(python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") ..
+    -DCMAKE_INSTALL_PREFIX=$(python3 -c "import sys; print(sys.prefix)") .. \

@@ -18,13 +18,15 @@ XF86AudioRaiseVolume
 XF86AudioLowerVolume
     amixer -D pulse sset Master 5%- && kill -44 $(pidof dwmblocks)
 XF86MonBrightnessUp
-    xbacklight -inc 5 # increase screen brightness
+    xbacklight -inc 2 # increase screen brightness
 alt+v
-    xbacklight -inc 5 # increase screen brightness
+    xbacklight -inc 2 # increase screen brightness
 XF86MonBrightnessDown
     xbacklight -dec 5 # decrease screen brightness
 alt+c
     xbacklight -dec 5 # decrease screen brightness
+alt+shift+v
+    pkill compton && compton --config ~/.config/compton/config -b
 Print
     maim $HOME/Pictures/screenshots/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5
 shift+Print
@@ -32,7 +34,7 @@ shift+Print
 # Caps_Lock
 #     ~/.local/bin/scripts/tools/caps_state.sh
 alt+u 
-    setxkbmap -layout 'us' && notify-send "lng english 🇺🇸"
+    setxkbmap -layout 'us' && notify-send "lng english 🇺🇸" && xmodmap.sh && caps_state.sh
 alt+a 
 	setxkbmap -layout 'am' -variant 'phonetic' && notify-send "lng armenian 🇦🇲"
 alt+r
@@ -52,8 +54,8 @@ alt+shift+r
 #    xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
 alt+shift+a
     ~/.local/bin/scripts/tools/cabl
-alt+d
-    ~/.local/bin/scripts/tools/tools
+# alt+d
+#     ~/.local/bin/scripts/tools/tools
 button8
     xte "keydown Alt_R" "keydown Tab" "keyup Alt_R" "keyup Tab" "sleep 1"
 button9

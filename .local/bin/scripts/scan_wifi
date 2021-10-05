@@ -1,0 +1,3 @@
+ #!/bin/sh
+nmcli -f ALL dev wifi
+

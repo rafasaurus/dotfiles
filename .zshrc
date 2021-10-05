@@ -96,5 +96,5 @@ history() { fc -lim "*$@*" 1 }
 # bindkey '^r' history-incremental-search-backward
 
 [ -f /usr/bin/neofetch ] && neofetch
-[ -f /usr/bin/fortune ] && fortune
+# [ -f /usr/bin/fortune ] && [ -f /usr/bin/cowsay ] && fortune | cowsay
 bindkey "^?" backward-delete-char
