@@ -12,7 +12,6 @@ unclutter &
 sxhkd &			# Bind keys with sxhkd
 xrdb ~/.cache/wal/.Xresources # || xrdb ~/.Xresources # update x database
 bluetoothctl power on &
-com.gitlab.newsflash &
 dropbox &
 surf habitica.com &
 xrandr -s 1920x1080 --dpi 115 &

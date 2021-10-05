@@ -41,7 +41,7 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'junegunn/goyo.vim'
 Plug 'coldfix/hexHighlight'
 Plug 'scrooloose/nerdtree'
-Plug 'dense-analysis/ale'
+" Plug 'dense-analysis/ale'
 Plug 'rking/ag.vim'
 Plug 'JamshedVesuna/vim-markdown-preview'
 " WORKS WITH NERDTREE:
@@ -84,7 +84,7 @@ set laststatus=2 " for powerline
 " CREATE THE TAGS FILE INSTALL CTAGS FIRST:
 command! MakeTags !ctags -R .
 command! MakeTagsCppFull !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q /usr/include
-command! MakeTagsPython !ctags -R --languages=python shellescape(system(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"))
+command! MakeTagsPython !ctags -R --languages=python "/usr/lib/python3.9/site-packages"
 " - Use ^] to jump to tag under cursor
 " - Use ^t to jump back up the tags stack
 " - Use ^t for ambigious tags
@@ -103,7 +103,7 @@ autocmd BufRead ~/Dropbox/todo.txt :Goyo
 autocmd VimLeave * call system("xsel -ib", getreg('+')) " Prevent Vim from clearing the clipboard on exit
 
 " RUNING MAKE WITH PYTHON:
-autocmd Filetype python set makeprg=python2\ %:S
+" autocmd Filetype python set makeprg=python2\ %:S
 " NOW WE CAN:
 "   -   Run :make
 "   -   :cl to list errors
@@ -226,3 +226,5 @@ augroup END
 :imap jk <Esc>
 
 color gruvbox
+
+" let g:ale_set_highlights = 0
