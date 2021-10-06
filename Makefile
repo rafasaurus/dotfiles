@@ -48,13 +48,15 @@ delete :
 .PHONY : install-prereqs
 install-prereqs :
 	sudo pacman -S stow \
-		base-devel vim neovim git rofi sxhkd arandr ranger dunst sxiv imagemagick ffmpeg \
+		base-devel gvim neovim git rofi sxhkd arandr ranger dunst sxiv imagemagick ffmpeg \
 		networkmanager ttf-joypixels ttf-linux-libertine ttf-inconsolata \
-		ttf-font-awesome xwallpaper python-pip pulseaudio pulseaudio-alsa alsa-utils \
-		maim unrar unzip youtube-dl zathura zathura-djvu zathura-pdf-poppler \
-		poppler highlight fzf xorg-xbacklight xorg-xprop xorg-xinit xorg-xwininfo xorg-server\
-		openssh ttf-liberation ttf-dejavu
-	sudo pip install pywal undervolt
+		xwallpaper python-pip pulseaudio pulseaudio-alsa alsa-utils \
+		maim unrar unzip youtube-dl zathura zathura-djvu zathura-pdf-mupdf \
+		poppler highlight fzf acpilight xorg-xprop xorg-xinit xorg-xwininfo xorg-server \
+		openssh ttf-liberation ttf-dejavu ttf-fira-code fontconfig ttf-roboto ttf-font-awesome \
+		unclutter
+
+	sudo pip install pywal undervolt wpm
 	@echo ''
 	@echo ''
 	@echo '******************************************************'
