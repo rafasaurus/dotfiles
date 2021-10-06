@@ -2,7 +2,7 @@
 
 # This file runs when a DM logs you into a graphical session.
 
-xwallpaper --zoom ~/.config/wall.png
+[-f ~/.config/wall.png] && xwallpaper --zoom ~/.config/wall.png || xwallpaper --zoom ~/.config/default_wall.jpg
 compton --config ~/.config/compton/config -b
 dwmblocks &
 dunst &
