@@ -5,6 +5,7 @@
 # ttf-dejavu for monospaced
 
 stow_dirs = $(wildcard .)
+TMUX_VERSION=2.8
 IGNORE_FLAGS= --ignore "Makefile" \
 		--ignore ".docs" \
 		--ignore ".fonts" \
@@ -17,6 +18,7 @@ IGNORE_FLAGS= --ignore "Makefile" \
 		--ignore "utils" \
 		--ignore "wallpaper" \
 		--ignore "etc" \
+		--ignore "tmux-${TMUX_VERSION}" \
 		# --ignore ".gtkrc-2.0" \
 
 .PHONY : stow
@@ -74,6 +76,12 @@ install-paru :
 install-udev :
 	sudo cp -r etc/udev/rules.d/* /etc/udev/rules.d/
 	sudo udevadm control --reload-rules && sudo udevadm trigger
+.PHONY : install-tmux
+install-tmux :
+	wget https://github.com/tmux/tmux/releases/download/${TMUX_VERSION}/tmux-${TMUX_VERSION}.tar.gz
+	tar xf tmux-${TMUX_VERSION}.tar.gz
+	rm -f tmux-${TMUX_VERSION}.tar.gz
+	cd tmux-${TMUX_VERSION} && ./configure && make && sudo make install
 
 .PHONY : uninstall-udev
 uninstall-udev :
