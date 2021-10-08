@@ -23,6 +23,9 @@ IGNORE_FLAGS= --ignore "Makefile" \
 
 .PHONY : stow
 stow :
+	# if mimeapps exists as file delele it, if its a symlink or does not exists do nothing
+	[ -L ~/.config/mimeapps.list ] || ([ -f ~/.config/mimeapps.list ] && rm ~/.config/mimeapps.list ) || echo ""
+	[ -L ~/.gtkrc-2.0 ] || ([ -d ~/.gtkrc-2.0 ] && rm ~/.gtkrc-2.0) || echo ""
 	[[ -d $(HOME)/.config ]] || mkdir $(HOME)/.config # making .local directory
 	[[ -d $(HOME)/.local ]] || mkdir $(HOME)/.local # making .local directory
 	[[ -d $(HOME)/.local/share ]] || mkdir -p $(HOME)/.local/share # making .local/share directory
@@ -43,8 +46,8 @@ stow :
 restow :
 	stow --target $(HOME) --verbose --restow $(stow_dirs) $(IGNORE_FLAGS)
 
-.PHONY : delete
-delete :
+.PHONY : destow
+destow :
 	stow -D --target $(HOME) --verbose $(stow_dirs) $(IGNORE_FLAGS)
 
 .PHONY : install-prereqs
