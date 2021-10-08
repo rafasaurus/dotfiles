@@ -10,3 +10,6 @@
 [submodule "dmenu"]
 	path = .suckless.d/dmenu
 	url = git@github.com:rafasaurus/dmenu
+[submodule "dwmblocks"]
+	path = .suckless.d/dwmblocks
+	url = git@github.com:rafasaurus/dwmblocks
