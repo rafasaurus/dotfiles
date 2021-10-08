@@ -56,7 +56,8 @@ install-prereqs :
 		maim unrar unzip youtube-dl zathura zathura-djvu zathura-pdf-mupdf \
 		poppler highlight fzf acpilight xorg-xprop xorg-xinit xorg-xwininfo xorg-server \
 		openssh ttf-liberation ttf-dejavu ttf-fira-code fontconfig ttf-roboto ttf-font-awesome \
-		unclutter
+		unclutter zsh xclip wget curl libevent ncurses libnotify pamixer upower the_silver_searcher \
+		redshift bluez-cups bluez-utils bluez pass qtpass mlocate lsof lxappearance xcursor-themes
 
 	sudo pip install pywal undervolt wpm
 	@echo ''
@@ -70,8 +71,10 @@ install-prereqs :
 .PHONY : install-paru
 install-paru :
 	git clone https://aur.archlinux.org/paru.git
-	cd paru
-	makepkg -si
+	cd paru && makepkg -si
+.PHONY : install-prereqs-paru
+install-prereqs-paru :
+	paru todo.sh compton-tryone
 .PHONY : install-udev
 install-udev :
 	sudo cp -r etc/udev/rules.d/* /etc/udev/rules.d/
@@ -82,6 +85,20 @@ install-tmux :
 	tar xf tmux-${TMUX_VERSION}.tar.gz
 	rm -f tmux-${TMUX_VERSION}.tar.gz
 	cd tmux-${TMUX_VERSION} && ./configure && make && sudo make install
+.PHONY : install-gui
+install-gui :
+	cd .suckless.d/dwm && sudo make install -j
+	cd .suckless.d/dwmblocks && sudo make install -j
+	cd .suckless.d/slstatus && sudo make install -j
+	cd .suckless.d/dmenu && sudo make install -j
+	cd .suckless.d/slock && sudo make install -j
+.PHONY : uninstall-gui
+uninstall-gui :
+	cd .suckless.d/dwm && sudo make uninstall
+	cd .suckless.d/dwmblocks && sudo make uninstall
+	cd .suckless.d/slstatus && sudo make uninstall
+	cd .suckless.d/dmenu && sudo make uninstall
+	cd .suckless.d/slock && sudo make uninstall
 
 .PHONY : uninstall-udev
 uninstall-udev :
