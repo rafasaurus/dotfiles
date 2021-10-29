@@ -60,7 +60,8 @@ install-prereqs :
 		poppler highlight fzf acpilight xorg-xprop xorg-xinit xorg-xwininfo xorg-server \
 		openssh ttf-liberation ttf-dejavu ttf-fira-code fontconfig ttf-roboto ttf-font-awesome \
 		unclutter zsh xclip wget curl libevent ncurses libnotify pamixer upower the_silver_searcher \
-		redshift bluez-cups bluez-utils bluez pass qtpass mlocate lsof lxappearance xcursor-themes
+		redshift bluez-cups bluez-utils bluez pass qtpass mlocate lsof lxappearance xcursor-themes \
+		cmake libc++abi libc++ cronie
 
 	sudo pip install pywal undervolt wpm
 	@echo ''
@@ -73,8 +74,11 @@ install-prereqs :
 
 .PHONY : install-paru
 install-paru :
-	git clone https://aur.archlinux.org/paru.git
+	[ -d paru ] || git clone https://aur.archlinux.org/paru.git 
 	cd paru && makepkg -si
+.PHONY : install-paru-packages
+install-paru-packages :
+	paru compton-tryone-git
 .PHONY : install-prereqs-paru
 install-prereqs-paru :
 	paru todo.sh compton-tryone
@@ -95,6 +99,13 @@ install-gui :
 	cd .suckless.d/slstatus && sudo make install -j
 	cd .suckless.d/dmenu && sudo make install -j
 	cd .suckless.d/slock && sudo make install -j
+.PHONY : clean-gui
+clean-gui :
+	cd .suckless.d/dwm && sudo make clean
+	cd .suckless.d/dwmblocks && sudo make clean
+	cd .suckless.d/slstatus && sudo make clean
+	cd .suckless.d/dmenu && sudo make clean
+	cd .suckless.d/slock && sudo make clean
 .PHONY : uninstall-gui
 uninstall-gui :
 	cd .suckless.d/dwm && sudo make uninstall
@@ -106,3 +117,6 @@ uninstall-gui :
 .PHONY : uninstall-udev
 uninstall-udev :
 	sudo rm -r /etc/udev/rules.d/*
+.PHONY : install-full
+install-full :  install-paru install-prereqs
+	echo "done"
