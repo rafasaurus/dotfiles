@@ -1,4 +1,4 @@
-"mauimauer        _                    
+"        _                    
 " __   _(_)_ __ ___  _ __ ___ 
 " \ \ / / | '_ ` _ \| '__/ __|
 "  \ V /| | | | | | | | | (__ 
@@ -41,6 +41,8 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'junegunn/goyo.vim'
 Plug 'coldfix/hexHighlight'
 Plug 'scrooloose/nerdtree'
+Plug 'derekwyatt/vim-fswitch' " switching header and sourc in cpp
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " Plug 'dense-analysis/ale'
 Plug 'rking/ag.vim'
 Plug 'JamshedVesuna/vim-markdown-preview'
@@ -48,10 +50,10 @@ Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'ryanoasis/vim-devicons'
 Plug 'mbbill/undotree'
 Plug 'ChristianChiarulli/codi.vim'
-" Plug 'neoclide/coc.nvim'
 Plug 'junegunn/fzf', { 'do': { ->fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'gruvbox-community/gruvbox'
+Plug 'tweekmonster/startuptime.vim'
 call plug#end()
 
 " PLUGIN CONFIGS:
@@ -140,7 +142,8 @@ nnoremap <leader>h :split<Space>
 nnoremap <leader>v :vsplit<Space>
 nnoremap <leader>n :NERDTreeToggle<cr>
 nnoremap <leader><space> :noh<cr>
-nnoremap <leader><tab> :FZF<CR>
+nnoremap <leader><tab> :FZF<cr>
+nnoremap <leader>s  :FSHere<cr> " vim-fswitch
 
 " CLIPBOARD COPY ALIAS:
 map qq "+
@@ -227,4 +230,8 @@ augroup END
 
 color gruvbox
 
+" search and highlight but do not jump
+nnoremap * :keepjumps normal! mi*`i<CR>
 " let g:ale_set_highlights = 0
+let g:fzf_tags_command = 'ctags -R'
+
