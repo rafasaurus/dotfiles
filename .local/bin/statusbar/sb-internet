@@ -8,7 +8,8 @@ source sb-essentials
 
 case $BLOCK_BUTTON in
 	# 1) POPUP_TERMINAL nmtui; pkill -RTMIN+4 dwmblocks ;;
-    1) nm-connection-editor ;;
+    1) networkmanager_dmenu ;;
+    2) nm-connection-editor ;;
 	3) notify-send "🌐 Internet module" "\- Click to connect
 📡: no wifi connection
 📶: wifi connection with quality
@@ -21,7 +22,7 @@ esac
 
 case "$(cat /sys/class/net/w*/operstate 2>/dev/null)" in
 	down) wifiicon="📡 " ;;
-	up) wifiicon="$(awk '/^\s*w/ { print "📶", int($3 * 100 / 70) "% " }' /proc/net/wireless)" ;;
+	up) wifiicon="$(awk '/^\s*w/ { print "📶", int($3 * 100 / 70) "%" }' /proc/net/wireless)" ;;
 esac
 
 printf "%s%s%s\n" "$wifiicon" "$(sed "s/down/❎/;s/up/🌐/" /sys/class/net/e*/operstate 2>/dev/null)" "$(sed "s/.*/🔒/" /sys/class/net/tun*/operstate 2>/dev/null)"
