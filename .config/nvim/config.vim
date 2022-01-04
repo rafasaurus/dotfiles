@@ -16,10 +16,15 @@ endif
 call plug#begin()
 Plug 'neovim/nvim-lspconfig'
 Plug 'honza/vim-snippets'
+Plug 'rking/ag.vim'
 Plug '9mm/vim-closer' " Closes brackets.
 Plug 'tpope/vim-commentary'
 Plug 'lifepillar/gruvbox8'
 Plug 'tweekmonster/startuptime.vim'
+Plug 'bignimbus/pop-punk.vim'
+Plug 'f-person/git-blame.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 call plug#end()
 
 " " CREATE THE TAGS FILE INSTALL CTAGS FIRST:
@@ -139,19 +144,16 @@ set shiftwidth=4
 
 " SHORTCUTS FOR TABS:
 nnoremap tn :tabnew<Space>
-nnoremap tk :tabnext<CR>
-nnoremap tj :tabprev<CR>
-nnoremap th :tabfirst<CR>
-nnoremap tl :tablast<CR>
 
-nmap <leader>c <Plug>CommentaryLine
 nmap <leader>s :source ~/.config/nvim/init.vim<CR>
 nmap <leader>i :LspInfo<CR>
-nmap <leader>l :lua vim.cmd('e'..vim.lsp.get_log_path())<CR>
+" nmap <leader>l :lua vim.cmd('e'..vim.lsp.get_log_path())<CR>
+nmap gc gcc
+unmap gcc
 
 set relativenumber
 set number
-color gruvbox8
+color elflord
 set scrolloff=2 " Keeps cursor 3 lines away from screen border.
 syntax enable
 filetype plugin on
@@ -167,66 +169,37 @@ set wildmenu
 nnoremap * :keepjumps normal! mi*`i<CR>
 autocmd BufWritePost *sxhkdrc !pkill sxhkd; sleep 1; setsid sxhkd &
 
-:lua << EOF
-local nvim_lsp = require('lspconfig')
 
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
-local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
--- Enable completion triggered by <c-x><c-o>
-buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
--- Mappings.
-local opts = { noremap=true, silent=true }
-
--- See `:help vim.lsp.*` for documentation on any of the below functions
-buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-buf_set_keymap('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-buf_set_keymap('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-buf_set_keymap('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-buf_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
-end
-
-local nvim_lsp = require('lspconfig')
-local util = require 'lspconfig/util'
-local servers = {'pylsp'}
-for _, lsp in ipairs(servers) do
-    nvim_lsp[lsp].setup {
-        on_attach = on_attach,
-        }
-end
-nvim_lsp.ccls.setup {
-    on_attach = on_attach,
-    cmd = { "ccls" } ,
-    filetypes = { "c", "cpp", "objc", "objcpp" },
-    root_dir = util.root_pattern("compile_commands.json", "build/compile_commands.json", ".ccls", "compile_flags.txt", ".git"),
-    init_options = {
-        compilationDatabaseDirectory = "build";
-        index = {
-            threads = 0;
-            };
-        clang = {
-            excludeArgs = { "-frounding-math"} ;
-            };
-        }
-    }
-vim.lsp.set_log_level("debug")
-EOF
+" Ag silversearcher
+if executable('ag')
+    set grepprg=ag\ --vimgrep\ $*
+    set grepformat^=%f:%l:%c:%m
+endif
 
 command! Format execute 'lua vim.lsp.buf.formatting()'
 
+function! ExecuteLeader(suffix)
+  let l:leader = get(g:,"mapleader","\\")
+
+  if l:leader == ' '
+    let l:leader = '1' . l:leader
+  endif
+
+  execute "normal ".l:leader.a:suffix
+endfunction
+command! -nargs=1 NormLead call ExecuteLeader(<f-args>)
+
+let g:gitblame_message_template = ' <author> • <date> • <summary> • <sha>'
+let g:gitblame_date_format = '%r'
+
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
+" Using Lua functions
+nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
+nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
