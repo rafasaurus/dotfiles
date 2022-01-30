@@ -9,5 +9,6 @@ keysym 0x2c = 0x2c 0x3c Prior
 keysym u = u U Prior
 keysym d = d D Next
 keysym f = f F Escape
+! keysym Escape = grave
 ! keysym 0x27 = 0x27 0x22 BackSpace
 ! keysym 0x3b = 0x3b 0x3a Delete

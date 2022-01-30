@@ -24,10 +24,10 @@ case $BLOCK_BUTTON in
 esac
 
 if [ $no_turbo == '0' ]; then
-    turbo_icon='🥵'
+    turbo_icon='🌶'
 else
-    turbo_icon='🥶'
+    turbo_icon='⛸'
 fi
 
 temp=$(sensors | awk '/Core 0/ {print "🌡" $3}')
-echo $temp'|'$freq'|🏃'$load'|'$turbo_icon
+echo $temp'|🏃'$load'|'$turbo_icon

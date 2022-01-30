@@ -27,4 +27,5 @@ export VISUAL="/usr/bin/vim" # for crontab -e
 export EDITOR=vim 
 export TERMINAL=alacritty
 export BROWSER=firefox
+export LD_LIBRARY_PATH="/usr/local/lib"
 # [[ -f ~/.profile ]] && . ~/.profile
