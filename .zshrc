@@ -98,3 +98,24 @@ history() { fc -lim "*$@*" 1 }
 [ -f /usr/bin/neofetch ] && neofetch
 # [ -f /usr/bin/fortune ] && [ -f /usr/bin/cowsay ] && fortune | cowsay
 bindkey "^?" backward-delete-char
+
+# share history across all zsh sessions
+setopt share_history
+
+up-line-or-local-history() {
+    zle set-local-history 1
+    zle up-line-or-history
+    zle set-local-history 0
+}
+zle -N up-line-or-local-history
+down-line-or-local-history() {
+    zle set-local-history 1
+    zle down-line-or-history
+    zle set-local-history 0
+}
+zle -N down-line-or-local-history
+
+bindkey '^[OA' up-line-or-history     # Cursor up
+bindkey '^[OB' down-line-or-history   # Cursor down
+bindkey '^[[1;5A' up-line-or-local-history    # [CTRL] + Cursor up
+bindkey '^[[1;5B' down-line-or-local-history  # [CTRL] + Cursor down
