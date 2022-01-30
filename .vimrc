@@ -228,10 +228,15 @@ augroup END
 :imap kj <Esc>
 :imap jk <Esc>
 
-color gruvbox
+" color gruvbox
+color elflord
 
 " search and highlight but do not jump
 nnoremap * :keepjumps normal! mi*`i<CR>
 " let g:ale_set_highlights = 0
 let g:fzf_tags_command = 'ctags -R'
 
+if executable('ag')
+  set grepprg=ag\ --vimgrep\ $*
+  set grepformat^=%f:%l:%c:%m
+endif

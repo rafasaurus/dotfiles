@@ -26,7 +26,6 @@ alias ka="killall" \
     d='todo.sh' \
     weather='curl https://wttr.in/stepanakert' \
     dict='sdcv' \
-    tn='tmux new -s' \
     cp='cp -iv' \
     inav='~/software/inav/INAV\ Configurator/inav-configurator' \
     wallpaper='sxiv ~/Dropbox/wallpaper' \
@@ -36,6 +35,7 @@ alias ka="killall" \
     study='mpv ~/Videos/study.mp4' \
     tree='exa --tree --level=2 --long -a --header --git' \
     sl='ls' \
+    noise='mpv ~/Music/white_noise.mp3' \
 
 command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
 
