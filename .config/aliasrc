@@ -36,6 +36,7 @@ alias ka="killall" \
     tree='exa --tree --level=2 --long -a --header --git' \
     sl='ls' \
     noise='mpv ~/Music/white_noise.mp3' \
+    lf='lfub'
 
 command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
 
