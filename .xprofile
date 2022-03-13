@@ -2,21 +2,24 @@
 
 # This file runs when a DM logs you into a graphical session.
 
-[-f ~/.config/wall.png] && xwallpaper --zoom ~/.config/wall.png || xwallpaper --zoom ~/.config/default_wall.jpg &
-compton --config ~/.config/compton/config -b &
+[ -f ~/.config/wall.png ] && xwallpaper --zoom ~/.config/wall.png || xwallpaper --zoom ~/.config/default_wall.jpg &
+picom --config ~/.config/compton/config -b --experimental-backends &
 dwmblocks &
 dunst &
 xset r rate 300 50 &
 xmodmap $HOME/.Xmodmap &
+cp ~/.cache/zsh/history ~/.cache/zsh/history.bak
 unclutter &
 sxhkd &			# Bind keys with sxhkd
 xrdb ~/.cache/wal/.Xresources # || xrdb ~/.Xresources & # update x database
 bluetoothctl power on &
 dropbox &
 surf habitica.com &
-xrandr -s 1920x1080 --dpi 125 &
-~/.screenlayout/built-in.sh &
+~/.screenlayout/4k &
 pulseaudio &
+wmbubble &
 syncthing --no-browser &
+# backup zsh history for good
+cp ~/.cach/zsh/history ~/.cache/zsh/history.bak
 
 # notify-send "Welcome to Rice of RAFASAURUS"
