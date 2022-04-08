@@ -4,6 +4,9 @@ while read file
 do
     case "$1" in
         "w") wal -n -i "$file" --backend `wal --backend | awk '{print $2}' | awk '/[a-z]/' | dmenu -i -p "choose pywal backend" -l 15` || sleep 3 && xrdb ~/.cache/wal/.Xresources && setbg "$file" || notify-send "wallpaper failed";;
+        "a") apply-hald-clut.sh "$file" | xargs -L 1 notify-send && pkill sxiv && sxiv -o `dirname $file` $file;;
+        "l") $TERMINAL -e vim ~/.local/bin/apply-hald-clut.sh "$file" ;;
+        "p") darktable "$file" ;;
         # "e") $TERMINAL -e vim ~/.config/sxiv/exec/key-handler & ;;
         "e") $TERMINAL -e vim  ~/.config/sxiv/exec/key-handler & ;;
         "o") pkill sxiv && sxiv -t `dirname "$file"` || notify-send "$file" ;;
