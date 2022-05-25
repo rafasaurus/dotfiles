@@ -29,4 +29,4 @@ case $BLOCK_BUTTON in
 	6) POPUP_TERMINAL -e "$EDITOR" "$0" ;;
 esac
 
-echo $(date "+$icon%I:%M%p"):$uptime
+echo $(date "+$icon%I:%M%p"):${uptime}h
