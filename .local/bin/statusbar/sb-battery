@@ -8,7 +8,7 @@ current=$(cat /sys/class/power_supply/BAT0/current_now)
 voltage=$(cat /sys/class/power_supply/BAT0/voltage_now)
 time_left=$(upower -d | grep "time to empty:" | awk '{print $4}' | head -1)
 
-let wattage=$current/10000*$voltage/100000
+let wattage="$current/10000*$voltage/100000"
 
 source sb-essentials
 
