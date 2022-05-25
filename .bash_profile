@@ -7,7 +7,7 @@
 export QT_QPA_PLATFORMTHEME="qt5ct"
 export QT_STYLE_OVERRIDE="Fusion"
 export QT_SCALE_FACTOR=1.25
-export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
+export GTK2_RC_FILES="$HOME/.config/.gtkrc-2.0"
 export _JAVA_AWT_WM_NONREPARENTING=1 # Fixing misbehaving Java applications
 export THEME=dark
 export XDG_SESSION_TYPE=X11
@@ -16,7 +16,7 @@ export XDG_MENU_PREFIX=lxde-
 export XDG_SESSION_DESKTOP="dwm"
 export XDG_CURRENT_DESKTOP="dwm"
 export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_DATA_DIRS="/usr/local/share:/usr/share"
+export XDG_DATA_DIRS="/usr/local/share:/usr/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share"
 export XDG_CONFIG_DIRS="/usr/share/upstart/xdg:/etc/xdg"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share/"
@@ -25,10 +25,11 @@ export DESKTOP_SESSION="dwm"
 export SUDO_ASKPASS="$HOME/.local/bin/dmenupass"
 export BROWSER=chromium
 export VISUAL="/usr/bin/vim" # for crontab -e
-export EDITOR=vim 
+export EDITOR=nvim 
 export TERMINAL=alacritty
 export BROWSER=firefox
 export LD_LIBRARY_PATH="/usr/local/lib"
+# export GTK_USE_PORTAL=1
 
 # This is the list for lf icons:
 export LF_ICONS="di=📁:\
