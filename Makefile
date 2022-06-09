@@ -53,9 +53,9 @@ destow :
 .PHONY : install-prereqs
 install-prereqs :
 	sudo pacman -S stow \
-		base-devel gvim neovim git rofi sxhkd arandr ranger dunst sxiv imagemagick ffmpeg \
+		base-devel neovim git rofi sxhkd arandr ranger dunst sxiv imagemagick ffmpeg \
 		networkmanager ttf-joypixels ttf-linux-libertine ttf-inconsolata \
-		xwallpaper python-pip pulseaudio pulseaudio-alsa alsa-utils \
+		xwallpaper python-pip pipewire pipewire-pulse wireplumber alsa-utils \
 		maim unrar unzip youtube-dl zathura zathura-djvu zathura-pdf-mupdf \
 		poppler highlight fzf acpilight xorg-xprop xorg-xinit xorg-xwininfo xorg-server \
 		openssh ttf-liberation ttf-dejavu ttf-fira-code fontconfig ttf-roboto ttf-font-awesome \
