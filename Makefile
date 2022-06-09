@@ -69,6 +69,9 @@ install-prereqs :
 	@echo '******************************************************'
 	@echo 'Please read what should be manually installed'
 	@echo 'Install Fira Code from aur'
+	@echo 'enable pipewire-pulse.service and socket per user'
+	@echo 'systemctl --user enable pipewire-pulse.service'
+	@echo 'systemctl --user enable pipewire-pulse.socket'
 	@echo '******************************************************'
 	@echo ''
 
