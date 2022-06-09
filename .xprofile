@@ -3,7 +3,8 @@
 # This file runs when a DM logs you into a graphical session.
 
 [ -f ~/.config/wall.png ] && xwallpaper --zoom ~/.config/wall.png || xwallpaper --zoom ~/.config/default_wall.jpg &
-picom --config ~/.config/compton/config -b --experimental-backends &
+# picom --config ~/.config/compton/config -b --experimental-backends &
+picom -b --experimental-backends --blur-method dual_kawase --blur-strength 5
 dwmblocks &
 dunst &
 xset r rate 300 50 &
@@ -16,9 +17,9 @@ bluetoothctl power on &
 dropbox &
 surf habitica.com &
 ~/.screenlayout/4k &
-pulseaudio &
 wmbubble &
 syncthing --no-browser &
+surf https://rss.bsd.am &
 # backup zsh history for good
 cp ~/.cach/zsh/history ~/.cache/zsh/history.bak
 
