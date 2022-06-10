@@ -85,7 +85,7 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 
 # Mimir git prompt
 autoload -Uz add-zsh-hook
-prompt_mimir_cmd() { mimir_zsh }
+prompt_mimir_cmd() { [ $(uname -m) = "x86_64" ] && mimir_zsh || mimir_armv7l}
 add-zsh-hook precmd prompt_mimir_cmd
 
 prompt_symbol='❯'
