@@ -46,7 +46,7 @@ nvim_lsp.ccls.setup {
     on_attach = on_attach,
     cmd = { "ccls" } ,
     filetypes = { "c", "cpp", "objc", "objcpp" },
-    root_dir = util.root_pattern("compile_commands.json", "build/compile_commands.json", ".ccls", "compile_flags.txt", ".git"),
+    root_dir = util.root_pattern("compile_commands.json", "build/compile_commands.json", "build/sitl/compile_commands.json", ".ccls", "compile_flags.txt", ".git"),
     init_options = {
         compilationDatabaseDirectory = "build";
         index = {

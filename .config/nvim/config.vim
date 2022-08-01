@@ -19,12 +19,16 @@ Plug 'honza/vim-snippets'
 Plug 'rking/ag.vim'
 Plug '9mm/vim-closer' " Closes brackets.
 Plug 'tpope/vim-commentary'
-Plug 'lifepillar/gruvbox8'
+Plug 'morhetz/gruvbox'
 Plug 'tweekmonster/startuptime.vim'
 Plug 'bignimbus/pop-punk.vim'
 Plug 'f-person/git-blame.nvim'
+Plug 'airblade/vim-gitgutter'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'kyoz/purify', { 'rtp': 'vim' }
+Plug 'junegunn/goyo.vim'
+Plug 'f-person/auto-dark-mode.nvim'
 call plug#end()
 
 " " CREATE THE TAGS FILE INSTALL CTAGS FIRST:
@@ -203,3 +207,6 @@ nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
+
+# set mouse=a
+color purify
