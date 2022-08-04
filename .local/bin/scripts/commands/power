@@ -1,11 +1,12 @@
 #!/bin/sh
-choices="lock\nsuspend\nshutdown\nreboot\nscreen_layout\0"
+choices=`echo "lock suspend suspend_and_lock shutdown reboot screen_layout" | tr ' ' '\n'`
 
 chosen=$(echo -e "$choices" | dmenu -i -p "Choose what to do ?" -l 15)
 echo $chosen
 case "$chosen" in
     lock) setxkbmap -layout 'us' && slock;;
-    suspend) ~/.screenlayout/built-in.sh && nordvpn disconnect && setxkbmap -layout 'us' && slock systemctl suspend  || slock systemctl suspend && setxkbmap -layout 'us';;
+    suspend_and_lock) ~/.screenlayout/built-in.sh && nordvpn disconnect && setxkbmap -layout 'us' && slock systemctl suspend  || slock systemctl suspend && setxkbmap -layout 'us';;
+    suspend) ~/.screenlayout/built-in.sh && nordvpn disconnect && setxkbmap -layout 'us' && systemctl suspend  || systemctl suspend && setxkbmap -layout 'us';;
     shutdown) ~/.local/bin/scripts/tools/prompt "Do you want to shutdown ?" "shutdown now";;
     reboot) ~/.local/bin/scripts/tools/prompt "Do you want to shutdown ?" "reboot";;
     screen_layout) ~/.local/bin/scripts/commands/scr ;;
