@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+languages=`echo "c++ c python bash" | tr ' ' '\n'`
+selected=`echo "$languages" | fzf --layout=reverse`
+
+read -p "Query for $selected should be entered. " query
+query="`echo $query | tr ' ' '+'`"
+
+# if grep -qs "$SELECTED"
+tmux neww zsh -c "curl cht.sh/$selected/$query & while [ : ]; do sleep 1; done"
