@@ -1,2 +1,13 @@
 #!/bin/sh
-`printf "xdg-open\nviewnior\nvlc\nnautilus\nfirefox" | dmenu -i -p "Open with.." -l 15` $1 &
+
+#!/bin/sh
+if [[ $1 == "" ]] #Where "$1" is the positional argument you want to validate 
+
+ then
+ echo "no arguments, path to file expected"
+ notify-send "no argument, path to file expected"
+ exit 0
+
+fi
+
+`echo "sxiv xdg-open viewnior vlc nautilus firefox" | tr ' ' '\n' | dmenu -i -p "Open with.." -l 15` $1 &
