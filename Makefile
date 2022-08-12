@@ -72,6 +72,7 @@ install-prereqs :
 	@echo 'enable pipewire-pulse.service and socket per user'
 	@echo 'systemctl --user enable pipewire-pulse.service'
 	@echo 'systemctl --user enable pipewire-pulse.socket'
+	@echo 'in order to use xsessions, you should run <install-gui>'
 	@echo '******************************************************'
 	@echo ''
 
@@ -102,6 +103,7 @@ install-gui :
 	cd .suckless.d/slstatus && sudo make install -j
 	cd .suckless.d/dmenu && sudo make install -j
 	cd .suckless.d/slock && sudo make install -j
+	sudo cp dwm.desktop /usr/share/xsessions
 .PHONY : clean-gui
 clean-gui :
 	cd .suckless.d/dwm && sudo make clean
@@ -116,6 +118,7 @@ uninstall-gui :
 	cd .suckless.d/slstatus && sudo make uninstall
 	cd .suckless.d/dmenu && sudo make uninstall
 	cd .suckless.d/slock && sudo make uninstall
+	sudo rm /usr/share/xsessions/dwm.desktop
 
 .PHONY : uninstall-udev
 uninstall-udev :
