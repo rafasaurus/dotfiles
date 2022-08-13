@@ -7,11 +7,11 @@ source sb-essentials
 case $BLOCK_BUTTON in
 	1) POPUP_TERMINAL -e pulsemixer ;;
 	2) pamixer -t ;;
-    4) amixer -D pulse sset Master 5%+ && kill -44 $(pidof dwmblocks);;
-    5) amixer -D pulse sset Master 5%- && kill -44 $(pidof dwmblocks);;
 	3) notify-send "📢 Volume module" "\- Shows volume 🔊, 🔇 if muted.
 - Middle click to mute.
 - Scroll to change." ;;
+    4) pamixer -i 10 && kill -44 $(pidof dwmblocks);;
+    5) pamixer -d 10 && kill -44 $(pidof dwmblocks);;
 	6) POPUP_TERMINAL -e "$EDITOR" "$0" ;;
 esac
 

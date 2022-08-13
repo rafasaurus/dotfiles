@@ -1,3 +1,6 @@
 #!/bin/sh
 TERMINAL=st
-alias POPUP_TERMINAL="$TERMINAL -f monospace:size=15 -g 120x30+350+220 -n \"popup\""
+alias POPUP_TERMINAL="$TERMINAL -f ComicCode-Bold:size=12 -g 140x30+330+220 -n \"popup\""
+alias SB_DEFAULT_EXEC_4_HANDLER="xbacklight -inc 1"
+alias SB_DEFAULT_EXEC_5_HANDLER="xbacklight -dec 1"
+
