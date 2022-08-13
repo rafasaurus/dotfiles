@@ -32,6 +32,8 @@ case $BLOCK_BUTTON in
 - Shows 🔃 if updating prices.
 - <b>Last updated:
 	$uptime</b>" ;;
+    4) sleep 0.01 ;;
+    5) sleep 0.01 ;;
 	6) "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
 

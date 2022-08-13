@@ -5,13 +5,15 @@
 
 case $BLOCK_BUTTON in
         # 1) setsid "$TERMINAL" -e newsboat ;;
-        1) surf -z 1.45 https://rss.bsd.am ;;
+        1) [ "2" -ne `ps ux | grep "surf -z 1.45 https://rss.bsd.am" | wc -l` ] && surf -z 1.45 https://rss.bsd.am ;;
 	    2) setsid -f newsup >/dev/null exit ;;
         3) notify-send "📰 News module" "\- Shows unread news items
 - Shows 🔃 if updating with \`newsup\`
 - Left click opens newsboat
 - Middle click syncs RSS feeds
 <b>Note:</b> Only one instance of newsboat (including updates) may be running at a time." ;;
+        4) sleep 0.01 ;;
+        5) sleep 0.01 ;;
         6) "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
 

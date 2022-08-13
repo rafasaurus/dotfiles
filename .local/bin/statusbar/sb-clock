@@ -26,6 +26,8 @@ case $BLOCK_BUTTON in
 	2) POPUP_TERMINAL calcurse ;;
 	3) notify-send "📅 Time/date module" "\- Left click to show upcoming appointments for the next three days via \`calcurse -d3\` and show the month via \`cal\`
 - Middle click opens calcurse if installed" ;;
+    4) ;;
+    5) ;;
 	6) POPUP_TERMINAL -e "$EDITOR" "$0" ;;
 esac
 

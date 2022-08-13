@@ -20,6 +20,8 @@ case $BLOCK_BUTTON in
 	3) notify-send "🖥 CPU module " "\- Shows CPU temperature.
 - Click to show intensive processes.
 - Middle click to open htop." ;;
+    4) ;;
+    5) ;;
 	6) POPUP_TERMINAL -e "$EDITOR" "$0" ;;
 esac
 
@@ -30,4 +32,5 @@ else
 fi
 
 temp=$(sensors | awk '/Core 0/ {print "🌡" $3}')
-echo $temp'|🏃'$load'|'$turbo_icon
+delim=''
+echo $temp$delim'🏃'$load$delim$turbo_icon

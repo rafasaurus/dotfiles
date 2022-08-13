@@ -2,9 +2,10 @@
 source sb-essentials
 
 case $BLOCK_BUTTON in
-    1) ~/.config/rofi/launchers/misc/launcher.sh ;;
-	# 4) xbacklight -inc 10 ;;
-	# 5) xbacklight -dec 10 ;;
+    1) power ;;
+    2) maim -o --nodecorations 2 -s $HOME/Pictures/screenshots/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5 ;;
+	4) xbacklight -inc 1 ;;
+	5) xbacklight -dec 1 ;;
 	6) POPUP_TERMINAL -e "$EDITOR" "$0" ;;
 esac
 

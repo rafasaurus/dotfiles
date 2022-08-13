@@ -17,6 +17,8 @@ case $BLOCK_BUTTON in
 🌐: ethernet working
 🔒: vpn is active
 " ;;
+    4) ;;
+    5) ;;
 	6) POPUP_TERMINAL "$EDITOR" "$0" ;;
 esac
 
