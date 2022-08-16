@@ -4,6 +4,8 @@ alt+Return
     $TERMINAL
 XF86AudioMute
     amixer -D pulse set Master toggle && kill -44 $(pidof dwmblocks)
+alt+ctrl+shift+m
+    amixer -D pulse set Master toggle && kill -44 $(pidof dwmblocks)
 
 # XF86AudioMute
 #     pactl set-sink-mute 0 toggle || notify-send "Can't mute"
@@ -14,9 +16,13 @@ XF86AudioNext
 XF86AudioPrev
     playerctl previous
 XF86AudioRaiseVolume
-    amixer -D pulse sset Master 5%+ && kill -44 $(pidof dwmblocks)
+    pamixer -i 10 && kill -44 $(pidof dwmblocks)
+alt+shift+ctrl+u
+    pamixer -i 10 && kill -44 $(pidof dwmblocks)
 XF86AudioLowerVolume
-    amixer -D pulse sset Master 5%- && kill -44 $(pidof dwmblocks)
+    pamixer -d 10 && kill -44 $(pidof dwmblocks)
+alt+shift+ctrl+d
+    pamixer -d 10 && kill -44 $(pidof dwmblocks)
 XF86MonBrightnessUp
     xbacklight -inc 2 # increase screen brightness
 alt+v
@@ -26,11 +32,18 @@ XF86MonBrightnessDown
 alt+c
     xbacklight -dec 5 # decrease screen brightness
 alt+shift+v
-    pkill compton && compton --config ~/.config/compton/config -b
+    pkill picom && picom --config ~/.config/compton/config -b --experimental-backends &
 Print
     maim $HOME/Pictures/screenshots/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5
 shift+Print
     maim -o --nodecorations 2 -s $HOME/Pictures/screenshots/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5
+shift+alt+ctrl+p
+    maim -o --nodecorations 2 -s $HOME/Pictures/screenshots/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5
+# TODO just for debuging flight
+shift+alt+ctrl+l
+    maim -o --nodecorations 2 -s /home/rafael/workspace/flights/21-04-2022/trajectories/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5
+    # maim -o --nodecorations 2 -s /home/rafael/workspace/trajectory-visualizer/scripts/trajectories/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5
+
 # Caps_Lock
 #     ~/.local/bin/scripts/tools/caps_state.sh
 alt+u 
@@ -40,13 +53,16 @@ alt+a
 alt+r
 	setxkbmap -layout 'ru' -variant 'phonetic' && notify-send "lng russian 🇷🇺"
 alt+Delete
-    ~/.local/bin/scripts/commands/power
+    ~/.local/bin/power
 XF86PowerOff
-    ~/.local/bin/scripts/commands/power
+    ~/.local/bin/power
 alt+x
     ~/.local/bin/scripts/commands/scr
 alt+o
-    rofi -show drun -columns 2 -show-icons -padding 18 -modi drun -theme ~/.cache/wal/colors-rofi-dark.rasi
+    ~/.config/rofi/launchers/type-3/launcher.sh
+    # ~/.config/rofi/launchers/misc/launcher.sh
+    # rofi -show drun -columns 2 -show-icons -padding 18 -modi drun -theme ~/.cache/wal/colors-rofi-dark.rasi
+
 alt+shift+o
     locate -r pdf$ -r epub$ | dmenu -i -l 15 | xargs -0 -r -d '\n' zathura
 alt+shift+r
