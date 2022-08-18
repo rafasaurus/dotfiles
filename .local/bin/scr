@@ -1,7 +1,13 @@
 #!/bin/sh
 choices=`echo "built-in 4k" | tr ' ' '\n'` 
 
-chosen=$(echo -e "$choices" | dmenu -i -p "Choose screen option" -l 15)
+if command -v xmenu
+then 
+    chosen=$(echo -e "$choices" | xmenu -p 0x0)
+else
+    chosen=$(echo -e "$choices" | dmenu -i -p "Choose screen option" -l 15)
+fi
+
 case "$chosen" in
     built-in) bash ~/.screenlayout/built-in.sh;;
     4k) bash ~/.screenlayout/4k.sh;;
