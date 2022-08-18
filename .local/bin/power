@@ -15,5 +15,5 @@ case "$chosen" in
     suspend) ~/.screenlayout/built-in.sh && nordvpn disconnect && setxkbmap -layout 'us' && systemctl suspend  || systemctl suspend && setxkbmap -layout 'us';;
     shutdown) ~/.local/bin/scripts/tools/prompt "Do you want to shutdown ?" "shutdown now";;
     reboot) ~/.local/bin/scripts/tools/prompt "Do you want to shutdown ?" "reboot";;
-    screen_layout) ~/.local/bin/scripts/commands/scr ;;
+    screen_layout) ~/.local/bin/scr ;;
 esac
