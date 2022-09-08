@@ -57,4 +57,18 @@ nvim_lsp.ccls.setup {
             };
         }
     }
+require('telescope').setup{
+  defaults = {
+     vimgrep_arguments = {
+        "ag",
+        "--nocolor",
+        "--noheading",
+        "--numbers",
+        "--column",
+        "--smart-case",
+        "--silent",
+        "--vimgrep",
+    }
+  }
+}
 vim.lsp.set_log_level("debug")
