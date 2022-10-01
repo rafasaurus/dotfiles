@@ -3,9 +3,10 @@
 while read file
 do
     case "$1" in
-        "w") wal -n -i "$file" --backend `wal --backend | awk '{print $2}' | awk '/[a-z]/' | dmenu -i -p "choose pywal backend" -l 15` || sleep 3 && xrdb ~/.cache/wal/.Xresources && setbg "$file" || notify-send "wallpaper failed";;
-        "a") apply-hald-clut.sh "$file" | xargs -L 1 notify-send && pkill sxiv && sxiv -o `dirname $file` $file;;
+        "w") backend=$(wal --backend | awk '{print $2}' | awk '/[a-z]/' | dmenu -i -p "choose pyawl backend" -l 15) && wal -n -i "$file" --backend $backend && sleep 3 && xrdb ~/.cache/wal/.Xresources && setbg "$file" || notify-send "wallpaper failed";;
+        "a") apply-hald-clut.sh "$file" | xargs -L 1 notify-send ;;
         "l") $TERMINAL -e vim ~/.local/bin/apply-hald-clut.sh "$file" ;;
+        "j") convert $file ${file}.jpg ;;
         "p") darktable "$file" ;;
         # "e") $TERMINAL -e vim ~/.config/sxiv/exec/key-handler & ;;
         "e") $TERMINAL -e vim  ~/.config/sxiv/exec/key-handler & ;;
@@ -25,7 +26,7 @@ do
         "R")
             convert -rotate -90 "$file" "$file" ;;
         "f")
-            convert -flop "$file" "$file" ;;
+            convert -flop -flip "$file" "$file" ;;
         "y")
             echo -n "$file" | xclip -selection clipboard &&
                 notify-send "$file copied to clipboard" & ;;
