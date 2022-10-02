@@ -108,7 +108,7 @@ Comment[zh_TW]=連線到網際網路
 StartupNotify=true
 StartupWMClass=brave-browser
 TryExec=brave
-Exec=brave --use-gl=desktop --enable-features=VaapiVideoDecoder,VaapiVidEncoder  --disable-features=UseChromeOSDirectVideoDecoder --force-device-scale-factor=1.22 %U
+Exec=brave --use-gl=egl --enable-features=VaapiVideoDecoder,VaapiVidEncoder --disable-features=UseChromeOSDirectVideoDecoder --force-device-scale-factor=1.22 %U
 Terminal=false
 Icon=brave
 Type=Application
