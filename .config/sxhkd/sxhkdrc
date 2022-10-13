@@ -6,9 +6,8 @@ XF86AudioMute
     amixer -D pulse set Master toggle && kill -44 $(pidof dwmblocks)
 alt+ctrl+shift+m
     amixer -D pulse set Master toggle && kill -44 $(pidof dwmblocks)
-
-# XF86AudioMute
-#     pactl set-sink-mute 0 toggle || notify-send "Can't mute"
+XF86AudioMute
+    pamixer -t
 XF86AudioPlay
     playerctl play-pause
 XF86AudioNext
@@ -39,30 +38,29 @@ shift+Print
     maim -o --nodecorations 2 -s $HOME/Pictures/screenshots/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5
 shift+alt+ctrl+p
     maim -o --nodecorations 2 -s $HOME/Pictures/screenshots/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5
-# TODO just for debuging flight
-shift+alt+ctrl+l
-    maim -o --nodecorations 2 -s /home/rafael/workspace/flights/21-04-2022/trajectories/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5
-    # maim -o --nodecorations 2 -s /home/rafael/workspace/trajectory-visualizer/scripts/trajectories/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5
-
 # Caps_Lock
 #     ~/.local/bin/scripts/tools/caps_state.sh
 alt+u 
-    setxkbmap -layout 'us' && notify-send "lng english 🇺🇸" && xmodmap.sh && caps_state.sh
+    setxkbmap -layout 'us' && notify-send "english 🇺🇸" && xmodmap.sh && caps_state.sh
 alt+a 
-	setxkbmap -layout 'am' -variant 'phonetic' && notify-send "lng armenian 🇦🇲"
+	setxkbmap -layout 'am' -variant 'phonetic' && notify-send "armenian 🇦🇲"
 alt+r
-	setxkbmap -layout 'ru' -variant 'phonetic' && notify-send "lng russian 🇷🇺"
+	setxkbmap -layout 'ru' -variant 'phonetic' && notify-send "russian 🇷🇺"
 alt+Delete
     ~/.local/bin/power
 XF86PowerOff
     ~/.local/bin/power
+alt+shift+d
+    ~/.screenlayout/4k.sh
+alt+shift+b
+    ~/.screenlayout/built-in.sh
 alt+x
     ~/.local/bin/scripts/commands/scr
 alt+o
     ~/.config/rofi/launchers/type-3/launcher.sh
+    # notify-send "rofi is depreciated, use dmenu"
     # ~/.config/rofi/launchers/misc/launcher.sh
     # rofi -show drun -columns 2 -show-icons -padding 18 -modi drun -theme ~/.cache/wal/colors-rofi-dark.rasi
-
 alt+shift+o
     locate -r pdf$ -r epub$ | dmenu -i -l 15 | xargs -0 -r -d '\n' zathura
 alt+shift+r
@@ -70,8 +68,6 @@ alt+shift+r
 #    xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
 alt+shift+a
     ~/.local/bin/scripts/tools/cabl
-# alt+d
-#     ~/.local/bin/scripts/tools/tools
 button8
     xte "keydown Alt_R" "keydown Tab" "keyup Alt_R" "keyup Tab" "sleep 1"
 button9
