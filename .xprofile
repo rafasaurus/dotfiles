@@ -4,11 +4,11 @@
 
 [ -f ~/.config/wall.png ] && xwallpaper --zoom ~/.config/wall.png || xwallpaper --zoom ~/.config/default_wall.jpg &
 # picom --config ~/.config/compton/config -b --experimental-backends &
-picom -b --experimental-backends --blur-method dual_kawase --blur-strength 5
+picom -b
 dwmblocks &
 dunst &
 xset r rate 300 50 &
-xmodmap $HOME/.Xmodmap &
+xmodmap $HOME/.config/wal/templates/.Xresources &
 cp ~/.cache/zsh/history ~/.cache/zsh/history.bak
 unclutter &
 sxhkd &			# Bind keys with sxhkd
