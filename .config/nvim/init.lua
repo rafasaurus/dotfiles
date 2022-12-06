@@ -68,6 +68,14 @@ require('telescope').setup{
         "--smart-case",
         "--silent",
         "--vimgrep",
+        "--path-to-ignore=./.agignore"
+    }
+  }
+}
+require "telescope".setup {
+  pickers = {
+    colorscheme = {
+      enable_preview = true
     }
   }
 }
