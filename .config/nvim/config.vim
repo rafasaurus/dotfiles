@@ -17,7 +17,6 @@ call plug#begin()
 Plug 'neovim/nvim-lspconfig'
 Plug 'honza/vim-snippets'
 Plug 'rking/ag.vim'
-Plug '9mm/vim-closer' " Closes brackets.
 Plug 'tpope/vim-commentary'
 Plug 'morhetz/gruvbox'
 Plug 'tweekmonster/startuptime.vim'
@@ -207,6 +206,7 @@ nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
+noremap <leader>c :Commentary<cr>
 
 " set mouse=a
 color purify
