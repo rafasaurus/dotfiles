@@ -37,23 +37,20 @@ Plug 'unblevable/quick-scope'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-Plug 'terryma/vim-multiple-cursors'
 Plug 'junegunn/goyo.vim'
 Plug 'coldfix/hexHighlight'
 Plug 'scrooloose/nerdtree'
 Plug 'derekwyatt/vim-fswitch' " switching header and sourc in cpp
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" Plug 'dense-analysis/ale'
 Plug 'rking/ag.vim'
 Plug 'JamshedVesuna/vim-markdown-preview'
 " WORKS WITH NERDTREE:
 Plug 'ryanoasis/vim-devicons'
 Plug 'mbbill/undotree'
-Plug 'ChristianChiarulli/codi.vim'
 Plug 'junegunn/fzf', { 'do': { ->fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'gruvbox-community/gruvbox'
 Plug 'tweekmonster/startuptime.vim'
+Plug 'kyoz/purify', { 'rtp': 'vim' }
 call plug#end()
 
 " PLUGIN CONFIGS:
@@ -240,3 +237,4 @@ if executable('ag')
   set grepprg=ag\ --vimgrep\ $*
   set grepformat^=%f:%l:%c:%m
 endif
+color purify
