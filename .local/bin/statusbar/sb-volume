@@ -10,8 +10,8 @@ case $BLOCK_BUTTON in
 	3) notify-send "📢 Volume module" "\- Shows volume 🔊, 🔇 if muted.
 - Middle click to mute.
 - Scroll to change." ;;
-    4) pamixer -i 10 && kill -44 $(pidof dwmblocks);;
-    5) pamixer -d 10 && kill -44 $(pidof dwmblocks);;
+    4) pamixer -i 4 && kill -44 $(pidof dwmblocks);;
+    5) pamixer -d 4 && kill -44 $(pidof dwmblocks);;
 	6) POPUP_TERMINAL -e "$EDITOR" "$0" ;;
 esac
 

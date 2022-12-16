@@ -36,9 +36,14 @@ alias ka="killall" \
     tree='exa --tree --level=2 --long -a --header --git' \
     sl='ls' \
     noise='mpv ~/Music/white_noise.mp3' \
-    lf='lfub'
+    qtcreator='~/Qt/Tools/QtCreator/bin/qtcreator' \
+    lf='lfub' \
+    ranger='lf' \
+    xlcip='xclip -in -selection clipboard' \
+    nautiltus='pcmanfm'
 
 command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
+# command -v nsxiv >/dev/null && alias sxiv="nsxiv" sxivdiff="nsxiv -d"
 
 PATH=$PATH:$HOME/.scripts/tools
 PATH=$PATH:$HOME/.scripts/commands
@@ -49,5 +54,6 @@ PATH=$PATH:$HOME/.local/bin/scripts/tools
 PATH=$PATH:$HOME/.local/bin/scripts/commands
 PATH=$PATH:$HOME/.local/bin/screenlayout
 PATH=$PATH:$HOME/.local/bin/statusbar
+PATH=$PATH:/home/rafael/go/bin
 PATH=$PATH:/opt/gcc-arm-none-eabi-9-2020-q2-update/bin
 vf() { fzf | xargs -r -I % $EDITOR % ;}

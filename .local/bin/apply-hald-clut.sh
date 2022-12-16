@@ -21,7 +21,7 @@ LUTS=$(echo -e "$LUTS" |  dmenu -i -p "Choose screen option" -l 15)
 
 CONVERT=/usr/bin/convert
 FL="${1%.*}"
-
+echo $LUTS
 if [ "$LUTS" == "all" ]; then
     # create new folder, and put all edited images into newly created folder
     foldername=${1%.*}
@@ -31,7 +31,7 @@ if [ "$LUTS" == "all" ]; then
     for LUT in $LUTS
     do
       FLLUT="${LUT%.*}"
-      # $CONVERT $1 ${LPATH}/${LUT} -hald-clut $foldername/${FL}-${FLLUT}.jpg && echo "done $LUT"
+      $CONVERT $1 ${LPATH}/${LUT} -hald-clut $foldername/${FL}-${FLLUT}.jpg && echo "done $LUT"
     done
     exit
 fi
@@ -39,7 +39,12 @@ fi
 for LUT in $LUTS
 do
   FLLUT="${LUT%.*}"
-  $CONVERT $1 ${LPATH}/${LUT} -hald-clut ${FL}-${FLLUT}.jpg
+  if [[ $2 == "" ]]
+  then
+    $CONVERT $1 ${LPATH}/${LUT} -hald-clut ${FL}-${FLLUT}.jpg
+  else
+    $CONVERT $1 ${LPATH}/${LUT} -hald-clut $2
+  fi
   # ffmpeg -i $1 -i "${LPATH}/${LUT}" -filter_complex "haldclut" "result.mp4"
   # break
   echo "done $LUT"
