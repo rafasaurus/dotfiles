@@ -1,5 +1,5 @@
 #!/bin/sh
-choices=`echo "lock suspend suspend_and_lock shutdown reboot screen_layout" | tr ' ' '\n'`
+choices=`echo "lock suspend suspend_and_lock bluetooth shutdown reboot screen_layout" | tr ' ' '\n'`
 
 if command -v xmenu
 then 
@@ -11,8 +11,9 @@ fi
 echo $chosen
 case "$chosen" in
     lock) setxkbmap -layout 'us' && slock;;
-    suspend_and_lock) ~/.screenlayout/built-in.sh && nordvpn disconnect && setxkbmap -layout 'us' && slock systemctl suspend  || slock systemctl suspend && setxkbmap -layout 'us';;
     suspend) ~/.screenlayout/built-in.sh && nordvpn disconnect && setxkbmap -layout 'us' && systemctl suspend  || systemctl suspend && setxkbmap -layout 'us';;
+    suspend_and_lock) ~/.screenlayout/built-in.sh && nordvpn disconnect && setxkbmap -layout 'us' && slock systemctl suspend  || slock systemctl suspend && setxkbmap -layout 'us';;
+    bluetooth) rofi-bluetooth ;;
     shutdown) ~/.local/bin/scripts/tools/prompt "Do you want to shutdown ?" "shutdown now";;
     reboot) ~/.local/bin/scripts/tools/prompt "Do you want to shutdown ?" "reboot";;
     screen_layout) ~/.local/bin/scr ;;

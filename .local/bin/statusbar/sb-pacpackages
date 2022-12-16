@@ -28,5 +28,7 @@ case $BLOCK_BUTTON in
 	6) "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
 
+# if packages are older then 2 months, delete it
+# find /var/cache/pacman/pkg/* -mtime +60 | sudo xargs -L 1 /bin/rm
 pacman -Qu | grep -Fcv "[ignored]" | sed "s/^/📦/;s/^📦0$//g"
 notify-send "updating pacman 📦"

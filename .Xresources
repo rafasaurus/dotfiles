@@ -101,23 +101,6 @@
 *.color13:      base0D
 *.color14:      base0E
 
-rofi.font: mono 18
-rofi.modi: run,ssh,window
-rofi.separator-style: solid
-rofi.show-icons: true
-rofi.drun-icon-theme: Paper
-rofi.sidebar-mode:    true
-rofi.padding:         10
-rofi.bw:              0
-rofi.scrollbar-width: 0
-rofi.line-margin:     0
-
-rofi.lines: 10
-rofi.terminal: st
-rofi.case-sensitive: false
-rofi.opacity: 0
-rofi.fake-transparency: false
-
 Xft.dpi: 105
 Xcursor.size: 30
 

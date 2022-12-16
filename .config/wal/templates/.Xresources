@@ -5,14 +5,10 @@
 ! ██╔╝░██╗██║░░██║███████╗███████║╚██████╔╝╚██████╔╝██║░░██║╚██████╗███████╗███████║
 ! ╚═╝░░╚═╝╚═╝░░╚═╝╚══════╝╚══════╝░╚═════╝░░╚═════╝░╚═╝░░╚═╝░╚═════╝╚══════╝╚══════╝
 
-*.alpha: 0.83
+*.alpha: 0.90
 ! *.font:	Fira Code:pixelsize=17:antialias=true:autohint=true;
-*.font:	monospace:pixelsize=17:antialias=true:autohint=true;
-*.cursorColor:	#00FF00
-
-! *foreground: {foreground}
-*foreground: #00ff00
-*background: {background}
+*.font:	ComicCode-Roman:pixelsize=17:antialias=true:autohint=true;
+*.cursorColor:	#00ff00
 
 #define base00 {color0}
 #define base01 {color1}
@@ -49,6 +45,9 @@
 *.color13:      base0D
 *.color14:      base0E
 
+! *foreground: {foreground}
+*foreground: #00ff00
+*background: {background}
 
 ! rofi.font: mono 18
 ! rofi.modi: run,ssh,window
