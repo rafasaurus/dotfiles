@@ -31,6 +31,7 @@ stow :
 	[[ -d $(HOME)/.local/share ]] || mkdir -p $(HOME)/.local/share # making .local/share directory
 	[[ -d $(HOME)/.local/bin ]] || mkdir -p $(HOME)/.local/bin # making .local/share directory
 	[[ -d $(HOME)/.local/share/applications ]] || mkdir -p $(HOME)/.local/share/applications # making .local/share directory
+	[[ -d $(HOME)/.local/share/fonts ]] || mkdir -p $(HOME)/.local/share/fonts # making .local/share directory
 	[[ -d $(HOME)/.cache/zsh ]] || mkdir -p $(HOME)/.cache/zsh # making .local/share directory
 	[[ -d $(HOME)/.todo ]] || mkdir $(HOME)/.todo
 	stow --target $(HOME) --verbose $(stow_dirs) $(IGNORE_FLAGS)
