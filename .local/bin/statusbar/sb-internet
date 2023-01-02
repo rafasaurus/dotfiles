@@ -8,7 +8,7 @@ source sb-essentials
 
 case $BLOCK_BUTTON in
 	# 1) POPUP_TERMINAL nmtui; pkill -RTMIN+4 dwmblocks ;;
-    1) networkmanager_dmenu ;;
+    1) networkmanager_dmenu -l 15;;
     2) nm-connection-editor ;;
 	3) notify-send "🌐 Internet module" "\- Click to connect
 📡: no wifi connection
