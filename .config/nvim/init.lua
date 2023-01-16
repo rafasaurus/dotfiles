@@ -35,13 +35,53 @@ end
 
 local nvim_lsp = require('lspconfig')
 local util = require 'lspconfig/util'
+
+-- pip install python-lsp-ruff
 nvim_lsp.pylsp.setup {
-    on_attach = on_attach,
-    plugins = {
-        pydocstyle = { maxLineLength = 200, };
-        flake8 = { maxLineLength = 200, };
-        }
-    }
+	settings = {
+		pylsp = {
+			plugins = {
+				ruff = {
+					enabled = true
+				},
+				pycodestyle = {
+					enabled = false
+				},
+				pyflakes = {
+					enabled = false
+				},
+				mccabe = {
+					enabled = false
+				}
+			}
+		}
+	},
+	on_attach = on_attach,
+	plugins = {
+		pydocstyle = { maxLineLength = 200, };
+		flake8 = { maxLineLength = 200, };
+	}
+}
+
+nvim_lsp.arduino_language_server.setup {
+	cmd = {
+		"arduino-language-server",
+		"-cli-config", "$HOME/.arduino15/arduino-cli.yaml",
+		"-fqbn", "arduino:avr:nano",
+		"-cli", "arduino-cli",
+		"-clangd", "clangd"
+	},
+}
+
+nvim_lsp.cmake.setup {
+	cmd = { "cmake-language-server" },
+	filetypes = { "cmake" },
+	root_dir = util.root_pattern('CMakePresets.json', 'CTestConfig.cmake', '.git', 'build', 'cmake'),
+	init_options = {
+		buildDirectory = "build";
+	}
+}
+
 nvim_lsp.ccls.setup {
     on_attach = on_attach,
     cmd = { "ccls" } ,
@@ -57,6 +97,7 @@ nvim_lsp.ccls.setup {
             };
         }
     }
+
 require('telescope').setup{
   defaults = {
      vimgrep_arguments = {
