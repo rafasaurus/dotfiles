@@ -126,3 +126,10 @@ uninstall-udev :
 .PHONY : install-full
 install-full :  install-paru install-prereqs
 	echo "done"
+
+.PHONY : install-film-android
+install-film-android :
+	cp -r .local/bin/film .local/bin/512x512/ $(shell dirname `which sh`) && echo "done"
+.PHONY : uninstall-film-android
+uninstall-film-android :
+	rm -r $(shell dirname `which sh`)/512x512 $(shell which film)
