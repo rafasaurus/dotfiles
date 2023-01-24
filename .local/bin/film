@@ -1,22 +1,25 @@
 #!/bin/bash
+SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+
 if [[ $1 == "" ]]
 
 then
     echo "no arguments, path to the picture expected"
-    echo "provide film emulation, k means kodachrome, s means sensia"
+    echo -e "provide film emulation\n k: kodachrome\n s: sensia\n p400: portra 400\n p160: portra 160"
     exit 1
 
 fi
 
 # for videos
-LPATH="/data/data/com.termux/files/usr/bin/512x512/"
+LPATH="$SCRIPTPATH/512x512/"
 ALL_LUTS="dehancer-fuji-astia-100f.png dehancer-fuji-astia-100.png dehancer-fuji-c200.png dehancer-fuji-eterna-vivid-500.png dehancer-fuji-fp100c.png dehancer-fuji-industrial-100.png dehancer-fuji-industrial-400.png dehancer-fuji-natura-1600.png dehancer-fuji-pro-400h.png dehancer-fuji-provia-100f.png dehancer-fuji-provia-400x.png dehancer-fuji-sensia-400.png dehancer-fuji-superia-1600.png dehancer-fuji-superia-200.png dehancer-fuji-velvia-100.png dehancer-fuji-velvia-50.png dehancer-ilford-hp5plus-400.png dehancer-ilford-xp2super-400.png dehancer-kodak-ektar-100.png dehancer-orwo-ut18-exp91.png dehancer-orwo-ut21-exp92.png vsco-fuji-pro-160c.png vsco-fuji-pro-160s.png vsco-fuji-pro-400h.png vsco-fuji-pro-800z.png vsco-fuji-provia-400x.png vsco-fuji-superia-100.png vsco-fuji-t64.png vsco-fuji-velvia-50.png vsco-kodachrome25.png vsco-kodak-portra-160.png vsco-kodak-portra-400.png"
 
 LUTS=vsco-kodachrome25.png
-if [[ $2 == "s" ]]
-then
-    LUTS=dehancer-fuji-sensia-400.png
-fi
+case $2 in
+    "s") LUTS=dehancer-fuji-sensia-400.png ;;
+    "p400") LUTS=vsco-kodak-portra-400.png ;;
+    "p160") LUTS=vsco-kodak-portra-160.png ;;
+esac
 
 CONVERT=/usr/bin/convert
 FL="${1%.*}"
@@ -24,7 +27,6 @@ FL="${1%.*}"
 for LUT in $LUTS
 do
     FLLUT="${LUT%.*}"
-    $CONVERT $1 ${LPATH}/${LUT} -hald-clut ${FL}-${FLLUT}.jpg
-    echo "done $LUT"
+    $CONVERT $1 ${LPATH}/${LUT} -hald-clut ${FL}-${FLLUT}.jpg && echo "done ${FL}-${FLLUT}.jpg"
 done
 
