@@ -19,6 +19,8 @@ case $2 in
     "s") LUTS=dehancer-fuji-sensia-400.png ;;
     "p400") LUTS=vsco-kodak-portra-400.png ;;
     "p160") LUTS=vsco-kodak-portra-160.png ;;
+    "v50") LUTS=dehancer-fuji-velvia-50.png ;;
+    "v100") LUTS=dehancer-fuji-velvia-100.png ;;
 esac
 
 CONVERT=/usr/bin/convert
