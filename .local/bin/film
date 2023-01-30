@@ -28,5 +28,6 @@ for LUT in $LUTS
 do
     FLLUT="${LUT%.*}"
     $CONVERT $1 ${LPATH}/${LUT} -hald-clut ${FL}-${FLLUT}.jpg && echo "done ${FL}-${FLLUT}.jpg"
+    # ffmpeg -i $1 -i "${LPATH}/${LUT}" -filter_complex "haldclut" "${FL}-${FLLUT}.mp4"
 done
 
