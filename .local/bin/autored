@@ -1,0 +1,10 @@
+#!/bin/sh
+# run every 10 minutes with crontab -e 
+# */10 * * * * autored
+
+currenttime=$(date +%H:%M)
+if [[ "$currenttime" > "22:00" ]] || [[ "$currenttime" < "06:30" ]]; then
+    redshift -PO 3000
+else
+    redshift -x
+fi
