@@ -9,12 +9,13 @@ else
 fi
 
 echo $chosen
+prompt=~/.local/bin/scripts/tools/prompt
 case "$chosen" in
     lock) setxkbmap -layout 'us' && slock;;
-    suspend) ~/.screenlayout/built-in.sh && nordvpn disconnect && setxkbmap -layout 'us' && systemctl suspend  || systemctl suspend && setxkbmap -layout 'us';;
+    suspend) ~/.screenlayout/built-in.sh && setxkbmap -layout 'us' && $prompt "Do you want to lock?" "slock systemctl suspend" "systemctl suspend";;
     suspend_and_lock) ~/.screenlayout/built-in.sh && nordvpn disconnect && setxkbmap -layout 'us' && slock systemctl suspend  || slock systemctl suspend && setxkbmap -layout 'us';;
     bluetooth) rofi-bluetooth ;;
-    shutdown) ~/.local/bin/scripts/tools/prompt "Do you want to shutdown ?" "shutdown now";;
-    reboot) ~/.local/bin/scripts/tools/prompt "Do you want to shutdown ?" "reboot";;
+    shutdown) $prompt "Do you want to shutdown ?" "shutdown now";;
+    reboot) $prompt "Do you want to shutdown ?" "reboot";;
     screen_layout) ~/.local/bin/scr ;;
 esac
