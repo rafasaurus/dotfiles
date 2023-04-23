@@ -6,7 +6,9 @@ case $BLOCK_BUTTON in
     # 1) notify-send -t 12000 "🚀 updating todo list\n $(todo.sh list)" && echo "" | echo `date +"%Y-%m-%d"` `echo "" | dmenu` | todo.sh add | xargs -i notify-send '{}' ;;
     1) [ "2" -ne `ps ux | grep "surf habitica.com" | wc -l` ] && surf habitica.com ;;
 	2) POPUP_TERMINAL zsh -c 'todo.sh list; zsh';;
-    3) todo.sh list | grep "^[0-9]" | dmenu -l 10 | awk '{print $1}' | xargs -L 1 todo.sh done ;;
+    3) sxiv -b -f /tmp/done.png ;;
+    # With this configuration we can interactivly set task DONE
+    # 3) todo.sh list | grep "^[0-9]" | dmenu -l 10 | awk '{print $1}' | xargs -L 1 todo.sh done ;;
     4) SB_DEFAULT_EXEC_4_HANDLER ;;
     5) SB_DEFAULT_EXEC_5_HANDLER ;;
 	# 3) [ $(ps aux | ag "surf habitica.com" | wc -l) -eq 1 ] && surf habitica.com || notify-send "⛔habitica already running";;
