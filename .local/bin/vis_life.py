@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import pytodotxt
 
 def main():
-    todotxt = pytodotxt.TodoTxt(os.path.expanduser('~')+'/Dropbox/todo/done.txt')
+    todotxt = pytodotxt.TodoTxt(os.path.expanduser('~')+'/todo/done.txt')
     todotxt.parse()
 
     completed = []
