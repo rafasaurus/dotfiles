@@ -39,9 +39,10 @@ def main():
     # Count how many tasks have been done each day and store in pandas Series
     events = df.pivot_table(index = ['completion_date'], aggfunc ='size')
 
-    calplot.calplot(events, yearascending=True, vmin=-1, vmax=7, colorbar=True, linewidth=1, cmap='YlGn', suptitle=date.today())
+    calplot.calplot(events, yearascending=True, vmin=-1, vmax=7, colorbar=True, linewidth=1, cmap='YlGn', suptitle=date.today(), figsize=(30,5))
 
     plt.savefig('/tmp/done.png', bbox_inches='tight')
+
 
 if __name__ == "__main__":
     main()
