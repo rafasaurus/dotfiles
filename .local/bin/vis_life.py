@@ -6,7 +6,7 @@ import numpy as np; np.random.seed(sum(map(ord, 'calplot')))
 import pandas as pd
 import matplotlib.pyplot as plt
 import pytodotxt
-from datetime import datetime
+from datetime import datetime, date
 
 calculateAllTasks = False
 
@@ -39,7 +39,7 @@ def main():
     # Count how many tasks have been done each day and store in pandas Series
     events = df.pivot_table(index = ['completion_date'], aggfunc ='size')
 
-    calplot.calplot(events, yearascending=True, vmin=-1, vmax=7, colorbar=True, linewidth=1, cmap='YlGn')
+    calplot.calplot(events, yearascending=True, vmin=-1, vmax=7, colorbar=True, linewidth=1, cmap='YlGn', suptitle=date.today())
 
     plt.savefig('/tmp/done.png', bbox_inches='tight')
 
