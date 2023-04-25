@@ -11,7 +11,7 @@ from datetime import datetime, date
 calculateAllTasks = False
 
 def main():
-    todotxt = pytodotxt.TodoTxt(os.path.expanduser('~')+'/todo/done.txt')
+    todotxt = pytodotxt.TodoTxt(os.path.expanduser('~')+'/Dropbox/todo/done.txt')
     todotxt.parse()
 
     completed = []
@@ -39,7 +39,17 @@ def main():
     # Count how many tasks have been done each day and store in pandas Series
     events = df.pivot_table(index = ['completion_date'], aggfunc ='size')
 
-    calplot.calplot(events, yearascending=True, vmin=-1, vmax=7, colorbar=True, linewidth=1, cmap='YlGn', suptitle=date.today(), figsize=(30,5))
+    # Options described in documentation
+    # https://calplot.readthedocs.io/en/latest/index.html
+    calplot.calplot(events, yearascending=True,
+                    vmin=-1,
+                    vmax=7,
+                    edgecolor=None, # Color of the lines that will divide months.
+                    colorbar=True,
+                    linewidth=7,
+                    cmap='YlGn',
+                    suptitle=date.today(),
+                    figsize=(30,5))
 
     plt.savefig('/tmp/done.png', bbox_inches='tight')
 
