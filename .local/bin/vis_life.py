@@ -33,11 +33,11 @@ def main():
     # Convert to isoformat that calplot wants using pandas
     completed = pd.DatetimeIndex(completed)
 
-    df = pd.DataFrame(list(zip(completed, descriptions)), 
+    completedTasks_df = pd.DataFrame(list(zip(completed, descriptions)),
                       columns = ['completion_date', 'description'])
 
     # Count how many tasks have been done each day and store in pandas Series
-    events = df.pivot_table(index = ['completion_date'], aggfunc ='size')
+    events = completedTasks_df.pivot_table(index = ['completion_date'], aggfunc ='size')
 
     # Options described in documentation
     # https://calplot.readthedocs.io/en/latest/index.html
