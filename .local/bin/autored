@@ -12,6 +12,7 @@ case $current_hour in
         redshift -x
         ;;
     12|13|14|15|16|17|18|19|20)
+        redshift -x
         ;;
     21)
         redshift -PO 6000
