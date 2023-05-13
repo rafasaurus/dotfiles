@@ -4,10 +4,12 @@
 
 # [[ -f ~/.bashrc ]] && . ~/.bashrc
 
-export QT_QPA_PLATFORMTHEME="qt5ct"
-export QT_STYLE_OVERRIDE="Fusion"
+export QT_STYLE_OVERRIDE="gtk2"
+export QT_QPA_PLATFORMTHEME="gtk2"
+# export QT_QPA_PLATFORMTHEME="qt5ct"
+# export QT_STYLE_OVERRIDE="Fusion"
 export QT_SCALE_FACTOR=1.25
-export GTK2_RC_FILES="$HOME/.config/.gtkrc-2.0"
+export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
 export _JAVA_AWT_WM_NONREPARENTING=1 # Fixing misbehaving Java applications
 export THEME=dark
 export XDG_SESSION_TYPE=X11
@@ -29,7 +31,8 @@ export EDITOR=nvim
 export TERMINAL=alacritty
 export BROWSER=firefox
 export LD_LIBRARY_PATH="/usr/local/lib"
-# export GTK_USE_PORTAL=1
+export LIBVA_DRIVER_NAME=iHD
+export GTK_USE_PORTAL=1
 
 # This is the list for lf icons:
 export LF_ICONS="di=📁:\
