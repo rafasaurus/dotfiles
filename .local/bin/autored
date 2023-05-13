@@ -17,7 +17,7 @@ case $current_hour in
     21)
         redshift -PO 6000
         ;;
-    23)
+    22)
         redshift -PO 5000
         ;;
     23)
