@@ -3,6 +3,8 @@
 # libxft-bgra-git
 # ttf-devicons
 # ttf-dejavu for monospaced
+# If we want to use universal style for both qt and gtk, we shall
+# install qt5-styleplugins package from git or AUR
 
 stow_dirs = $(wildcard .)
 TMUX_VERSION=2.8
