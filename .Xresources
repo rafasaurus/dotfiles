@@ -101,6 +101,7 @@
 *.color13:      base0D
 *.color14:      base0E
 
+Xcursor.theme: macOSBigSur
 Xft.dpi: 105
 Xcursor.size: 30
 
