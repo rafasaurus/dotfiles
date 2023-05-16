@@ -66,6 +66,7 @@
 ! rofi.opacity: 0
 ! rofi.fake-transparency: false
 
+Xcursor.theme: macOSBigSur
 Xft.dpi: 105
 Xcursor.size: 30
 
