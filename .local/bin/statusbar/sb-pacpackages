@@ -30,5 +30,12 @@ esac
 
 # if packages are older then 2 months, delete it
 # find /var/cache/pacman/pkg/* -mtime +60 | sudo xargs -L 1 /bin/rm
+# inside pacman-contrib package there is paccahe
+# remove all except last two revision of packages
+# paccache -rvk2
+paru -Qu google-chrome > /dev/null && notify-send -u critical "chrome upgrade is available "
+paru -Qu notion-app-enhanced > /dev/null && notify-send -u low "notion upgrade is available 📓"
+paru -Qu brave-bin > /dev/null && notify-send -u low "brave upgrade is available "
+
 pacman -Qu | grep -Fcv "[ignored]" | sed "s/^/📦/;s/^📦0$//g"
 notify-send "updating pacman 📦"
