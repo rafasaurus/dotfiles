@@ -109,7 +109,7 @@ require('telescope').setup{
         "--smart-case",
         "--silent",
         "--vimgrep",
-        "--path-to-ignore=./.agignore"
+        "--path-to-ignore=./.ignore"
     }
   }
 }
