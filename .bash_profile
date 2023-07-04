@@ -32,7 +32,7 @@ export TERMINAL=alacritty
 export BROWSER=firefox
 export LD_LIBRARY_PATH="/usr/local/lib"
 export LIBVA_DRIVER_NAME=iHD
-export GTK_USE_PORTAL=1
+export GTK_USE_PORTAL=0
 
 # This is the list for lf icons:
 export LF_ICONS="di=📁:\
