@@ -5,7 +5,7 @@ if [[ $1 == "" ]]
 
 then
     echo "no arguments, path to the picture expected"
-    echo -e "provide film emulation\n k: kodachrome\n s: sensia\n p400: portra 400\n p160: portra 160"
+    echo -e "provide film emulation\n k: old kodachrome\n s: sensia\n p400: portra 400\n p160: portra 160 \n v50: velvia 50 \n v100: velvia 100"
     exit 1
 
 fi
@@ -14,8 +14,9 @@ fi
 LPATH="$SCRIPTPATH/512x512/"
 ALL_LUTS="dehancer-fuji-astia-100f.png dehancer-fuji-astia-100.png dehancer-fuji-c200.png dehancer-fuji-eterna-vivid-500.png dehancer-fuji-fp100c.png dehancer-fuji-industrial-100.png dehancer-fuji-industrial-400.png dehancer-fuji-natura-1600.png dehancer-fuji-pro-400h.png dehancer-fuji-provia-100f.png dehancer-fuji-provia-400x.png dehancer-fuji-sensia-400.png dehancer-fuji-superia-1600.png dehancer-fuji-superia-200.png dehancer-fuji-velvia-100.png dehancer-fuji-velvia-50.png dehancer-ilford-hp5plus-400.png dehancer-ilford-xp2super-400.png dehancer-kodak-ektar-100.png dehancer-orwo-ut18-exp91.png dehancer-orwo-ut21-exp92.png vsco-fuji-pro-160c.png vsco-fuji-pro-160s.png vsco-fuji-pro-400h.png vsco-fuji-pro-800z.png vsco-fuji-provia-400x.png vsco-fuji-superia-100.png vsco-fuji-t64.png vsco-fuji-velvia-50.png vsco-kodachrome25.png vsco-kodachrome25-new.png vsco-kodak-portra-160.png vsco-kodak-portra-400.png"
 
-LUTS=vsco-kodachrome25.png
+LUTS=vsco-kodachrome25-new.png
 case $2 in
+    "k") LUTS=vsco-kodachrome25.png ;;
     "s") LUTS=dehancer-fuji-sensia-400.png ;;
     "p400") LUTS=vsco-kodak-portra-400.png ;;
     "p160") LUTS=vsco-kodak-portra-160.png ;;
@@ -29,7 +30,7 @@ FL="${1%.*}"
 for LUT in $LUTS
 do
     FLLUT="${LUT%.*}"
-    # $CONVERT $1 ${LPATH}/${LUT} -hald-clut ${FL}-${FLLUT}.jpg && echo "done ${FL}-${FLLUT}.jpg"
-    ffmpeg -i $1 -i "${LPATH}/${LUT}" -filter_complex haldclut -pix_fmt yuv420p -c:a copy "${FL}-${FLLUT}-emulation.mp4"
+    $CONVERT $1 ${LPATH}/${LUT} -hald-clut ${FL}-${FLLUT}.jpg && echo "done ${FL}-${FLLUT}.jpg"
+    # ffmpeg -i $1 -i "${LPATH}/${LUT}" -filter_complex haldclut -pix_fmt yuv420p -c:a copy "${FL}-${FLLUT}-emulation.mp4"
 done
 
