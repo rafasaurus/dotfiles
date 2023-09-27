@@ -1,14 +1,16 @@
 #!/bin/sh
+set -x
 if [[ $1 == "" ]] #Where "$1" is the positional argument you want to validate 
 
- then
- echo "no arguments, path to the picture expected"
- exit 0
+then
+    echo "no arguments, path to the picture expected"
+    exit 0
 
 fi
 # for videos
+IMAGE=$1
 LPATH="/home/rafael/.local/bin/512x512/"
-ALL_LUTS="dehancer-fuji-astia-100f.png dehancer-fuji-astia-100.png dehancer-fuji-c200.png dehancer-fuji-eterna-vivid-500.png dehancer-fuji-fp100c.png dehancer-fuji-industrial-100.png dehancer-fuji-industrial-400.png dehancer-fuji-natura-1600.png dehancer-fuji-pro-400h.png dehancer-fuji-provia-100f.png dehancer-fuji-provia-400x.png dehancer-fuji-sensia-400.png dehancer-fuji-superia-1600.png dehancer-fuji-superia-200.png dehancer-fuji-velvia-100.png dehancer-fuji-velvia-50.png dehancer-ilford-hp5plus-400.png dehancer-ilford-xp2super-400.png dehancer-kodak-ektar-100.png dehancer-orwo-ut18-exp91.png dehancer-orwo-ut21-exp92.png vsco-fuji-pro-160c.png vsco-fuji-pro-160s.png vsco-fuji-pro-400h.png vsco-fuji-pro-800z.png vsco-fuji-provia-400x.png vsco-fuji-superia-100.png vsco-fuji-t64.png vsco-fuji-velvia-50.png vsco-kodachrome25.png vsco-kodachrome25-new.png vsco-kodak-portra-160.png vsco-kodak-portra-400.png"
+ALL_LUTS="dehancer-fuji-astia-100f.png dehancer-fuji-astia-100.png dehancer-fuji-c200.png dehancer-fuji-eterna-vivid-500.png dehancer-fuji-fp100c.png dehancer-fuji-industrial-100.png dehancer-fuji-industrial-400.png dehancer-fuji-natura-1600.png dehancer-fuji-pro-400h.png dehancer-fuji-provia-100f.png dehancer-fuji-provia-400x.png dehancer-fuji-sensia-400.png dehancer-fuji-superia-1600.png dehancer-fuji-superia-200.png dehancer-fuji-velvia-100.png dehancer-fuji-velvia-50-new-new.png dehancer-fuji-velvia-50-new.png dehancer-fuji-velvia-50.png dehancer-ilford-hp5plus-400.png dehancer-ilford-xp2super-400.png dehancer-kodak-ektar-100.png dehancer-orwo-ut18-exp91.png dehancer-orwo-ut21-exp92.png vsco-fuji-pro-160c.png vsco-fuji-pro-160s.png vsco-fuji-pro-400h.png vsco-fuji-pro-800z.png vsco-fuji-pro-800z-new.png vsco-fuji-provia-400x.png vsco-fuji-superia-100.png vsco-fuji-t64.png vsco-fuji-velvia-50.png vsco-kodachrome25.png vsco-kodachrome25-new.png vsco-kodak-portra-160.png vsco-kodak-portra-400.png dehancer-adox-color-implosion.png dehancer-adox-color-implosion-grain.png"
 
 # LUTS=vsco-kodachrome25.png
 # LUTS=vsco-fuji-velvia-50.png
@@ -30,23 +32,23 @@ if [ "$LUTS" == "all" ]; then
     echo $LUTS
     for LUT in $LUTS
     do
-      FLLUT="${LUT%.*}"
-      $CONVERT $1 ${LPATH}/${LUT} -hald-clut $foldername/${FL}-${FLLUT}.jpg && echo "done $LUT"
+        FLLUT="${LUT%.*}"
+        $CONVERT $IMAGE ${LPATH}/${LUT} -hald-clut $foldername/${FL}-${FLLUT}.jpg && echo "done $LUT"
     done
     exit
 fi
 
 for LUT in $LUTS
 do
-  FLLUT="${LUT%.*}"
-  if [[ $2 == "" ]]
-  then
-    $CONVERT $1 ${LPATH}/${LUT} -hald-clut ${FL}-${FLLUT}.jpg
-  else
-    $CONVERT $1 ${LPATH}/${LUT} -hald-clut $2
-  fi
-  # ffmpeg -i $1 -i "${LPATH}/${LUT}" -filter_complex "haldclut" "result.mp4"
-  # break
-  echo "done $LUT"
+    FLLUT="${LUT%.*}"
+    if [[ $2 == "" ]]
+    then
+        $CONVERT $IMAGE ${LPATH}/${LUT} -hald-clut ${FL}-${FLLUT}.jpg
+    else
+        $CONVERT $IMAGE ${LPATH}/${LUT} -hald-clut $2
+    fi
+    # ffmpeg -i $IMAGE -i "${LPATH}/${LUT}" -filter_complex "haldclut" "result.mp4"
+    # break
+    echo "done $LUT"
 done
 
