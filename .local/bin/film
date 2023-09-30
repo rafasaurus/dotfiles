@@ -32,7 +32,7 @@ FL="${1%.*}"
 for LUT in $LUTS
 do
     FLLUT="${LUT%.*}"
-    ffmpeg -i $1 -i "${LPATH}/${LUT}" -filter_complex haldclut -pix_fmt yuv420p -c:a copy "${FL}-${FLLUT}-emulation.mp4" && exit 0
+    # ffmpeg -i $1 -i "${LPATH}/${LUT}" -filter_complex haldclut -pix_fmt yuv420p -c:a copy "${FL}-${FLLUT}-emulation.mp4" && exit 0
     orig=${FL}_orig.${extension}
     [ -f $orig ] || cp "$1" $orig
     $CONVERT $orig ${LPATH}/${LUT} -hald-clut $1
