@@ -5,23 +5,25 @@ if [[ $1 == "" ]]
 
 then
     echo "no arguments, path to the picture expected"
-    echo -e "provide film emulation\n k: old kodachrome\n s: sensia\n p400: portra 400\n p160: portra 160 \n v50: velvia 50 \n v100: velvia 100"
+    echo -e "provide film emulation\n adox: adox impolsion \n p400: portra 400\n v50: velvia 50 \n"
     exit 1
 
 fi
 
-# for videos
-LPATH="$SCRIPTPATH/512x512/"
-ALL_LUTS="dehancer-fuji-astia-100f.png dehancer-fuji-astia-100.png dehancer-fuji-c200.png dehancer-fuji-eterna-vivid-500.png dehancer-fuji-fp100c.png dehancer-fuji-industrial-100.png dehancer-fuji-industrial-400.png dehancer-fuji-natura-1600.png dehancer-fuji-pro-400h.png dehancer-fuji-provia-100f.png dehancer-fuji-provia-400x.png dehancer-fuji-sensia-400.png dehancer-fuji-superia-1600.png dehancer-fuji-superia-200.png dehancer-fuji-velvia-100.png dehancer-fuji-velvia-50.png dehancer-ilford-hp5plus-400.png dehancer-ilford-xp2super-400.png dehancer-kodak-ektar-100.png dehancer-orwo-ut18-exp91.png dehancer-orwo-ut21-exp92.png vsco-fuji-pro-160c.png vsco-fuji-pro-160s.png vsco-fuji-pro-400h.png vsco-fuji-pro-800z.png vsco-fuji-provia-400x.png vsco-fuji-superia-100.png vsco-fuji-t64.png vsco-fuji-velvia-50.png vsco-kodachrome25.png vsco-kodachrome25-new.png vsco-kodak-portra-160.png vsco-kodak-portra-400.png"
+extension="${1##*.}"
+if [ "$extension" != "jpeg" ] && [ "$extension" != "jpg" ]; then
+    echo "[Warning] sxiv previews not working for non jpeg/jpg formats"
+fi
 
-LUTS=vsco-kodachrome25-new.png
+# for videos
+LPATH="/home/rafael/.local/bin/luts/"
+ALL_LUTS="dehancer-adox-impolsion-kodak-paper.png dehancer-adox-impolsion.png dehancer-agfa-100.png dehancer-ektar-25-exp-1996+k2383.png dehancer-fujichrome-velvia-100.png dehancer-fujichrome-velvia-50+1ev.png dehancer-fujichrome-velvia-50-1ev.png dehancer-fujichrome-velvia-50-k2383.png dehancer-fuji-eterna-vivid-500-exp-2013-f3513.png dehancer-fuji-eterna-vivid-500-expired-2013-k2383.png dehancer-fuji-eterna-vivid-500.png dehancer-fuji-fp100c-digital-intermediate.png dehancer-fuji-fp100c.png dehancer-fuji-instax-k2383.png dehancer-fuji-reala-500d-exp-2013-k2383.png dehancer-kodachrome-64+3ev.png dehancer-kodachrome-64-3ev.png dehancer-kodachrome-64.png dehancer-kodak-aerocolor-IV-125.png dehancer-kodak-eastman-double-X-5222.png dehancer-kodak-ektar-25-exp-1996+endura.png dehancer-kodak-gold-200.png dehancer-kodak-portra-400+endura.png dehancer-kodak-supra-100+endura.png dehancer-kodak-supra-100+k2383.png dehancer-kodak-vision-3-500t+k2383.png dehancer-konica-minolta-vx400-super.png dehancer-lomochrome-metropolis-xr-100-400.png dehancer-lomochrome-purple.png dehancer-orwo-chrom-ut21-daylight-exp-1992.png dehancer-polachrome-35mm-exp-1986.png dehancer-prokudin-gorskiy-1906.png dehancer-rollei-ortho-25.png dehancer-sverna-type-42-exp-1991.png dehancer-xp2-super400.png"
+
+LUTS=dehancer-kodachrome-64.png
 case $2 in
-    "k") LUTS=vsco-kodachrome25.png ;;
-    "s") LUTS=dehancer-fuji-sensia-400.png ;;
-    "p400") LUTS=vsco-kodak-portra-400.png ;;
-    "p160") LUTS=vsco-kodak-portra-160.png ;;
-    "v50") LUTS=dehancer-fuji-velvia-50.png ;;
-    "v100") LUTS=dehancer-fuji-velvia-100.png ;;
+    "adox") LUTS=dehancer-adox-impolsion-kodak-paper.png ;;
+    "p400") LUTS=dehancer-kodak-portra-400+endura.png ;;
+    "v50") LUTS=dehancer-fujichrome-velvia-50-k2383.png ;;
 esac
 
 CONVERT=/usr/bin/convert
@@ -30,7 +32,11 @@ FL="${1%.*}"
 for LUT in $LUTS
 do
     FLLUT="${LUT%.*}"
-    $CONVERT $1 ${LPATH}/${LUT} -hald-clut ${FL}-${FLLUT}.jpg && echo "done ${FL}-${FLLUT}.jpg"
-    # ffmpeg -i $1 -i "${LPATH}/${LUT}" -filter_complex haldclut -pix_fmt yuv420p -c:a copy "${FL}-${FLLUT}-emulation.mp4"
+    ffmpeg -i $1 -i "${LPATH}/${LUT}" -filter_complex haldclut -pix_fmt yuv420p -c:a copy "${FL}-${FLLUT}-emulation.mp4" && exit 0
+    orig=${FL}_orig.${extension}
+    [ -f $orig ] || cp "$1" $orig
+    $CONVERT $orig ${LPATH}/${LUT} -hald-clut $1
+    exiftool -delete_original -Exif:ImageDescription="${FLLUT}" -Description="${FLLUT}" "$1" 
+    $CONVERT $orig ${LPATH}/${LUT} -hald-clut $1
 done
 
