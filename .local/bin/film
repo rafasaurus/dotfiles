@@ -16,7 +16,7 @@ if [ "$extension" != "jpeg" ] && [ "$extension" != "jpg" ]; then
 fi
 
 # for videos
-LPATH="/home/rafael/.local/bin/luts/"
+LPATH="$HOME/.local/bin/luts/"
 ALL_LUTS="dehancer-adox-impolsion-kodak-paper.png dehancer-adox-impolsion.png dehancer-agfa-100.png dehancer-ektar-25-exp-1996+k2383.png dehancer-fujichrome-velvia-100.png dehancer-fujichrome-velvia-50+1ev.png dehancer-fujichrome-velvia-50-1ev.png dehancer-fujichrome-velvia-50-k2383.png dehancer-fuji-eterna-vivid-500-exp-2013-f3513.png dehancer-fuji-eterna-vivid-500-expired-2013-k2383.png dehancer-fuji-eterna-vivid-500.png dehancer-fuji-fp100c-digital-intermediate.png dehancer-fuji-fp100c.png dehancer-fuji-instax-k2383.png dehancer-fuji-reala-500d-exp-2013-k2383.png dehancer-kodachrome-64+3ev.png dehancer-kodachrome-64-3ev.png dehancer-kodachrome-64.png dehancer-kodak-aerocolor-IV-125.png dehancer-kodak-eastman-double-X-5222.png dehancer-kodak-ektar-25-exp-1996+endura.png dehancer-kodak-gold-200.png dehancer-kodak-portra-400+endura.png dehancer-kodak-supra-100+endura.png dehancer-kodak-supra-100+k2383.png dehancer-kodak-vision-3-500t+k2383.png dehancer-konica-minolta-vx400-super.png dehancer-lomochrome-metropolis-xr-100-400.png dehancer-lomochrome-purple.png dehancer-orwo-chrom-ut21-daylight-exp-1992.png dehancer-polachrome-35mm-exp-1986.png dehancer-prokudin-gorskiy-1906.png dehancer-rollei-ortho-25.png dehancer-sverna-type-42-exp-1991.png dehancer-xp2-super400.png"
 
 LUTS=dehancer-kodachrome-64.png
