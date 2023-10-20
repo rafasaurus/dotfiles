@@ -36,7 +36,7 @@ do
     orig=${FL}_orig.${extension}
     [ -f $orig ] || cp "$1" $orig
     $CONVERT $orig ${LPATH}/${LUT} -hald-clut $1
-    exiftool -delete_original -Exif:ImageDescription="${FLLUT}" -Description="${FLLUT}" "$1" 
+    exiftool -m -delete_original -Exif:ImageDescription="${FLLUT}" -Description="${FLLUT}" "$1" 
     $CONVERT $orig ${LPATH}/${LUT} -hald-clut $1
 done
 
