@@ -23,13 +23,13 @@ XF86AudioLowerVolume
 alt+shift+ctrl+d
     pamixer -d 10 && kill -44 $(pidof dwmblocks)
 XF86MonBrightnessUp
-    xbacklight -inc 2 # increase screen brightness
+    brillo -q -A 10 # increase screen brightness
 alt+v
-    xbacklight -inc 2 # increase screen brightness
+    brillo -q -A 10 # increase screen brightness
 XF86MonBrightnessDown
-    xbacklight -dec 5 # decrease screen brightness
+    brillo -q -U 10 # decrease screen brightness
 alt+c
-    xbacklight -dec 5 # decrease screen brightness
+    brillo -q -U 10 # decrease screen brightness
 alt+shift+v
     pkill picom && picom --config ~/.config/compton/config -b --experimental-backends &
 Print
@@ -62,7 +62,7 @@ alt+o
     # ~/.config/rofi/launchers/misc/launcher.sh
     # rofi -show drun -columns 2 -show-icons -padding 18 -modi drun -theme ~/.cache/wal/colors-rofi-dark.rasi
 alt+shift+o
-    locate -r pdf$ -r epub$ | dmenu -i -l 15 | xargs -0 -r -d '\n' zathura
+    find $HOME/tmp/ $HOME/Dropbox/ -name '*.pdf' -o -name "*.epub" | dmenu -i -l 15 | xargs -0 -r -d '\n' zathura
 alt+shift+r
     $TERMINAL -e cava
 #    xfce4-terminal -e "cava" --hide-borders --hide-toolbar --hide-menubar --hide-scrollbar --title=desktopconsole --geometry=130x44+0+0 &
