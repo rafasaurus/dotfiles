@@ -127,13 +127,15 @@ uninstall-udev :
 	sudo rm -r /etc/udev/rules.d/*
 .PHONY : install-full
 install-full :  install-paru install-prereqs
-	echo "done"
-.PHONY : install-android-env
+	echo "done" .PHONY : install-android-env
 install-android-env :
 	cp .local/bin/mimir_armv7l $(shell dirname `which sh`)
 .PHONY : install-film-android
 install-film-android :
-	cp -r .local/bin/film .local/bin/512x512/ $(shell dirname `which sh`) && echo "done"
+	mkdir -p $(HOME)/.local/bin
+	cp -r .local/bin/luts/ $(HOME)/.local/bin/ && echo "copied luts"
+	cp -r .local/bin/film $(shell dirname `which sh`) && echo "copied film script"
+.PHONY : uninstall-film-android
 .PHONY : uninstall-film-android
 uninstall-film-android :
 	rm -r $(shell dirname `which sh`)/512x512 $(shell which film)
