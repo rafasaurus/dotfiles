@@ -128,7 +128,9 @@ uninstall-udev :
 .PHONY : install-full
 install-full :  install-paru install-prereqs
 	echo "done"
-
+.PHONY : install-android-env
+install-android-env :
+	cp .local/bin/mimir_armv7l $(shell dirname `which sh`)
 .PHONY : install-film-android
 install-film-android :
 	cp -r .local/bin/film .local/bin/512x512/ $(shell dirname `which sh`) && echo "done"
