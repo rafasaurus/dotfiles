@@ -51,7 +51,7 @@ alt+Delete
 XF86PowerOff
     ~/.local/bin/power
 alt+shift+d
-    ~/.screenlayout/4k.sh
+    ~/.screenlayout/external.sh
 alt+shift+b
     ~/.screenlayout/built-in.sh
 alt+x
@@ -80,3 +80,5 @@ alt+F7
     ~/.local/bin/scripts/tools/translate urban selection && notify-send "translating..."
 alt+shift+F7
     ~/.local/bin/scripts/tools/translate chtsh selection && notify-send "translating..."
+alt+shift+p
+    pcmanfm ~/Pictures/screenshots
