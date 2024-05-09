@@ -1,4 +1,6 @@
 #!/bin/sh
+# This script creates three different virtual screens in one 4k monitor
+#
 height=2160
 width=3840
 screen="DP-1-1"
