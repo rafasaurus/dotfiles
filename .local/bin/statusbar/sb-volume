@@ -5,7 +5,8 @@
 source sb-essentials
 
 case $BLOCK_BUTTON in
-	1) POPUP_TERMINAL -e pulsemixer ;;
+	# 1) POPUP_TERMINAL -e pulsemixer ;;
+	1) pavucontrol ;;
 	2) pamixer -t ;;
 	3) notify-send "📢 Volume module" "\- Shows volume 🔊, 🔇 if muted.
 - Middle click to mute.

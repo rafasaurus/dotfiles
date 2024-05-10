@@ -1,4 +1,3 @@
-" TODO fix commentary for blcok commenting
 let nvim_plug_path = expand('~/.local/share/nvim/site/autoload/plug.vim')
 let nvim_plug_just_installed = 0
 if !filereadable(nvim_plug_path)
@@ -14,6 +13,11 @@ if nvim_plug_just_installed " manually load nvim-plug the first time
 endif
 " 
 call plug#begin()
+Plug 'David-Kunz/gen.nvim'
+Plug 'unblevable/quick-scope'
+Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'folke/tokyonight.nvim'
+Plug 'tpope/vim-speeddating'
 Plug 'neovim/nvim-lspconfig'
 Plug 'honza/vim-snippets'
 Plug 'rking/ag.vim'
@@ -24,7 +28,7 @@ Plug 'bignimbus/pop-punk.vim'
 Plug 'f-person/git-blame.nvim'
 Plug 'airblade/vim-gitgutter'
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
 Plug 'kyoz/purify', { 'rtp': 'vim' }
 Plug 'junegunn/goyo.vim'
 Plug 'f-person/auto-dark-mode.nvim'
@@ -122,13 +126,13 @@ if has("autocmd")
     au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | 
 endif
 " BETTER BACKUP AND RESTORE MECHANISM:
-set directory=$XDG_DATA_HOME/nvim/dirs/tmp   " directory to place swap files in
+set directory=${XDG_DATA_HOME}/nvim/dirs/tmp   " directory to place swap files in
 set backup                              " make backup files
-set backupdir=$XDG_DATA_HOME/nvim/dirs/backups       " where to put backup files
+set backupdir=${XDG_DATA_HOME}/nvim/dirs/backups       " where to put backup files
 set undofile
-set undodir=$XDG_DATA_HOME/nvim/undodir udf
+set undodir=${XDG_DATA_HOME}/nvim/undodir udf
 
-let g:yankring_history_dir = '$XDG_DATA_HOME/nvim/dirs/' " store yankring history file there too
+let g:yankring_history_dir = '${XDG_DATA_HOME}/nvim/dirs/' " store yankring history file there too
 if !isdirectory(&backupdir) " create needed directories if they don't exist
     call mkdir(&backupdir, "p")
 endif
@@ -208,5 +212,12 @@ nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 noremap <leader>c :Commentary<cr>
 
-" set mouse=a
 color purify
+if &diff
+    colorscheme tokyonight-night
+endif
+
+:imap kj <Esc>
+:imap jk <Esc>
+
+let g:gitgutter_diff_base = 'origin/master'

@@ -22,7 +22,12 @@ IGNORE_FLAGS= --ignore "Makefile" \
 		--ignore "tmux-${TMUX_VERSION}" \
 		# --ignore ".gtkrc-2.0" \
 
-.PHONY : stow
+# Phony targets for make
+.PHONY: stow restow destow install-prereqs install-paru install-paru-packages
+.PHONY: install-prereqs-paru install-udev install-tmux install-gui clean-gui
+.PHONY: uninstall-gui uninstall-udev install-full install-android-env
+.PHONY: install-film-android uninstall-film-android
+
 stow :
 	# if mimeapps exists as file delele it, if its a symlink or does not exists do nothing
 	[ -L ~/.config/mimeapps.list ] || ([ -f ~/.config/mimeapps.list ] && rm ~/.config/mimeapps.list ) || echo ""
@@ -44,15 +49,12 @@ stow :
 	@echo '******************************************************'
 	@echo ''
 
-.PHONY : restow
 restow :
 	stow --target $(HOME) --verbose --restow $(stow_dirs) $(IGNORE_FLAGS)
 
-.PHONY : destow
 destow :
 	stow -D --target $(HOME) --verbose $(stow_dirs) $(IGNORE_FLAGS)
 
-.PHONY : install-prereqs
 install-prereqs :
 	sudo pacman -S stow \
 		base-devel neovim git rofi sxhkd arandr ranger dunst sxiv imagemagick ffmpeg \
@@ -78,27 +80,21 @@ install-prereqs :
 	@echo '******************************************************'
 	@echo ''
 
-.PHONY : install-paru
 install-paru :
 	[ -d paru ] || git clone https://aur.archlinux.org/paru.git 
 	cd paru && makepkg -si
-.PHONY : install-paru-packages
 install-paru-packages :
 	paru compton-tryone-git
-.PHONY : install-prereqs-paru
 install-prereqs-paru :
 	paru todo.sh compton-tryone
-.PHONY : install-udev
 install-udev :
 	sudo cp -r etc/udev/rules.d/* /etc/udev/rules.d/
 	sudo udevadm control --reload-rules && sudo udevadm trigger
-.PHONY : install-tmux
 install-tmux :
 	wget https://github.com/tmux/tmux/releases/download/${TMUX_VERSION}/tmux-${TMUX_VERSION}.tar.gz
 	tar xf tmux-${TMUX_VERSION}.tar.gz
 	rm -f tmux-${TMUX_VERSION}.tar.gz
 	cd tmux-${TMUX_VERSION} && ./configure && make && sudo make install
-.PHONY : install-gui
 install-gui :
 	cd .suckless.d/dwm && sudo make install -j
 	cd .suckless.d/dwmblocks && sudo make install -j
@@ -106,14 +102,12 @@ install-gui :
 	cd .suckless.d/dmenu && sudo make install -j
 	cd .suckless.d/slock && sudo make install -j
 	sudo cp dwm.desktop /usr/share/xsessions
-.PHONY : clean-gui
 clean-gui :
 	cd .suckless.d/dwm && sudo make clean
 	cd .suckless.d/dwmblocks && sudo make clean
 	cd .suckless.d/slstatus && sudo make clean
 	cd .suckless.d/dmenu && sudo make clean
 	cd .suckless.d/slock && sudo make clean
-.PHONY : uninstall-gui
 uninstall-gui :
 	cd .suckless.d/dwm && sudo make uninstall
 	cd .suckless.d/dwmblocks && sudo make uninstall
@@ -122,20 +116,15 @@ uninstall-gui :
 	cd .suckless.d/slock && sudo make uninstall
 	sudo rm /usr/share/xsessions/dwm.desktop
 
-.PHONY : uninstall-udev
 uninstall-udev :
 	sudo rm -r /etc/udev/rules.d/*
-.PHONY : install-full
 install-full :  install-paru install-prereqs
 	echo "done" .PHONY : install-android-env
 install-android-env :
 	cp .local/bin/mimir_armv7l $(shell dirname `which sh`)
-.PHONY : install-film-android
 install-film-android :
 	mkdir -p $(HOME)/.local/bin
 	cp -r .local/bin/luts/ $(HOME)/.local/bin/ && echo "copied luts"
 	cp -r .local/bin/film $(shell dirname `which sh`) && echo "copied film script"
-.PHONY : uninstall-film-android
-.PHONY : uninstall-film-android
 uninstall-film-android :
 	rm -r $(shell dirname `which sh`)/512x512 $(shell which film)

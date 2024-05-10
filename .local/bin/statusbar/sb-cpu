@@ -28,7 +28,7 @@ esac
 if [ $no_turbo == '0' ]; then
     turbo_icon='🌶'
 else
-    turbo_icon='⛸'
+    turbo_icon='⛄'
 fi
 
 temp=$(sensors | awk '/Core 0/ {print "🌡" $3}')

@@ -1,15 +1,15 @@
 cmake -DBUILD_TIFF=ON \
     -DBUILD_opencv_java=OFF \
-    -DOPENCV_EXTRA_MODULES_PATH=~/opencv/opencv_contrib-3.4.15/modules \
+    -DOPENCV_EXTRA_MODULES_PATH=~/github/opencv/opencv_contrib-4.4.0/modules \
     -DWITH_CUDA=OFF \
     -DENABLE_AVX=ON \
-    -DWITH_OPENGL=ON \
+    -DWITH_OPENGL=OFF \
     -DWITH_OPENCL=ON \
     -DWITH_IPP=ON \
-    -DWITH_TBB=ON \
+    -DWITH_TBB=OFF \
     -DWITH_EIGEN=ON \
     -DWITH_V4L=ON \
-    -DWITH_FFMPEG=ON \
+    -DWITH_FFMPEG=OFF \
     -DWITH_GSTREAMER=ON \
     -DBUILD_TESTS=OFF \
     -DBUILD_PERF_TESTS=OFF \
@@ -17,4 +17,7 @@ cmake -DBUILD_TIFF=ON \
     -DINSTALL_PYTHON_EXAMPLES=OFF \
     -DINSTALL_C_EXAMPLES=OFF \
     -DCMAKE_BUILD_TYPE=RELEASE \
+    -DBUILD_opencv_gapi=OFF \
+    -DCV_TRACE=OFF \
+    -Wno-return-type \
     -DCMAKE_INSTALL_PREFIX=$(python3 -c "import sys; print(sys.prefix)") .. \

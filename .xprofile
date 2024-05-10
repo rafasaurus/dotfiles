@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # This file runs when a DM logs you into a graphical session.
+[ -f ~/.profile ] && . ~/.profile
 
 export QT_STYLE_OVERRIDE="gtk2"
 export QT_QPA_PLATFORMTHEME="gtk3"
@@ -25,5 +26,8 @@ export XDG_DATA_HOME="$HOME/.local/share/"
 export XDG_RUNTIME_DIR="$HOME/.cache/xdgr/"
 export DESKTOP_SESSION="dwm"
 export SUDO_ASKPASS="$HOME/.local/bin/dmenupass"
+export MOZ_USE_XINPUT2=1
+# export MESA_LOADER_DRIVER_OVERRIDE=iris
 
 alias POPUP_TERMINAL="st -f ComicCode-Bold:size=12 -g 140x30+330+220 -n \"popup\""
+$HOME/startup.sh

@@ -11,7 +11,7 @@ fi
 
 echo $chosen
 case "$chosen" in
-    lock) setxkbmap -layout 'us' && slock;;
+    lock) lock.sh;;
     suspend) ~/.screenlayout/built-in.sh && setxkbmap -layout 'us' && systemctl suspend || setxkbmap -layout 'us' && systemctl suspend ;;
     suspend_ext_scr) setxkbmap -layout 'us' && systemctl suspend ;;
     bluetooth) rofi-bluetooth ;;
