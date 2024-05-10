@@ -1,0 +1,15 @@
+#!/bin/sh
+
+vault=$HOME/obsidian/code
+# Gets year and quarter in xxxxqx format
+quarter=$(date +"%Y %m" | awk '{printf ("%4dq%1d\n", $1, ($2/4)+1)}')
+
+folder=$vault/$quarter
+mkdir -p $folder
+
+# Create daily md file if does not exist
+daily_md=$folder/$(date +"%Y-%m-%d").md
+[ -f $daily_md ] || ( touch $daily_md && echo "creating new daily in <$daily_md>" )
+
+$EDITOR $daily_md
+

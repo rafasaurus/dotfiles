@@ -1,28 +1,33 @@
 #!/bin/sh
 [ -f ~/.config/wall.png ] && xwallpaper --zoom ~/.config/wall.png || xwallpaper --zoom ~/.config/default_wall.jpg &
-# picom --config ~/.config/compton/config -b --experimental-backends &
-# picom -b
+
 dwmblocks | tee /tmp/dwmblock.log &
 xset r rate 300 50 &
-# xmodmap $HOME/.config/wal/templates/.Xresources &
 cp ~/.cache/zsh/history ~/.cache/zsh/history.bak
 unclutter &
 sxhkd &			# Bind keys with sxhkd
 xrdb ~/.cache/wal/.Xresources # || xrdb ~/.Xresources & # update x database
 bluetoothctl power on &
 dropbox &
-xautolock -time 10 -locker slock &
-xss-lock slock &
-# surf habitica.com &
+xautolock -time 30 -locker lock.sh -notify 30 -notifier "notify-send --urgency low --expire-time=10000 -- 'Locking screen in 30 seconds'" &
+xss-lock lock.sh &
 surf hackernews.com &
-~/.screenlayout/4k &
+
+~/.screenlayout/external.sh true
+xrandr --dpi 125
 wmbubble &
 # LD_LIBRARY_PATH="/opt/gai/lib" shermans_applet &
 syncthing --no-browser &
-surf https://rss.bsd.am &
+# surf https://rss.bsd.am &
 pulseaudio -D
 dunst &
+
+# run ollama with with unified memory on intel
+#
+source $HOME/intel/oneapi/setvars.sh && export ZES_ENABLE_SYSMAN=1 && ollama serve 2>&1 | tee /tmp/ollama.log &
+
 # backup zsh history for good
+#
 cp ~/.cach/zsh/history ~/.cache/zsh/history.bak
 # Watch for updates in todo.txt
 ls ~/Dropbox/todo/todo.txt | entr -n -r notify-send "Update in todo list 📔" -u critical &

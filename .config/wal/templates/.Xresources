@@ -68,7 +68,7 @@
 
 Xcursor.theme: macOSBigSur
 Xft.dpi: 105
-Xcursor.size: 30
+Xcursor.size: 28
 
 ! dwm 
 ! according to https://github.com/dylanaraps/pywal/blob/master/pywal/templates/colors-wal-dwm.h

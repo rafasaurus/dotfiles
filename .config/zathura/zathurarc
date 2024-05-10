@@ -7,9 +7,7 @@ map R rotate
 map i recolor
 map n navigate next
 map p navigate previous
-map z navigate next
-map x navigate previous
-set font "monospace 16"
+set font "Comic Code 12"
 set selection-clipboard clipboard
 map K zoom in
 map J zoom out

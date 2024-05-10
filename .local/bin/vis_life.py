@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import pytodotxt
 from datetime import datetime, date
 
-calculateAllTasks = False
+calculateAllTasks = True
 
 def main():
     todotxt = pytodotxt.TodoTxt(os.path.expanduser('~')+'/Dropbox/todo/done.txt')

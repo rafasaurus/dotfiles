@@ -1,3 +1,6 @@
+export CC=/usr/bin/gcc-8
+export CXX=/usr/bin/g++-8
+
 cmake -DBUILD_TIFF=ON \
   -DBUILD_opencv_java=OFF \
   -DOPENCV_EXTRA_MODULES_PATH=/home/pi/opencv/opencv_contrib-3.4.3/modules \
