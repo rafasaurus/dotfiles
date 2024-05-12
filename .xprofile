@@ -8,7 +8,6 @@ export QT_QPA_PLATFORMTHEME="gtk3"
 # export QT_QPA_PLATFORMTHEME="qt5ct"
 # export QT_STYLE_OVERRIDE="Fusion"
 export QT_SCALE_FACTOR=1.25
-export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
 export GTK_USE_PORTAL=0
 export _JAVA_AWT_WM_NONREPARENTING=1 # Fixing misbehaving Java applications
 export THEME=dark

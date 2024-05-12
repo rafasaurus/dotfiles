@@ -51,7 +51,7 @@ alt+Delete
 XF86PowerOff
     ~/.local/bin/power
 alt+shift+d
-    ~/.screenlayout/external.sh
+    ~/.screenlayout/external.sh true
 alt+shift+b
     ~/.screenlayout/built-in.sh
 alt+x

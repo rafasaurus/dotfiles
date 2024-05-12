@@ -48,3 +48,4 @@ st
 wallpaper
 # .local
 .config/darktable
+.config/nvim/plugged/
