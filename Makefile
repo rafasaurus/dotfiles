@@ -7,20 +7,17 @@
 # install qt5-styleplugins package from git or AUR
 
 stow_dirs = $(wildcard .)
-TMUX_VERSION=2.8
+TMUX_VERSION=3.4
 IGNORE_FLAGS= --ignore "Makefile" \
 		--ignore ".docs" \
 		--ignore "\.gitignore" \
 		--ignore "\.gitmodules" \
-		--ignore "\.git-prompt.sh" \
 		--ignore ".suckless.d" \
-		--ignore "slstatus" \
 		--ignore "README" \
-		--ignore "utils" \
-		--ignore "wallpaper" \
 		--ignore "etc" \
 		--ignore "tmux-${TMUX_VERSION}" \
-		# --ignore ".gtkrc-2.0" \
+		--ignore "paru" \
+		--ignore ".gtkrc-2.0" \
 
 # Phony targets for make
 .PHONY: stow restow destow install-prereqs install-paru install-paru-packages

@@ -1,7 +1,0 @@
-# fix no usb device
-sudo modprobe vboxdrv
-sudo modprobe -a vboxguest vboxsf vboxvideo
-sudo modprobe vboxnetflt
-sudo modprobe vboxsf
-# list usb devices
-sudo VBoxManage list usbhost

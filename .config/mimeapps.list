@@ -7,8 +7,8 @@ text/x-shellscript=text.desktop;
 x-scheme-handler/magnet=torrent.desktop;
 application/x-bittorrent=torrent.desktop;
 x-scheme-handler/mailto=mail.desktop;
-x-scheme-handler/https=brave.desktop
-x-scheme-handler/http=brave.desktop
+x-scheme-handler/https=firefox.desktop
+x-scheme-handler/http=firefox.desktop
 text/plain=text.desktop;
 application/postscript=pdf.desktop;
 application/pdf=pdf.desktop;
@@ -18,5 +18,9 @@ image/gif=img.desktop;
 application/rss+xml=rss.desktop
 video/x-matroska=video.desktop
 x-scheme-handler/lbry=lbry.desktop
-inode/directory=file.desktop
+inode/directory=pcmanfm.desktop
 x-scheme-handler/notion=notion-app.desktop
+x-scheme-handler/tg=org.telegram.desktop.desktop
+
+[Added Associations]
+x-scheme-handler/tg=org.telegram.desktop.desktop;
