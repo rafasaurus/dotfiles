@@ -3,7 +3,7 @@
 #
 height=2160
 width=3840
-screen="DP-1-1"
+screen=$(xrandr | grep -w "connected" | grep -v "primary" | awk '{print $1}')
 virtual_screen="VP-1"
 
 xrandr --setmonitor $virtual_screen-1 2160/0x2160/0+0+1680 $screen
