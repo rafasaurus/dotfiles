@@ -1,6 +1,6 @@
 #!/bin/sh
 set -x
-choices=`echo "lock suspend suspend_ext_scr bluetooth shutdown reboot screen_layout" | tr ' ' '\n'`
+choices=`echo "lock suspend suspend_to_external_screen bluetooth shutdown reboot screen_layout" | tr ' ' '\n'`
 
 if command -v xmenu
 then 
@@ -13,7 +13,7 @@ echo $chosen
 case "$chosen" in
     lock) lock.sh;;
     suspend) ~/.screenlayout/built-in.sh && setxkbmap -layout 'us' && systemctl suspend || setxkbmap -layout 'us' && systemctl suspend ;;
-    suspend_ext_scr) setxkbmap -layout 'us' && systemctl suspend ;;
+    suspend_to_external_screen) setxkbmap -layout 'us' && systemctl suspend ;;
     bluetooth) rofi-bluetooth ;;
     shutdown) ~/.local/bin/scripts/tools/prompt "Do you want to shutdown ?" "shutdown now";;
     reboot) ~/.local/bin/scripts/tools/prompt "Do you want to shutdown ?" "reboot";;

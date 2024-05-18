@@ -1,5 +1,5 @@
 #!/bin/sh
-choices=`echo "$(ls $HOME/.screenlayout)" | tr ' ' '\n'` 
+choices=`echo "built-in external_rotated external" | tr ' ' '\n'`
 
 if command -v xmenu
 then 
@@ -8,9 +8,8 @@ else
     chosen=$(echo -e "$choices" | dmenu -i -p "Choose screen option" -l 15)
 fi
 
-bash $HOME/.screenlayout/$chosen
-exit
 case "$chosen" in
     built-in) bash ~/.screenlayout/built-in.sh;;
-    4k) bash ~/.screenlayout/4k.sh;;
+    external_rotated) bash ~/.screenlayout/external.sh true;;
+    external) bash ~/.screenlayout/external.sh false && pkill dunst && dunst &;;
 esac
