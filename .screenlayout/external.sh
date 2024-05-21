@@ -10,7 +10,7 @@ fi
 if [[ "$1" = true ]]; then 
     $HOME/.screenlayout/4k_rotated.sh && $HOME/.screenlayout/virmon.sh
 else
-    $HOME/.screenlayout/4k.sh && /home/rafael/.screenlayout/clear-virmon.sh
+    $HOME/.screenlayout/clear-virmon.sh && $HOME/.screenlayout/4k.sh
 fi
 [ -f ~/.config/wall.png ] && xwallpaper --zoom ~/.config/wall.png || xwallpaper --zoom ~/.config/default_wall.jpg &
 pkill picom
