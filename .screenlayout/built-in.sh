@@ -1,4 +1,5 @@
 #!/bin/sh
+# $HOME/.local/bin/change-dpi 100
 $HOME/.screenlayout/clear-virmon.sh
 $HOME/.screenlayout/laptop_screen.sh # generate with arandr
 
