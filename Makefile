@@ -53,18 +53,8 @@ destow :
 	stow -D --target $(HOME) --verbose $(stow_dirs) $(IGNORE_FLAGS)
 
 install-prereqs :
-	sudo pacman -S stow \
-		base-devel neovim git rofi sxhkd arandr ranger dunst sxiv imagemagick ffmpeg \
-		networkmanager ttf-joypixels ttf-linux-libertine ttf-inconsolata \
-		xwallpaper python-pip pipewire pipewire-pulse wireplumber alsa-utils \
-		maim unrar unzip youtube-dl zathura zathura-djvu zathura-pdf-mupdf \
-		poppler highlight fzf acpilight xorg-xprop xorg-xinit xorg-xwininfo xorg-server \
-		openssh ttf-liberation ttf-dejavu ttf-fira-code fontconfig ttf-roboto ttf-font-awesome \
-		unclutter zsh xclip wget curl libevent ncurses libnotify pamixer upower the_silver_searcher \
-		redshift bluez-cups bluez-utils bluez pass qtpass mlocate lsof lxappearance xcursor-themes \
-		cmake libc++abi libc++ cronie
+	sudo pacman -S --needed - < packages.txt
 
-	sudo pip install pywal undervolt wpm
 	@echo ''
 	@echo ''
 	@echo '******************************************************'

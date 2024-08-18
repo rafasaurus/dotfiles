@@ -51,3 +51,4 @@ background = "#2f343f"
 foreground = "#d8dee8"
 frame_color = "#bf616a"
 timeout = 0
+scale = 0

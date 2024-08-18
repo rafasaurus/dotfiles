@@ -16,3 +16,6 @@
 [submodule ".config/rofi/themes"]
 	path = .config/rofi/themes
 	url = https://github.com/adi1090x/rofi
+[submodule ".suckless.d/dwmblocks-async"]
+	path = .suckless.d/dwmblocks-async
+	url = https://github.com/UtkarshVerma/dwmblocks-async

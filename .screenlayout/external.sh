@@ -1,7 +1,6 @@
 #!/bin/sh
-set -x
+# this script should be the main interface from user perspective
 
-# $HOME/.local/bin/change-dpi 96
 # TODO, do not rotate when different is plugged, other then 4k
 $HOME/.screenlayout/generic.sh
 virmon=$(echo "virmon no_virmon" | tr ' ' '\n' | xmenu -i -r -p 0x0)
