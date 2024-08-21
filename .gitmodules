@@ -1,24 +1,24 @@
 [submodule "dwm"]
-	path = .suckless.d/dwm
+	path = external/dwm
 	url = git@github.com:rafasaurus/dwm
 [submodule "slstatus"]
-	path = .suckless.d/slstatus
+	path = external/slstatus
 	url = git@github.com:rafasaurus/slstatus
 [submodule "slock"]
-	path = .suckless.d/slock
+	path = external/slock
 	url = git@github.com:rafasaurus/slock
 [submodule "dmenu"]
-	path = .suckless.d/dmenu
+	path = external/dmenu
 	url = git@github.com:rafasaurus/dmenu
 [submodule "dwmblocks"]
-	path = .suckless.d/dwmblocks
+	path = external/dwmblocks
 	url = git@github.com:rafasaurus/dwmblocks
 [submodule ".config/rofi/themes"]
 	path = .config/rofi/themes
 	url = https://github.com/adi1090x/rofi
-[submodule ".suckless.d/dwmblocks-async"]
-	path = .suckless.d/dwmblocks-async
+[submodule "external/dwmblocks-async"]
+	path = external/dwmblocks-async
 	url = https://github.com/UtkarshVerma/dwmblocks-async
-[submodule ".suckless.d/mimir"]
-	path = .suckless.d/mimir
+[submodule "external/mimir"]
+	path = external/mimir
 	url = https://github.com/rafasaurus/mimir
