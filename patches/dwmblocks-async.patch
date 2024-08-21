@@ -1,0 +1,45 @@
+diff --git a/config.h b/config.h
+index d9d605b..81de4ea 100644
+--- a/config.h
++++ b/config.h
+@@ -2,10 +2,10 @@
+ #define CONFIG_H
+ 
+ // String used to delimit block outputs in the status.
+-#define DELIMITER "  "
++#define DELIMITER ""
+ 
+ // Maximum number of Unicode characters that a block can output.
+-#define MAX_BLOCK_OUTPUT_LENGTH 45
++#define MAX_BLOCK_OUTPUT_LENGTH 16
+ 
+ // Control whether blocks are clickable.
+ #define CLICKABLE_BLOCKS 1
+@@ -18,15 +18,17 @@
+ 
+ // Define blocks for the status feed as X(icon, cmd, interval, signal).
+ #define BLOCKS(X)             \
+-    X("", "sb-mail", 600, 1)  \
+-    X("", "sb-music", 0, 2)   \
+-    X("", "sb-disk", 1800, 3) \
+-    X("", "sb-memory", 10, 4) \
+-    X("", "sb-loadavg", 5, 5) \
+-    X("", "sb-mic", 0, 6)     \
+-    X("", "sb-record", 0, 7)  \
+-    X("", "sb-volume", 0, 8)  \
+-    X("", "sb-battery", 5, 9) \
+-    X("", "sb-date", 1, 10)
++	X("", "sb-pacpackages", 24400,	8) \
++	X("", "sb-todo", 200,	11)        \
++	X("", "sb-news", 0,	6)             \
++	X("", "sb-memory", 10,	14)        \
++	X("", "sb-disk", 60,	5)         \
++	X("", "sb-cpu",	3,	18)            \
++	X("", "sb-battery", 5,	3)         \
++	X("", "sb-eta", 0,	2)             \
++	X("", "sb-volume", 0,	10)        \
++	X("", "sb-clock", 60,	1)         \
++	X("", "sb-internet", 5,	4)         \
++	X("", "sb-menu", 0,	9)
+ 
+ #endif  // CONFIG_H
