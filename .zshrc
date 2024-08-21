@@ -76,16 +76,15 @@ bindkey '^e' edit-command-line
 # Load aliases and shortcuts if existent.
 [ -f "$HOME/.config/shortcutrc" ] && source "$HOME/.config/shortcutrc"
 [ -f "$HOME/.config/aliasrc" ] && source "$HOME/.config/aliasrc"
+[ -f $HOME/workspace/work_env.sh ] && source $HOME/workspace/work_env.sh
 
 # Load zsh-syntax-highlighting; should be last.
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-[ -f "$HOME/.config/aliasrc" ] && source "$HOME/.config/aliasrc"
-
 # Mimir git prompt
 autoload -Uz add-zsh-hook
-prompt_mimir_cmd() { [ $(uname -m) = "x86_64" ] && mimir_zsh || mimir_armv7l}
+prompt_mimir_cmd() { mimir }
 add-zsh-hook precmd prompt_mimir_cmd
 
 prompt_symbol='❯'
