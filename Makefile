@@ -12,7 +12,7 @@ IGNORE_FLAGS= --ignore "Makefile" \
 		--ignore ".docs" \
 		--ignore "\.gitignore" \
 		--ignore "\.gitmodules" \
-		--ignore ".suckless.d" \
+		--ignore "external" \
 		--ignore "README" \
 		--ignore "etc" \
 		--ignore "tmux-${TMUX_VERSION}" \
@@ -83,29 +83,31 @@ install-tmux :
 	rm -f tmux-${TMUX_VERSION}.tar.gz
 	cd tmux-${TMUX_VERSION} && ./configure && make && sudo make install
 install-gui :
-	cd .suckless.d/dwm && sudo make install -j
-	cd .suckless.d/dwmblocks && sudo make install -j
-	cd .suckless.d/slstatus && sudo make install -j
-	cd .suckless.d/dmenu && sudo make install -j
-	cd .suckless.d/slock && sudo make install -j
+	cd external/dwm && sudo make install -j
+	cd external/dwmblocks && sudo make install -j
+	cd external/slstatus && sudo make install -j
+	cd external/dmenu && sudo make install -j
+	cd external/slock && sudo make install -j
 	sudo cp dwm.desktop /usr/share/xsessions
 clean-gui :
-	cd .suckless.d/dwm && sudo make clean
-	cd .suckless.d/dwmblocks && sudo make clean
-	cd .suckless.d/slstatus && sudo make clean
-	cd .suckless.d/dmenu && sudo make clean
-	cd .suckless.d/slock && sudo make clean
+	cd external/dwm && sudo make clean
+	cd external/dwmblocks && sudo make clean
+	cd external/slstatus && sudo make clean
+	cd external/dmenu && sudo make clean
+	cd external/slock && sudo make clean
 uninstall-gui :
-	cd .suckless.d/dwm && sudo make uninstall
-	cd .suckless.d/dwmblocks && sudo make uninstall
-	cd .suckless.d/slstatus && sudo make uninstall
-	cd .suckless.d/dmenu && sudo make uninstall
-	cd .suckless.d/slock && sudo make uninstall
+	cd external/dwm && sudo make uninstall
+	cd external/dwmblocks && sudo make uninstall
+	cd external/slstatus && sudo make uninstall
+	cd external/dmenu && sudo make uninstall
+	cd external/slock && sudo make uninstall
 	sudo rm /usr/share/xsessions/dwm.desktop
 
 uninstall-udev :
 	sudo rm -r /etc/udev/rules.d/*
-install-full :  install-paru install-prereqs
+install-mimir:
+	cd ./external/mimir && make install
+install-full :  install-paru install-prereqs install-mimir
 	echo "done" .PHONY : install-android-env
 install-android-env :
 	cp .local/bin/mimir_armv7l $(shell dirname `which sh`)
