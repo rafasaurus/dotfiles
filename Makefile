@@ -29,14 +29,14 @@ stow :
 	# if mimeapps exists as file delele it, if its a symlink or does not exists do nothing
 	[ -L ~/.config/mimeapps.list ] || ([ -f ~/.config/mimeapps.list ] && rm ~/.config/mimeapps.list ) || echo ""
 	[ -L ~/.gtkrc-2.0 ] || ([ -d ~/.gtkrc-2.0 ] && rm ~/.gtkrc-2.0) || echo ""
-	[[ -d $(HOME)/.config ]] || mkdir $(HOME)/.config
-	[[ -d $(HOME)/.local ]] || mkdir $(HOME)/.local
-	[[ -d $(HOME)/.local/share ]] || mkdir -p $(HOME)/.local/share
-	[[ -d $(HOME)/.local/bin ]] || mkdir -p $(HOME)/.local/bin
-	[[ -d $(HOME)/.local/share/applications ]] || mkdir -p $(HOME)/.local/share/applications
-	[[ -d $(HOME)/.local/share/fonts ]] || mkdir -p $(HOME)/.local/share/fonts
-	[[ -d $(HOME)/.cache/zsh ]] || mkdir -p $(HOME)/.cache/zsh
-	[[ -d $(HOME)/.todo ]] || mkdir $(HOME)/.todo
+	[ -d $(HOME)/.config ] || mkdir $(HOME)/.config
+	[ -d $(HOME)/.local ] || mkdir $(HOME)/.local
+	[ -d $(HOME)/.local/share ] || mkdir -p $(HOME)/.local/share
+	[ -d $(HOME)/.local/bin ] || mkdir -p $(HOME)/.local/bin
+	[ -d $(HOME)/.local/share/applications ] || mkdir -p $(HOME)/.local/share/applications
+	[ -d $(HOME)/.local/share/fonts ] || mkdir -p $(HOME)/.local/share/fonts
+	[ -d $(HOME)/.cache/zsh ] || mkdir -p $(HOME)/.cache/zsh
+	[ -d $(HOME)/.todo ] || mkdir $(HOME)/.todo
 	stow --target $(HOME) --verbose $(stow_dirs) $(IGNORE_FLAGS)
 	@echo ''
 	@echo ''
