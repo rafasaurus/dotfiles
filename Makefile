@@ -20,8 +20,8 @@ IGNORE_FLAGS= --ignore "Makefile" \
 		--ignore ".gtkrc-2.0" \
 
 # Phony targets for make
-.PHONY: stow restow destow install-prereqs install-paru install-paru-packages
-.PHONY: install-prereqs-paru install-udev install-tmux install-gui clean-gui
+.PHONY: stow restow destow install-prereqs install-paru
+.PHONY: install-udev install-tmux install-gui lean-gui
 .PHONY: uninstall-gui uninstall-udev install-full install-android-env
 .PHONY: install-film-android uninstall-film-android
 
@@ -59,7 +59,6 @@ install-prereqs :
 	@echo ''
 	@echo '******************************************************'
 	@echo 'Please read what should be manually installed'
-	@echo 'Install Fira Code from aur'
 	@echo 'enable pipewire-pulse.service and socket per user'
 	@echo 'systemctl --user enable pipewire-pulse.service'
 	@echo 'systemctl --user enable pipewire-pulse.socket'
@@ -70,10 +69,6 @@ install-prereqs :
 install-paru :
 	[ -d paru ] || git clone https://aur.archlinux.org/paru.git 
 	cd paru && makepkg -si
-install-paru-packages :
-	paru compton-tryone-git
-install-prereqs-paru :
-	paru todo.sh compton-tryone
 install-udev :
 	sudo cp -r etc/udev/rules.d/* /etc/udev/rules.d/
 	sudo udevadm control --reload-rules && sudo udevadm trigger
@@ -84,21 +79,13 @@ install-tmux :
 	cd tmux-${TMUX_VERSION} && ./configure && make && sudo make install
 install-gui :
 	cd external/dwm && sudo make install -j
-	cd external/dwmblocks && sudo make install -j
-	cd external/slstatus && sudo make install -j
+	cd external/dwmblocks-async && sudo make install -j
 	cd external/dmenu && sudo make install -j
 	cd external/slock && sudo make install -j
 	sudo cp dwm.desktop /usr/share/xsessions
-clean-gui :
-	cd external/dwm && sudo make clean
-	cd external/dwmblocks && sudo make clean
-	cd external/slstatus && sudo make clean
-	cd external/dmenu && sudo make clean
-	cd external/slock && sudo make clean
 uninstall-gui :
 	cd external/dwm && sudo make uninstall
-	cd external/dwmblocks && sudo make uninstall
-	cd external/slstatus && sudo make uninstall
+	cd external/dwmblocks-async && sudo make uninstall
 	cd external/dmenu && sudo make uninstall
 	cd external/slock && sudo make uninstall
 	sudo rm /usr/share/xsessions/dwm.desktop
@@ -108,12 +95,4 @@ uninstall-udev :
 install-mimir:
 	cd ./external/mimir && make install
 install-full :  install-paru install-prereqs install-mimir
-	echo "done" .PHONY : install-android-env
-install-android-env :
-	cp .local/bin/mimir_armv7l $(shell dirname `which sh`)
-install-film-android :
-	mkdir -p $(HOME)/.local/bin
-	cp -r .local/bin/luts/ $(HOME)/.local/bin/ && echo "copied luts"
-	cp -r .local/bin/film $(shell dirname `which sh`) && echo "copied film script"
-uninstall-film-android :
-	rm -r $(shell dirname `which sh`)/512x512 $(shell which film)
+	echo "done full installation"
