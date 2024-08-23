@@ -57,7 +57,7 @@ alt+shift+b
 alt+x
     ~/.local/bin/scripts/commands/scr
 alt+o
-    ~/.config/rofi/launchers/type-3/launcher.sh
+    ~/.config/rofi/themes/files/launchers/type-3/launcher.sh
     # notify-send "rofi is depreciated, use dmenu"
     # ~/.config/rofi/launchers/misc/launcher.sh
     # rofi -show drun -columns 2 -show-icons -padding 18 -modi drun -theme ~/.cache/wal/colors-rofi-dark.rasi
