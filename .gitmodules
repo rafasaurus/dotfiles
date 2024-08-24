@@ -19,3 +19,6 @@
 [submodule "external/mimir"]
 	path = external/mimir
 	url = https://github.com/rafasaurus/mimir
+[submodule "external/dmenu"]
+	path = external/dmenu
+	url = https://git.suckless.org/dmenu
