@@ -7,9 +7,6 @@
 [submodule "slock"]
 	path = external/slock
 	url = git@github.com:rafasaurus/slock
-[submodule "dmenu"]
-	path = external/dmenu
-	url = git@github.com:rafasaurus/dmenu
 [submodule "dwmblocks"]
 	path = external/dwmblocks
 	url = git@github.com:rafasaurus/dwmblocks
