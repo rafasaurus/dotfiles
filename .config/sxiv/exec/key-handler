@@ -2,8 +2,16 @@
 
 while read file
 do
+    # Check if pywal-env exist, if not install all necessary system components for pywal
+    [ -f $HOME/.local/share/pywal-env/bin/activate ] ||  \
+        (notify-send "no pywal-env detected, installing..." \
+            && python -m virtualenv $HOME/.local/share/pywal-env \
+            && source $HOME/.local/share/pywal-env/bin/activate \
+            && pip install pywal colorz colorthief haishoku \
+            && notify-send "installed pywal-env")
+
     case "$1" in
-        "w") backend=$(wal --backend | awk '{print $2}' | awk '/[a-z]/' | dmenu -i -p "choose pywal backend" -l 15) && wal -n -i "$file" --backend $backend && sleep 3 && xrdb ~/.cache/wal/.Xresources && setbg "$file" && echo $backend > ~/.config/pywal_backend || notify-send "wallpaper failed";;
+        "w") source $HOME/.local/share/pywal-env/bin/activate && backend=$(wal --backend | awk '{print $2}' | awk '/[a-z]/' | dmenu -i -p "choose pywal backend" -l 15) && wal -n -i "$file" --backend $backend && sleep 3 && xrdb ~/.cache/wal/.Xresources && setbg "$file" && echo $backend > ~/.config/pywal_backend || notify-send "wallpaper failed";;
         "q") apply-hald-clut.sh "$file" | xargs -L 1 notify-send ;;
         "l") $TERMINAL -e vim ~/.local/bin/apply-hald-clut.sh "$file" ;;
         "j") convert $file ${file}.jpg ;;
