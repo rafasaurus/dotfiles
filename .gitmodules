@@ -1,12 +1,6 @@
 [submodule "dwm"]
 	path = external/dwm
 	url = git@github.com:rafasaurus/dwm
-[submodule "slstatus"]
-	path = external/slstatus
-	url = git@github.com:rafasaurus/slstatus
-[submodule "slock"]
-	path = external/slock
-	url = git@github.com:rafasaurus/slock
 [submodule "dwmblocks"]
 	path = external/dwmblocks
 	url = git@github.com:rafasaurus/dwmblocks
