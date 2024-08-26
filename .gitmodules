@@ -10,9 +10,6 @@
 [submodule "dwmblocks"]
 	path = external/dwmblocks
 	url = git@github.com:rafasaurus/dwmblocks
-[submodule ".config/rofi/themes"]
-	path = .config/rofi/themes
-	url = https://github.com/adi1090x/rofi
 [submodule "external/dwmblocks-async"]
 	path = external/dwmblocks-async
 	url = https://github.com/UtkarshVerma/dwmblocks-async
