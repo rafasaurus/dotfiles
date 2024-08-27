@@ -49,7 +49,7 @@ alt+r
 alt+Delete
     ~/.local/bin/power
 XF86PowerOff
-    ~/.local/bin/power
+    ~/.local/bin/power || notify-send "power button error"
 alt+shift+d
     ~/.screenlayout/external.sh true
 alt+shift+b
@@ -57,7 +57,7 @@ alt+shift+b
 alt+x
     ~/.local/bin/scripts/commands/scr
 alt+o
-    rofi -show drun -config ~/.config/rofi/kde_simplemenu.rasi
+    ~/.config/rofi/launcher.sh
 alt+shift+o
     find $HOME/tmp/ $HOME/Dropbox/ -name '*.pdf' -o -name "*.epub" | dmenu -i -l 15 | xargs -0 -r -d '\n' zathura
 alt+shift+r
