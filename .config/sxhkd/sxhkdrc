@@ -41,7 +41,7 @@ shift+alt+ctrl+p
 # Caps_Lock
 #     ~/.local/bin/scripts/tools/caps_state.sh
 alt+u 
-    setxkbmap -layout 'us' && notify-send "english 🇺🇸" && xmodmap.sh && caps_state.sh
+    setxkbmap -layout 'us' && notify-send "english 🇺🇸" && xmodmap ~/.Xmodmap && caps_state.sh
 alt+a 
 	setxkbmap -layout 'am' -variant 'phonetic' && notify-send "armenian 🇦🇲"
 alt+r
@@ -78,4 +78,4 @@ alt+F7
 alt+shift+F7
     ~/.local/bin/scripts/tools/translate chtsh selection && notify-send "translating..."
 alt+shift+p
-    pcmanfm ~/Pictures/screenshots
+    thunar ~/Pictures/screenshots

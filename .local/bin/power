@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -x
 choices=`echo "lock suspend suspend_to_external_screen bluetooth shutdown reboot screen_layout" | tr ' ' '\n'`
 
