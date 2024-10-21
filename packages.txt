@@ -69,3 +69,4 @@ go
 rust
 trash-cli
 python-virtualenv
+newsboat

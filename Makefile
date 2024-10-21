@@ -9,6 +9,7 @@
 stow_dirs = $(wildcard .)
 TMUX_VERSION=3.4
 IGNORE_FLAGS= --ignore "Makefile" \
+		--ignore ".config/wall.png" \
 		--ignore ".docs" \
 		--ignore "\.gitignore" \
 		--ignore "\.gitmodules" \

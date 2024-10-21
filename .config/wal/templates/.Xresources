@@ -67,7 +67,7 @@
 ! rofi.fake-transparency: false
 
 Xcursor.theme: macOSBigSur
-Xft.dpi: 105
+Xft.dpi: 96
 Xcursor.size: 28
 
 ! dwm 
@@ -81,7 +81,7 @@ dwm.selfgcolor: base0F
 ! dmenu settings
 
 dmenu.selforeground:	    #FFFFFF
-dmenu.background:	        #000000
+dmenu.background:	        {background}
 dmenu.selbackground:	    #0C73C2
-dmenu.foreground:	        #A0A0A0
-dmenu.font:	                "DroidSansMono-9"
+dmenu.foreground:	        {foreground}
+dmenu.font:	                "Charcoal 11"
