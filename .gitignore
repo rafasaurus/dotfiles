@@ -49,3 +49,5 @@ wallpaper
 # .local
 .config/darktable
 .config/nvim/plugged/
+.config/ranger/colorschemes/__init__.py
+.config/ranger/colorschemes/__pycache__

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# loads aliases for statusbar
+source sb-essentials
+case $BLOCK_BUTTON in
+    1) surf /tmp/eta2home.html ;;
+    2) notify-send "updating ETA's 🚋" && /home/rafael/.local/bin/eta.py /home/rafael/.config/eta.yaml >> /home/rafael/.cache/eta.log && kill -36 $(pidof dwmblocks) && notify-send "updated ETA's 🚋" -u critical || notify-send "failed to update ETA's";;
+	3) surf /tmp/eta2work.html ;;
+	6) POPUP_TERMINAL -e "$EDITOR" "$0" ;;
+esac
+
+eta2home=$(cat /tmp/eta2home)
+eta2work=$(cat /tmp/eta2work)
+printf 🚋h$eta2home:w$eta2work

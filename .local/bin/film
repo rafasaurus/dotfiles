@@ -5,7 +5,7 @@ if [[ $1 == "" ]]
 
 then
     echo "no arguments, path to the picture expected"
-    echo -e "provide film emulation\n adox: adox impolsion \n p400: portra 400\n v50: velvia 50 \n"
+    echo -e "provide film emulation\n adox: adox impolsion \n p400: portra 400\n v50: velvia 50 \n v50+1: velvia 50 +1 exp\n"
     exit 1
 
 fi
@@ -23,6 +23,7 @@ case $2 in
     "adox") LUTS=dhnc-adox-impolsion-kodak-paper.png ;;
     "p400") LUTS=dhnc-kodak-portra-400+endura.png ;;
     "v50") LUTS=dhnc-fujichrome-velvia-50-k2383.png ;;
+    "v50+1") LUTS=dhnc-fujichrome-velvia-50+1ev.png ;;
 esac
 
 CONVERT=/usr/bin/convert
@@ -36,6 +37,5 @@ do
     [ -f $orig ] || cp "$1" $orig
     $CONVERT $orig ${LPATH}/${LUT} -hald-clut $1
     exiftool -m -delete_original -Exif:ImageDescription="${FLLUT}" -Description="${FLLUT}" "$1" 
-    $CONVERT $orig ${LPATH}/${LUT} -hald-clut $1
 done
 

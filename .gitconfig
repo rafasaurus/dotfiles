@@ -15,3 +15,7 @@
 
 [includeIf "gitdir:~/workspace/"]
     path = workspace/.gitconfig-job
+[includeIf "gitdir:~/sshfs/workspace/"]
+    path = sshfs/workspace/.gitconfig-job
+[includeIf "gitdir:~/sshfs1/workspace/"]
+    path = sshfs1/workspace/.gitconfig-job

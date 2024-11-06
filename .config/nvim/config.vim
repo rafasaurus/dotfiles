@@ -14,6 +14,10 @@ endif
 " 
 call plug#begin()
 Plug 'David-Kunz/gen.nvim'
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
+Plug 'neovim/nvim-lspconfig'
+Plug 'David-Kunz/gen.nvim'
 Plug 'unblevable/quick-scope'
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'folke/tokyonight.nvim'

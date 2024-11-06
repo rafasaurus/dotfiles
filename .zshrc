@@ -94,7 +94,6 @@ history() { fc -lim "*$@*" 1 }
 # In case fzf-history-widget does not work
 # bindkey '^r' history-incremental-search-backward
 
-[ -f /usr/bin/neofetch ] && neofetch
 # [ -f /usr/bin/fortune ] && [ -f /usr/bin/cowsay ] && fortune | cowsay
 bindkey "^?" backward-delete-char
 
@@ -118,3 +117,4 @@ bindkey '^[OA' up-line-or-history     # Cursor up
 bindkey '^[OB' down-line-or-history   # Cursor down
 bindkey '^[[1;5A' up-line-or-local-history    # [CTRL] + Cursor up
 bindkey '^[[1;5B' down-line-or-local-history  # [CTRL] + Cursor down
+[ -f $HOME/workspace/work_env.sh ] && source $HOME/workspace/work_env.sh

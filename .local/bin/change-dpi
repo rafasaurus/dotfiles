@@ -1,0 +1,58 @@
+#!/bin/bash
+
+dpi=$1
+
+RES=$(grep Xft.dpi ~/.Xresources | grep -Eo '[0-9]+')
+
+if (($dpi > 150)) ; then
+  export GDK_SCALE=2
+  export GDK_DPI_SCALE=1.5
+else
+  export GDK_SCALE=1
+  export GDK_DPI_SCALE=1
+fi
+
+# For GTK 3 applications
+cat >~/.xsettingsd <<EOF
+Xft/DPI $(($dpi * 1024))
+Gdk/WindowScalingFactor $(($dpi / 96))
+Gdk/UnscaledDPI $(($dpi * 1024 / ($dpi / 96)))
+EOF
+
+
+gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "[{'Gdk/WindowScalingFactor', <$GDK_SCALE>}]"
+gsettings set org.gnome.desktop.interface scaling-factor $GDK_SCALE
+gsettings set org.gnome.desktop.interface text-scaling-factor $GDK_SCALE
+gsettings set org.gnome.desktop.interface gtk-theme Cay-$dpi
+
+pkill -HUP xsettingsd || xsettingsd &
+# For Qt applications
+export QT_AUTO_SCREEN_SCALE_FACTOR=1
+export QT_SCALE_FACTOR_ROUNDING_POLICY=PassThrough
+
+if [ "${dpi}" -gt 96 ] && [ "${dpi}" -lt 130 ]; then
+  cursor=36
+fi
+
+if [ "${dpi}" -gt 130 ] && [ "${dpi}" -lt 170 ]; then
+  cursor=36
+fi
+
+if [ "${dpi}" -gt 170 ] ; then
+  cursor=64
+fi
+
+gsettings set org.gnome.desktop.interface cursor-size $cursor
+# For miscellaneous applications
+xrdb -merge <<EOF
+Xft.dpi: ${dpi}
+Xcursor.size: ${cursor}
+
+! These might also be useful depending on your monitor and personal preference:
+Xft.autohint: 0
+Xft.lcdfilter: lcddefault
+Xft.hintstyle: hintfull
+Xft.hinting: 1
+Xft.antialias: 1
+Xft.rgba: rgb
+EOF

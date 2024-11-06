@@ -2,11 +2,11 @@
 source sb-essentials
 
 case $BLOCK_BUTTON in
-    1) power ;;
+    1) power >> /tmp/power.log ;; #TODO logging works working with dwmblocks-async
     2) maim -o --nodecorations 2 -s $HOME/Pictures/screenshots/$(date +"%Y-%m-%d_%H-%M-%S").png -m 5 ;;
 	4) xbacklight -inc 1 ;;
 	5) xbacklight -dec 1 ;;
 	6) POPUP_TERMINAL -e "$EDITOR" "$0" ;;
 esac
 
-echo " "
+echo "💻"
