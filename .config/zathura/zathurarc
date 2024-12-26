@@ -7,44 +7,48 @@ map R rotate
 map i recolor
 map n navigate next
 map p navigate previous
-set font "Comic Code 12"
+set font "Comic Code 13"
 set selection-clipboard clipboard
 map K zoom in
 map J zoom out
 
 
-set default-bg "#000000" #00
-set default-fg "#F7F7F6" #01
+set completion-group-bg         "#282828"
+set completion-group-fg         "#ebdbb2"
+set completion-bg               "#282828"
+set completion-fg               "#ebdbb2"
+set completion-highlight-bg     "#458588"
+set completion-highlight-fg     "#ebdbb2"
 
-set statusbar-fg "#B0B0B0" #04
-set statusbar-bg "#202020" #01
+set notification-error-bg       "#3c3836"
+set notification-error-fg       "#ebdbb2"
+set notification-warning-bg     "#3c3836"
+set notification-warning-fg     "#ebdbb2"
+set notification-bg             "#3c3836"
+set notification-fg             "#ebdbb2"
 
-set inputbar-bg "#151515" #00 currently not used
-set inputbar-fg "#FFFFFF" #02
+set index-bg                    "#1d2021"
+set index-fg                    "#ebdbb2"
+set index-active-bg             "#282828"
+set index-active-fg             "#ebdbb2"
 
-set notification-error-bg "#AC4142" #08
-set notification-error-fg "#151515" #00
+set inputbar-bg                 "#3c3836"
+set inputbar-fg                 "#ebdbb2"
 
-set notification-warning-bg "#AC4142" #08
-set notification-warning-fg "#151515" #00
+set statusbar-bg                "#282828"
+set statusbar-fg                "#ebdbb2"
 
-set highlight-color "#F4BF75" #0A
-set highlight-active-color "#6A9FB5" #0D
+set highlight-color             "#458588"
+set highlight-active-color      "#458588"
 
-set completion-highlight-fg "#151515" #02
-set completion-highlight-bg "#90A959" #0C
+set default-bg                  "#1d2021"
+set default-fg                  "#001512"
+set recolor-lightcolor          "#282828"
+set recolor-darkcolor           "#ebdbb2"
 
-set completion-bg "#303030" #02
-set completion-fg "#E0E0E0" #0C
 
-set notification-bg "#90A959" #0B
-set notification-fg "#151515" #00
-
-set recolor-lightcolor "#000000" #00
-set recolor-darkcolor "#E0E0E0" #06
 set recolor-reverse-video "true"
 set recolor-keephue "true"
-
 
 #stop at page boundries
 set scroll-page-aware "true"

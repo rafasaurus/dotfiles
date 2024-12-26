@@ -40,6 +40,7 @@ alias ka="killall" \
     lf='lfub' \
     xlcip='xclip -in -selection clipboard' \
     diff='diff --strip-trailing-cr' \
+    oneko='oneko -rv -fg \#CCCCCC -speed 13' \
 
 command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
 # command -v nsxiv >/dev/null && alias sxiv="nsxiv" sxivdiff="nsxiv -d"

@@ -6,7 +6,7 @@ current_hour=$(date +%H)
 [ -f /tmp/noautored ] && redshift -x && exit 0
 case $current_hour in
     00|01|02|03|04|05|06)
-        redshift -PO 3000
+        redshift -PO 3500
         ;;
     07|08|09|10|11)
         redshift -x
@@ -21,7 +21,7 @@ case $current_hour in
         redshift -PO 5000
         ;;
     23)
-        redshift -PO 3500
+        redshift -PO 4500
         ;;
     *)
         echo "Invalid hour!"

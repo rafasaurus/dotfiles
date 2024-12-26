@@ -33,7 +33,6 @@ esac
 # inside pacman-contrib package there is paccahe
 # remove all except last two revision of packages
 # paccache -rvk2
-paru -Qu google-chrome > /dev/null && `dunstify -t 10000 --action='st -e paru --noconfirm -S google-chrome',1 chrome upgrade`
 
 pacman -Qu | grep -Fcv "[ignored]" | sed "s/^/📦/;s/^📦0$//g"
 notify-send "updating pacman 📦"
