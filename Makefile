@@ -19,6 +19,7 @@ IGNORE_FLAGS= --ignore "Makefile" \
 		--ignore "tmux-${TMUX_VERSION}" \
 		--ignore "paru" \
 		--ignore ".gtkrc-2.0" \
+		--ignore "patches" \
 
 # Phony targets for make
 .PHONY: stow restow destow install-prereqs install-paru
