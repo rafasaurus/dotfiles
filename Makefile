@@ -102,6 +102,7 @@ install-full :  install-paru install-prereqs install-mimir
 install-android-env :
 	cp .local/bin/mimir_armv7l $(shell dirname `which sh`)
 install-film-android :
+	apt install exiftool which
 	mkdir -p $(HOME)/.local/bin
 	cp -r .local/bin/luts/ $(HOME)/.local/bin/ && echo "copied luts"
 	cp -r .local/bin/film $(shell dirname `which sh`) && echo "copied film script"
