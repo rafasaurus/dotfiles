@@ -99,3 +99,11 @@ install-mimir:
 	cd ./external/mimir && make install
 install-full :  install-paru install-prereqs install-mimir
 	echo "done full installation"
+install-android-env :
+	cp .local/bin/mimir_armv7l $(shell dirname `which sh`)
+install-film-android :
+	mkdir -p $(HOME)/.local/bin
+	cp -r .local/bin/luts/ $(HOME)/.local/bin/ && echo "copied luts"
+	cp -r .local/bin/film $(shell dirname `which sh`) && echo "copied film script"
+uninstall-film-android :
+	rm -r $(shell dirname `which sh`)/512x512 $(shell which film)
