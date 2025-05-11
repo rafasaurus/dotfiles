@@ -11,8 +11,6 @@ sxiv
 imagemagick
 ffmpeg
 networkmanager
-ttf-joypixels
-ttf-linux-libertine
 ttf-inconsolata
 xwallpaper
 python-pip
@@ -28,7 +26,6 @@ zathura-pdf-mupdf
 poppler
 highlight
 fzf
-acpilight
 xorg-xprop
 xorg-xinit
 xorg-xwininfo
