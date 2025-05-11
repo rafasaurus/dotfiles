@@ -67,3 +67,6 @@ rust
 trash-cli
 python-virtualenv
 newsboat
+gammastep
+wmenu
+swaybg
