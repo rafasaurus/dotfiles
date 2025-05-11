@@ -1,0 +1,25 @@
+#!/bin/sh
+
+[ -f ~/.wprofile ] && . ~/.wprofile
+
+# Loop enables dwm's "restart" feature (mod+Shift+F2).
+export XKB_DEFAULT_LAYOUT=us
+export XDG_RUNTIME_DIR=/tmp/xdg-runtime-$(id -u)
+mkdir -p $XDG_RUNTIME_DIR
+exec dwl -s 'pulseaudio & \
+    /usr/lib/xdg-desktop-portal-gtk & \
+    dwlmsg -w > /tmp/dwl_info &\
+    yambar & \
+    swaybg -i /home/rafael/.config/wall.png & \
+    dunst & \
+    wmbubble & \
+    dropbox & \
+    syncthing --no-browser & \
+    surf hackernews.com & \
+    bluetoothctl power on & \
+    notify-send "Welcome to Rice of rafasaurus" & \'
+
+# exec dbus-launch --exit-with-session dwl -s 'dwlb -font "monospace:size=16"'
+# while :; do
+#     ssh-agent dwl > ~/.dwl.log || break
+# done
