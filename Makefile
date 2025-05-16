@@ -74,6 +74,7 @@ install-paru :
 	paru -S --noconfirm ttf-twemoji-color yambar startw wlroots-git
 install-udev :
 	sudo cp -r etc/udev/rules.d/* /etc/udev/rules.d/
+	sudo cp -r etc/tmpfiles.d/* /etc/tmpfiles.d/
 	sudo udevadm control --reload-rules && sudo udevadm trigger
 install-tmux :
 	wget https://github.com/tmux/tmux/releases/download/${TMUX_VERSION}/tmux-${TMUX_VERSION}.tar.gz

@@ -1,0 +1,1 @@
+SUBSYSTEM=="powercap", ACTION=="add", RUN+="/usr/bin/systemd-tmpfiles --create /etc/tmpfiles.d/intel-rapl.conf"
