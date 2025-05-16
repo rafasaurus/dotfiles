@@ -1,1 +1,1 @@
-SUBSYSTEM=="powercap", ACTION=="add", RUN+="/usr/bin/systemd-tmpfiles --create /etc/tmpfiles.d/intel-rapl.conf"
+SUBSYSTEM=="powercap", ACTION=="add", RUN+="/bin/chmod 0440 /sys/class/powercap/%k/energy_uj", RUN+="/bin/chown root:power /sys/class/powercap/%k/energy_uj"
