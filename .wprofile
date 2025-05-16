@@ -5,20 +5,19 @@
 
 # export QT_STYLE_OVERRIDE="gtk2"
 export QT_QPA_PLATFORMTHEME="qt5ct"
-# export QT_QPA_PLATFORMTHEME="qt5ct"
 export QT_STYLE_OVERRIDE="Fusion"
 export QT_SCALE_FACTOR=1.25
-export GTK_USE_PORTAL=0
+export GTK_USE_PORTAL=1
 export _JAVA_AWT_WM_NONREPARENTING=1 # Fixing misbehaving Java applications
 export THEME=dark
-# export XDG_SESSION_TYPE=X11
-# export GDK_BACKEND=X11
-export QT_QPA_PLATFORM=wayland
-export XDG_SESSION_TYPE=wayland
+
+export GDK_BACKEND=wayland
 export XDG_SESSION_CLASS=user
-export XDG_MENU_PREFIX=lxde-
-export XDG_SESSION_DESKTOP="sway"
-export XDG_CURRENT_DESKTOP="sway"
+
+export XDG_SESSION_TYPE=wayland
+export XDG_SESSION_DESKTOP="wlroots"
+export XDG_CURRENT_DESKTOP="wlroots"
+
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_DIRS="/usr/local/share:/usr/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share"
 export XDG_CONFIG_DIRS="/usr/share/upstart/xdg:/etc/xdg"
@@ -26,9 +25,7 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share/"
 export XDG_RUNTIME_DIR="$HOME/.cache/xdgr/"
 export DESKTOP_SESSION="dwl"
+export XKB_DEFAULT_LAYOUT=us
+
 export SUDO_ASKPASS="$HOME/.local/bin/dmenupass"
 export MOZ_USE_XINPUT2=1
-# export MESA_LOADER_DRIVER_OVERRIDE=iris
-
-alias POPUP_TERMINAL="st -f ComicCode-Bold:size=12 -g 140x30+330+220 -n \"popup\""
-# $HOME/startup.sh

@@ -64,8 +64,8 @@ bar:
     - pulse:
         content: 
             - string:
-                text: "{sink_percent}%"
-                on-click: /bin/sh -c "amixer -D pulse set Master toggle"
+                text: "  {sink_percent}%"
+                on-click: pavucontrol
     - removables:
         anchors:
           drive: &drive { text: , font: *awesome}
@@ -101,22 +101,18 @@ bar:
         path: /home/rafael/.local/bin/statusbar-yambar/intel-power
         args: []
         content:
-          - string: {text: " {POWER}w "}
+          - string: {text: "", foreground: FFD700ff}
+          - string: {text: " {POWER}w ", deco: *std_underline, on-click: bash -c "sudo -A systemd-tmpfiles --create" }
 
-    - network:
+    - cpu:
+        poll-interval: 2500
         content:
           map:
-            default: {empty: {}}
             conditions:
-              name == wlp0s20f3:
-                map:
-                  conditions:
-                    ~carrier: {empty: {}}
-                    carrier:
-                      map:
-                        default: {string: {text: , font: *awesome, foreground: ffffff66}}
-                        conditions:
-                          state == up && ipv4 != "": {string: {text: , font: *awesome}}
+              id < 0:
+                - string: {text: , font: font awesome 6 free:style=solid, on-click: cpupower-gui}
+                - string: {text: "{cpu}%"}
+
     - network:
         poll-interval: 1000
         content:
@@ -131,12 +127,15 @@ bar:
                     state == up:
                       map:
                         default:
-                          - string: {text: , font: *awesome}
+                          - string: {text: , font: *awesome, on-click: nm-connection-editor }
                           - string: {text: "{ssid} {dl-speed:mb}/{ul-speed:mb} Mb/s"}
 
                         conditions:
                           ipv4 == "":
-                            - string: {text: , font: *awesome, foreground: ffffff66}
+                            - string: {text: , font: *awesome, on-click: nm-connection-editor, foreground: ffffff66}
+                            - string: {text: "{ssid} {dl-speed:mb}/{ul-speed:mb} Mb/s", foreground: ffffff66}
+                          ipv6 == "":
+                            - string: {text: , font: *awesome, on-click: nm-connection-editor, foreground: ffffff66}
                             - string: {text: "{ssid} {dl-speed:mb}/{ul-speed:mb} Mb/s", foreground: ffffff66}
     # - backlight:
     #     name: intel_backlight

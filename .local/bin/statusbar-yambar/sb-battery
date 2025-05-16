@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# Prints all batteries, their percentage remaining and an emoji corresponding
+# to charge status (🔌 for plugged up, 🔋 for discharging on battery, etc.).
+
+#!/bin/sh
+
+while true; do
+    current=$(cat /sys/class/power_supply/BAT0/current_now)
+    voltage=$(cat /sys/class/power_supply/BAT0/voltage_now)
+    time_left=$(upower -d | grep "time to empty:" | awk '{print $4}' | head -1)
+    time_left="$time_left"h
+
+    let "wattage = (current * voltage) / 1000000000"
+    wattage=$(echo "scale=2; $wattage / 1000" | bc)
+
+    # Loop through all attached batteries and format the info
+    for battery in /sys/class/power_supply/BAT?*; do
+        # If non-first battery, print a space separator.
+        [ -n "${capacity+x}" ] && printf " "
+        # Sets up the status and capacity
+        case "$(cat "$battery/status")" in
+            "Full") status="⚡" && time_left="";;
+            "Discharging") status="🔋" ;;
+            "Charging") status="🔌" && time_left=$(upower -d | grep "time to full" | awk '{print $4}');;
+            "Not charging") status="🛑" ;;
+            "Unknown") status="♻️" ;;
+        esac
+        capacity=$(cat "$battery/capacity")
+        # Will make a warn variable if discharging and low
+        [ "$status" = "🔋" ] && [ "$capacity" -le 25 ] && warn="❗"
+
+        echo "battery|string|$wattage"
+        echo ""
+    done
+    sleep 1
+done
