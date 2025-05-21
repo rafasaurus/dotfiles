@@ -12,13 +12,13 @@ std_underline: &std_underline {underline: { size: 2, color: ff0000ff}}
 
 # This is THE bar configuration
 bar:
-  height: 26
+  height: 28
   location: top
   spacing: 4
   margin: 0
 
   # Default font
-  font: Charcoal:pixelsize=17
+  font: Charcoal:pixelsize=16
 
   foreground: eeeeeeff
   background: 2F133Fff
@@ -44,14 +44,14 @@ bar:
 
                     selected:
                       string: 
-                        text: " {id} "
+                        text: "  {id}  "
                         deco:
                           background:
                             color: 999999cc
                     urgent: {string: {text: "=> {id} <="}}
                     ~empty:
                       string:
-                        text: " {id} "
+                        text: "  {id}  "
                         on-click: sh -c "dwlmsg -s -t $(({id}-1))"
   center:
     - sway-xkb:
@@ -97,6 +97,13 @@ bar:
     #     args: []
     #     content:
     #       - string: {text: " {battery}w "}
+    - script:
+        path: /home/rafael/.local/bin/statusbar-yambar/disk
+        args: []
+        content:
+          - string: {text: "💽", foreground: FFD700ff}
+          - string: {text: " {HOME_DISK}", deco: *std_underline}
+
     - script:
         path: /home/rafael/.local/bin/statusbar-yambar/intel-power
         args: []
