@@ -4,6 +4,7 @@
 [[ -f $HOME/.cache/wal/colors.sh ]] && source "$HOME/.cache/wal/colors.sh"
 
 alias ka="killall" \
+    sxiv='$(which nsxiv)'
     vi='/usr/bin/vim' \
     rm='trash' \
     cam='ranger ~/phone/Camera/' \

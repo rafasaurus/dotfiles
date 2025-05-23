@@ -1,16 +1,6 @@
 [colors]
 draw_bold_text_with_bright_colors = true
 
-[colors.bright]
-black = "#5b6268"
-blue = "#3071db"
-cyan = "#46d9ff"
-green = "#4db5bd"
-magenta = "#a9a1e1"
-red = "#da8548"
-white = "#dfdfdf"
-yellow = "#ecbe7b"
-
 [colors.cursor]
 cursor = "#528bff"
 text = "CellBackground"
@@ -23,10 +13,20 @@ green = "#98be65"
 magenta = "#c678dd"
 red = "#ff6c6b"
 white = "#55FF55"
-yellow = "#da8548"
+yellow = "#ffcc00"
+
+[colors.bright]
+black = "#5b6268"
+blue = "#3071db"
+cyan = "#46d9ff"
+green = "#4db5bd"
+magenta = "#a9a1e1"
+red = "#ff8c00"
+white = "#dfdfdf"
+yellow = "#ffea00"
 
 [colors.primary]
-background = "#151819"
+background = "#1e2124"
 foreground = "#00ff00"
 
 [colors.selection]
@@ -40,19 +40,19 @@ TERM = "xterm-256color"
 size = 16
 
 [font.bold]
-family = "Source Code Pro"
+family = "ComicCode"
 style = "Bold"
 
 [font.bold_italic]
-family = "Source Code Pro"
+family = "ComicCode"
 style = "Bold Italic"
 
 [font.italic]
-family = "Source Code Pro"
+family = "ComicCode"
 style = "Italic"
 
 [font.normal]
-family = "comic code medium"
+family = "ComicCode"
 style = "Regular"
 
 [font.offset]
@@ -148,7 +148,7 @@ history = 5000
 
 [window]
 dynamic_padding = false
-opacity = 0.9
+opacity = 1.0
 title = "Alacritty"
 
 [window.class]

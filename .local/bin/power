@@ -2,11 +2,11 @@
 set -x
 choices=`echo "lock suspend suspend_to_external_screen bluetooth shutdown reboot screen_layout" | tr ' ' '\n'`
 
-if command -v xmenu
+if command -v wmenu
 then 
-    chosen=$(echo -e "$choices" | xmenu -i -r -p 0x0)
+    chosen=$(echo -e "$choices" | wmenu -i -p "Choose what to do ?" -l 15)
 else
-    chosen=$(echo -e "$choices" | dmenu -i -p "Choose what to do ?" -l 15)
+    chosen=$(echo -e "$choices" | dmenu -i -r -p 0x0)
 fi
 
 echo $chosen

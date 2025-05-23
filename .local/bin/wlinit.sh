@@ -21,5 +21,5 @@ systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP & \
 dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP & \
 dbus-update-activation-environment --systemd --all & \
 systemctl --user import-environment QT_QPA_PLATFORMTHEME & \
-/usr/libexec/polkit-gnome-authentication-agent-1 & \
-swayidle -w timeout 300 "swaylock -f -c 000000" before-sleep "swaylock -f -c 000000" & 
+swayidle -w timeout 300 "lock.sh" before-sleep "setxkbmap -layout 'us'" & \
+# /usr/libexec/polkit-gnome-authentication-agent-1 & \
