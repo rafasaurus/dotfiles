@@ -20,6 +20,7 @@ IGNORE_FLAGS= --ignore "Makefile" \
 		--ignore "paru" \
 		--ignore ".gtkrc-2.0" \
 		--ignore "patches" \
+		--ignore "local-ai" \
 
 # Phony targets for make
 .PHONY: stow restow destow install-prereqs install-paru
