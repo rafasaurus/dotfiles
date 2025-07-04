@@ -5,7 +5,6 @@ services:
   ollama:
     image: intelanalytics/ipex-llm-inference-cpp-xpu:latest
     container_name: ipex-llm-ollama # Static name instead of timestamp
-    # network_mode: bridge # Replicates --net=bridge. See notes below.
     devices:
       - /dev/dri:/dev/dri # Map the GPU device
     ports:
@@ -26,10 +25,8 @@ services:
       SYCL_CACHE_PERSISTENT: 1
       ONEAPI_DEVICE_SELECTOR: level_zero:0
       DEVICE: Arc
-    shm_size: '16g' # Shared memory size
+    shm_size: '32g' # Shared memory size
     mem_limit: '32G' # Memory limit (alternative to deploy.resources)
-    # The command to run inside the container
-    # Note: YAML handles multi-line strings well
     command: >
       bash -c "
       cd /llm/scripts/ && \
@@ -43,28 +40,16 @@ services:
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
     container_name: open-webui
-    # network_mode: host # Replicates --network=host. See notes below.
     ports:
-      # If not using network_mode: host, you need to expose the WebUI port
-      # For host mode, this isn't strictly needed but doesn't hurt
-      - "8080:8080" # Default WebUI port, adjust if you changed it
+      - "8080:8080" # Default WebUI port
     volumes:
-      - open-webui-data:/app/backend/data # Use a named volume
+      # It now maps a host directory to the container's data directory.
+      - ${HOME}/.local/share/open_webui:/app/backend/data
     environment:
-      # IMPORTANT: How WebUI finds Ollama depends on networking (see notes)
-      # Option 1 (If Ollama is on bridge/default & WebUI is on host):
-      # OLLAMA_BASE_URL: http://127.0.0.1:11434
-      # Option 2 (If BOTH are on the default Compose network - RECOMMENDED):
       OLLAMA_BASE_URL: http://ollama:11434
     depends_on:
       - ollama # Ensures Ollama starts before WebUI (optional but good practice)
     restart: always
 
-# Define the named volume used by open-webui
-volumes:
-  open-webui-data:
-
-# Define networks (Optional, needed if you want more control than the default)
-# networks:
-#  default:
-#    driver: bridge
+# This will repopulate freshly inside .local/share/open_webui
+# docker compose up -d --force-recreate
