@@ -40,6 +40,7 @@ services:
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
     container_name: open-webui
+    network_mode: host
     ports:
       - "8080:8080" # Default WebUI port
     volumes:
