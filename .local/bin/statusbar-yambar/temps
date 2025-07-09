@@ -1,0 +1,6 @@
+#!/bin/bash
+CPU_TEMP_PATH="/sys/class/thermal/thermal_zone9/temp"
+TEMP=$(cat "$CPU_TEMP_PATH")
+CPU_TEMP=$(echo "scale=0; $TEMP / 1000" | bc)
+echo "CPU_TEMP|string|$CPU_TEMP"
+echo ""

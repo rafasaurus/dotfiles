@@ -18,7 +18,7 @@ bar:
   margin: 0
 
   # Default font
-  font: ocra-bold:pixelsize=16
+  font: charcoal:pixelsize=16
 
   foreground: eeeeeeff
   background: 2F133Fff
@@ -109,7 +109,14 @@ bar:
         args: []
         content:
           - string: {text: "", font: font awesome 6 free:style=solid, foreground: FFD700ff}
-          - string: {text: "{POWER}w ", deco: *std_underline, on-click: bash -c "sudo -A systemd-tmpfiles --create" }
+          - string: {text: "{POWER}w", deco: *std_underline}
+
+    - script:
+        path: /home/rafael/.local/bin/statusbar-yambar/temps
+        args: []
+        content:
+          - string: {text: "🌡️", font: font awesome 6 free:style=solid, foreground: FFD700ff}
+          - string: {text: "{CPU_TEMP}°", deco: *std_underline}
 
     - cpu:
         poll-interval: 2500
