@@ -52,7 +52,7 @@ family = "ComicCode"
 style = "Italic"
 
 [font.normal]
-family = "ComicCode"
+family = "monospace"
 style = "Regular"
 
 [font.offset]
