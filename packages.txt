@@ -14,8 +14,8 @@ networkmanager
 ttf-inconsolata
 xwallpaper
 python-pip
-pulseaudio
 wireplumber
+pipewire-pulse
 alsa-utils
 maim
 unrar
@@ -71,3 +71,8 @@ gammastep
 wmenu
 swaybg
 tumbler
+slurp
+wl-clipboard
+grim
+fuzzel
+wmenu
