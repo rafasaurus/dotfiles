@@ -26,7 +26,7 @@ IGNORE_FLAGS= --ignore "Makefile" \
 
 # Phony targets for make
 .PHONY: stow restow destow install-prereqs install-paru
-.PHONY: install-udev install-tmux install-gui lean-gui
+.PHONY: install-udev install-tmux install-gui lean-gui install-themes
 .PHONY: uninstall-gui uninstall-udev install-full install-android-env
 .PHONY: install-film-android uninstall-film-android
 
