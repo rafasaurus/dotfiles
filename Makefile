@@ -96,8 +96,10 @@ uninstall-gui :
 
 uninstall-udev :
 	sudo rm -r /etc/udev/rules.d/*
-install-mimir:
-	cd ./external/mimir && make install
+install-themes : 
+	git clone https://github.com/B00merang-Project/Mac-OS-9 ~/.themes/Mac-OS-9
+install-mimir :
+	cd ./external/mimir && git chckout main && make install
 install-full :  install-paru install-prereqs install-mimir
 	echo "done full installation"
 install-android-env :
