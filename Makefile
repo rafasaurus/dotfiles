@@ -72,7 +72,7 @@ install-prereqs :
 install-paru :
 	[ -d paru ] || git clone https://aur.archlinux.org/paru.git 
 	cd paru && makepkg -si
-	paru -S --noconfirm ttf-twemoji-color yambar startw wlroots-git
+	paru -S --noconfirm ttf-twemoji-color yambar startw
 install-udev :
 	sudo cp -r etc/udev/rules.d/* /etc/udev/rules.d/
 	sudo udevadm control --reload-rules && sudo udevadm trigger
