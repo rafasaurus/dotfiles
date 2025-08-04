@@ -30,11 +30,8 @@ xorg-xinit
 xorg-xwininfo
 xorg-server
 openssh
-ttf-liberation
 ttf-dejavu
-ttf-fira-code
 fontconfig
-ttf-roboto
 ttf-font-awesome
 unclutter
 zsh
@@ -47,7 +44,9 @@ libnotify
 pamixer
 upower
 the_silver_searcher
+ripgrep
 redshift
+gammastep
 bluez-cups
 bluez-utils
 bluez
@@ -56,7 +55,6 @@ qtpass
 mlocate
 lsof
 lxappearance-gtk3
-xcursor-themes
 cmake
 libc++abi
 libc++
@@ -66,10 +64,10 @@ rust
 trash-cli
 python-virtualenv
 newsboat
-gammastep
 wmenu
 swaybg
 tumbler
+thunar
 slurp
 wl-clipboard
 grim
@@ -81,3 +79,5 @@ xdg-desktop-portal-gtk
 xdg-desktop-portal-wlr
 gammastep
 nsxiv
+pavucontrol
+wlroots0.19

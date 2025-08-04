@@ -4,14 +4,14 @@
 [[ -f $HOME/.cache/wal/colors.sh ]] && source "$HOME/.cache/wal/colors.sh"
 
 alias ka="killall" \
-    sxiv='$(which nsxiv)'
+    sxiv='$(which nsxiv)' \
     vi='/usr/bin/vim' \
     rm='trash' \
     cam='ranger ~/phone/Camera/' \
     ls="ls -hN --color=auto --group-directories-first" \
     grep="grep --color=auto" \
     diff="diff --color=auto" \
-    ccat="highlight --out-format=ansi" \
+    cat="highlight --out-format=ansi" \
     yta="youtube-dl -x -f bestaudio/best --audio-format mp3" \
     yt_playlist="youtube-dl -f 140+137 -citk –format mp4 –yes-playlist -c" \
     yt_best="youtube-dl -f 248+250" \
