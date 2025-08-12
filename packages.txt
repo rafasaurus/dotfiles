@@ -81,3 +81,5 @@ gammastep
 nsxiv
 pavucontrol
 wlroots0.19
+nm-connection-editor
+swaylock

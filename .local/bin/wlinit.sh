@@ -2,7 +2,7 @@
 
 pipewire & \
 pipewire-pulse & \
-wireplumber &
+wireplumber & \
 dwlmsg -w > /tmp/dwl_info & \
 yambar & \
 swaybg -i /home/rafael/.config/wall.png & \
@@ -13,7 +13,6 @@ syncthing --no-browser & \
 surf hackernews.com & \
 bluetoothctl power on & \
 notify-send "Welcome to Rice of rafasaurus" & \
-/usr/lib/xdg-desktop-portal & \
 /usr/lib/xdg-desktop-portal-gtk & \
 /usr/lib/xdg-desktop-portal-wlr & \
 wlr-randr --output eDP-1 --mode 1920x1200@120.000000Hz & \
