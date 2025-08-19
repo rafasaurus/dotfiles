@@ -82,3 +82,5 @@ nsxiv
 pavucontrol
 wlroots0.19
 sudo-rs
+nm-connection-editor
+swaylock
