@@ -1,12 +1,9 @@
 [submodule "dwm"]
 	path = external/dwm
-	url = https://github.com:rafasaurus/dwm
-[submodule "external/dwmblocks-async"]
+	url = https://github.com/rafasaurus/dwm
+[submodule "dwmblocks-async"]
 	path = external/dwmblocks-async
 	url = https://github.com/UtkarshVerma/dwmblocks-async
-[submodule "external/mimir"]
+[submodule "mimir"]
 	path = external/mimir
 	url = https://github.com/rafasaurus/mimir
-[submodule "external/dwlb"]
-	path = external/dwlb
-	url = https://github.com/kolunmi/dwlb.git
