@@ -1,15 +1,12 @@
 [submodule "dwm"]
 	path = external/dwm
-	url = git@github.com:rafasaurus/dwm
-[submodule "dwmblocks"]
-	path = external/dwmblocks
-	url = git@github.com:rafasaurus/dwmblocks
+	url = https://github.com:rafasaurus/dwm
 [submodule "external/dwmblocks-async"]
 	path = external/dwmblocks-async
 	url = https://github.com/UtkarshVerma/dwmblocks-async
 [submodule "external/mimir"]
 	path = external/mimir
 	url = https://github.com/rafasaurus/mimir
-[submodule "external/dmenu"]
-	path = external/dmenu
-	url = https://git.suckless.org/dmenu
+[submodule "external/dwlb"]
+	path = external/dwlb
+	url = https://github.com/kolunmi/dwlb.git
