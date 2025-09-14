@@ -7,3 +7,6 @@
 [submodule "mimir"]
 	path = external/mimir
 	url = https://github.com/rafasaurus/mimir
+[submodule "external/dwlb"]
+	path = external/dwlb
+	url = https://github.com/kolunmi/dwlb
