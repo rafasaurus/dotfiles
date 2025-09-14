@@ -1,0 +1,166 @@
+#!/usr/bin/env bash
+# dwlb status: volume | ⚡ <RAPL1>W <RAPL0>W | 🔥 CPU°C | 📈 CPU% (click→cpupower-gui) | 🧠 RAM | 💾 HOME | 🔋 batt% ~h | 📅 date 🕒 time
+
+set -u
+LOOP_SLEEP=1.2  # ~300 ms
+
+# ---------- helpers ----------
+find_cpu_package_temp_path() {
+  for d in /sys/class/hwmon/hwmon*; do
+    [[ -f "$d/name" ]] || continue
+    if grep -qi 'coretemp' "$d/name"; then
+      for t in "$d"/temp*_label; do
+        [[ -f "$t" ]] || continue
+        if grep -q "Package id 0" "$t"; then
+          echo "${t%_label}_input"; return 0
+        fi
+      done
+      for ti in "$d"/temp*_input; do
+        [[ -f "$ti" ]] && { echo "$ti"; return 0; }
+      done
+    fi
+  done
+  echo ""
+}
+
+read_cpu_times() { awk '/^cpu /{for(i=2;i<=NF;i++) s+=$i; print $5, s; exit}' /proc/stat; }
+
+read_int() {  # read numeric-ish file → integer (or 0)
+  local p="$1" v=0; [[ -f "$p" ]] || { echo 0; return; }
+  v=$(cat "$p" 2>/dev/null || echo 0)
+  awk -v x="$v" 'BEGIN{printf("%.0f", x+0)}'
+}
+
+read_first_num() {  # try multiple paths, return first numeric value or 0
+  local v p
+  for p in "$@"; do
+    [[ -f "$p" ]] || continue
+    v=$(cat "$p" 2>/dev/null) || v=""
+    [[ -n "$v" ]] && { awk -v x="$v" 'BEGIN{printf("%.0f", x+0)}'; return 0; }
+  done
+  echo 0
+}
+
+# Battery: echo "PCT HOURS ICON"  (HOURS may be empty if unknown)
+battery_info() {
+  local B="/sys/class/power_supply/BAT0"
+  [[ -d "$B" ]] || { echo "??  ? 🔋"; return; }
+
+  local pct status energy_now_uWh energy_full_uWh power_uW cur_uA volt_uV hours=""
+  pct=$(cat "$B/capacity" 2>/dev/null || echo "??")
+  status=$(cat "$B/status" 2>/dev/null || echo "Unknown")
+
+  # Prefer energy_* (uWh) and power_now (uW)
+  energy_now_uWh=$(read_first_num "$B/energy_now" "$B/energy_now_uwh")
+  energy_full_uWh=$(read_first_num "$B/energy_full" "$B/energy_full_uwh")
+  power_uW=$(read_int "$B/power_now")
+
+  # Fallbacks via charge/current + voltage
+  if (( energy_now_uWh == 0 || energy_full_uWh == 0 )); then
+    cur_uA=$(read_int "$B/current_now")
+    volt_uV=$(read_int "$B/voltage_now")
+    local ch_now_uAh ch_full_uAh
+    ch_now_uAh=$(read_int "$B/charge_now")
+    ch_full_uAh=$(read_int "$B/charge_full")
+    if (( ch_now_uAh > 0 && volt_uV > 0 )); then
+      energy_now_uWh=$(awk -v q="$ch_now_uAh" -v v="$volt_uV" 'BEGIN{printf("%.0f", (q*v)/1e6)}')
+      energy_full_uWh=$(awk -v q="$ch_full_uAh" -v v="$volt_uV" 'BEGIN{printf("%.0f", (q*v)/1e6)}')
+    fi
+    if (( power_uW == 0 && cur_uA > 0 && volt_uV > 0 )); then
+      power_uW=$(awk -v i="$cur_uA" -v v="$volt_uV" 'BEGIN{printf("%.0f", (i*v)/1e6)}')
+    fi
+  fi
+
+  if (( power_uW > 0 )); then
+    if [[ "$status" == "Discharging" ]]; then
+      hours=$(awk -v e="$energy_now_uWh" -v p="$power_uW" 'BEGIN{printf("%.1f", e/p)}')
+    elif [[ "$status" == "Charging" ]] && (( energy_full_uWh > energy_now_uWh )); then
+      hours=$(awk -v en="$energy_now_uWh" -v ef="$energy_full_uWh" -v p="$power_uW" 'BEGIN{printf("%.1f", (ef-en)/p)}')
+    fi
+  fi
+
+  local icon="🔋"; [[ "$status" == "Charging" ]] && icon="🔌"
+  echo "$pct" "$hours" "$icon"
+}
+
+# ---------- RAPL paths (0=CPU package, 1=SoC/platform) ----------
+PKG_CPU="/sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj"  # RAPL0: CPU
+PKG_SOC="/sys/class/powercap/intel-rapl/intel-rapl:1/energy_uj"  # RAPL1: SoC/platform
+
+cpu_temp_path="$(find_cpu_package_temp_path)"
+
+# ---------- initial samples ----------
+prev_pkg_cpu=$(read_int "$PKG_CPU")
+prev_pkg_soc=$(read_int "$PKG_SOC")
+prev_ns=$(date +%s%N)
+read prev_idle prev_total < <(read_cpu_times)
+
+# ---------- loop ----------
+while :; do
+  # Volume (click=mute, scroll ±5%)
+  mute_str="$(pamixer --get-mute 2>/dev/null || echo false)"
+  vol_pct="$(pamixer --get-volume 2>/dev/null || echo 0)"
+  if [[ "$mute_str" == "true" ]]; then vol_text="🔇 mute"; else vol_text="🔊 ${vol_pct}%"; fi
+  vol_block="^lm(pamixer -t)^su(pamixer -i 5)^sd(pamixer -d 5)${vol_text}^sd()^su()^lm()"
+
+  # RAPL power (W) from deltas — show: ⚡ <socW>W <cpuW>W
+  cur_pkg_cpu=$(read_int "$PKG_CPU")
+  cur_pkg_soc=$(read_int "$PKG_SOC")
+  cur_ns=$(date +%s%N)
+
+  ds=$(awk -v c="$cur_ns" -v p="$prev_ns" 'BEGIN{print (c-p)/1e9}'); [[ "$ds" == 0 || "$ds" == "0.0" ]] && ds="0.001"
+  d_cpu=$(awk -v c="$cur_pkg_cpu" -v p="$prev_pkg_cpu" 'BEGIN{d=c-p; if(d<0)d=0; print d}')
+  d_soc=$(awk -v c="$cur_pkg_soc" -v p="$prev_pkg_soc" 'BEGIN{d=c-p; if(d<0)d=0; print d}')
+  cpu_w=$(awk -v duj="$d_cpu" -v s="$ds" 'BEGIN{printf("%.1f", (s<=0?0:duj/(s*1e6)))}')
+  soc_w=$(awk -v duj="$d_soc" -v s="$ds" 'BEGIN{printf("%.1f", (s<=0?0:duj/(s*1e6)))}')
+  prev_pkg_cpu="$cur_pkg_cpu"; prev_pkg_soc="$cur_pkg_soc"; prev_ns="$cur_ns"
+
+  power_str="^fg(FFD700)⚡^fg() ${soc_w}W ${cpu_w}W"
+
+  # CPU temperature (°C)
+  if [[ -n "$cpu_temp_path" && -r "$cpu_temp_path" ]]; then
+    t_milli=$(cat "$cpu_temp_path" 2>/dev/null || echo 0)
+    cpu_temp=$(awk -v m="$t_milli" 'BEGIN{printf("%.0f", m/1000)}')
+  else
+    cpu_temp=$(sensors 2>/dev/null | awk '/Package id 0:/ {gsub(/\+|°C/,"",$4); print int($4); exit}')
+    [[ -z "$cpu_temp" ]] && cpu_temp="?"
+  fi
+  temp_str="🔥 ${cpu_temp}°C"
+
+  # CPU load % (clickable → cpupower-gui)
+  read cur_idle cur_total < <(read_cpu_times)
+  d_total=$(( cur_total - prev_total )); d_idle=$(( cur_idle - prev_idle ))
+  prev_total=$cur_total; prev_idle=$cur_idle
+  cpu_pct=$(awk -v dt="$d_total" -v di="$d_idle" 'BEGIN{ if(dt<=0) print 0; else printf("%.0f", (dt-di)*100/dt) }')
+  cpu_block="^lm(cpupower-gui)📈 ${cpu_pct}%^lm()"
+
+  # RAM used/total (GiB)
+  read mem_total_kb mem_avail_kb < <(awk '/MemTotal:/{t=$2} /MemAvailable:/{a=$2} END{print t, a}' /proc/meminfo)
+  mem_used_kb=$(( mem_total_kb - mem_avail_kb ))
+  ram_str=$(awk -v u="$mem_used_kb" -v t="$mem_total_kb" 'BEGIN{printf("🧠 %.1f/%.1fGiB", u/1048576, t/1048576)}')
+
+  # Disk for $HOME
+  disk="$(df -h "$HOME" --output=used,size 2>/dev/null | awk 'NR==2{print $1 "/" $2}')"
+  [[ -z "$disk" ]] && disk="$(df -h / | awk 'NR==2{print $3 "/" $2}')"
+  disk_str="💾 ${disk}"
+
+  # Battery (percent + hours estimate)
+  read batt_pct batt_hours batt_icon < <(battery_info)
+  if [[ -n "${batt_hours}" && "${batt_hours}" != "?" ]]; then
+    battery_str="${batt_icon} ${batt_pct}% ~${batt_hours}h"
+  else
+    battery_str="${batt_icon} ${batt_pct}%"
+  fi
+
+  # Time & Date at the end
+  now_date="$(date '+%Y-%m-%d')"
+  now_time="$(date '+%H:%M')"
+  datetime_str="📅 ${now_date} 🕒 ${now_time}"
+
+  # Compose (date/time LAST) & push
+  bar=" ${vol_block} | ${power_str} | ${temp_str} | ${cpu_block} | ${ram_str} | ${disk_str} | ${battery_str} | ${datetime_str} "
+  dwlb -status all "$bar"
+
+  sleep "$LOOP_SLEEP"
+done
+

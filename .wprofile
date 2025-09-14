@@ -30,3 +30,4 @@ export XKB_DEFAULT_LAYOUT=us
 export SUDO_ASKPASS="$HOME/.local/bin/dmenupass"
 export MOZ_USE_XINPUT2=1
 export MOZ_ENABLE_WAYLAND=1
+export XDG_DESKTOP_PORTAL_BACKEND=xdg-desktop-portal-wlr

@@ -2,7 +2,8 @@
 set -x
 [ -f ~/.config/wall.png ] && xwallpaper --zoom ~/.config/wall.png || xwallpaper --zoom ~/.config/default_wall.jpg &
 
-dwmblocks | tee /tmp/dwmblock.log &
+[ -f /usr/lib/xdg-desktop-portal-gtk ] && /usr/lib/xdg-desktop-portal-gtk &
+dwmblocks > /tmp/dwmblocks.log 2>&1 &
 xset r rate 300 50 &
 cp ~/.cach/zsh/history ~/.cache/zsh/history-$(date +"%d-%m-%Y-%T")
 unclutter &
@@ -19,10 +20,9 @@ syncthing --no-browser &
 # surf https://rss.bsd.am &
 pulseaudio -D
 dunst &
+picom &
 
-source $HOME/intel/oneapi/setvars.sh && \
-    export ZES_ENABLE_SYSMAN=1 && \
-    OLLAMA_ORIGINS="app://obsidian.md*" ollama serve 2>&1 | tee /tmp/ollama.log &
+ollama.sh 2>&1 | tee /tmp/ollama.log &
 
 # backup zsh history for good
 #
