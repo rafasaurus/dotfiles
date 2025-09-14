@@ -84,16 +84,9 @@ install-tmux :
 	rm -f tmux-${TMUX_VERSION}.tar.gz
 	cd tmux-${TMUX_VERSION} && ./configure && make && sudo make install
 install-gui :
-	cd external/dwm && sudo make install -j
-	cd external/dwmblocks-async && sudo make install -j
-	cd external/dmenu && sudo make install -j
-	cd external/slock && sudo make install -j
-	sudo cp dwm.desktop /usr/share/xsessions
+	cd external/dwl && sudo make install -j
 uninstall-gui :
-	cd external/dwm && sudo make uninstall
-	cd external/dwmblocks-async && sudo make uninstall
-	cd external/dmenu && sudo make uninstall
-	cd external/slock && sudo make uninstall
+	cd external/dwl && sudo make uninstall
 	sudo rm /usr/share/xsessions/dwm.desktop
 
 uninstall-udev :
