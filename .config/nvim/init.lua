@@ -7,15 +7,13 @@ require('gen-llama')
 require('telescope').setup{
   defaults = {
      vimgrep_arguments = {
-        "ag",
-        "--nocolor",
-        "--noheading",
-        "--numbers",
+        "rg",
+        "--no-heading",
+        "--line-number",
         "--column",
         "--smart-case",
-        "--silent",
         "--vimgrep",
-        "--path-to-ignore=./.ignore"
+        -- no-heading --line-number --column --smart-case --vimgrep  guided
     }
   }
 }
