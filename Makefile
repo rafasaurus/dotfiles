@@ -22,6 +22,7 @@ IGNORE_FLAGS= --ignore "Makefile" \
 		--ignore "local-ai" \
 		--ignore "dwm.desktop" \
 		--ignore "patches" \
+		--ignore "dwlb-status" \
 		--ignore "packages.txt" \
 
 # Phony targets for make
@@ -85,6 +86,7 @@ install-tmux :
 	cd tmux-${TMUX_VERSION} && ./configure && make && sudo make install
 install-gui :
 	cd external/dwl && sudo make install -j
+	cp patches/dwlb-config.h && cd external/dwlb && sudo make install -j
 uninstall-gui :
 	cd external/dwl && sudo make uninstall
 	sudo rm /usr/share/xsessions/dwm.desktop
