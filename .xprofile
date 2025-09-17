@@ -3,15 +3,16 @@
 # This file runs when a DM logs you into a graphical session.
 [ -f ~/.profile ] && . ~/.profile
 
-export QT_STYLE_OVERRIDE="gtk2"
+# export QT_STYLE_OVERRIDE="gtk2"
 export QT_QPA_PLATFORMTHEME="gtk3"
-# export QT_QPA_PLATFORMTHEME="qt5ct"
-# export QT_STYLE_OVERRIDE="Fusion"
+export QT_STYLE_OVERRIDE="Fusion"
 export QT_SCALE_FACTOR=1.25
 export GTK_USE_PORTAL=0
 export _JAVA_AWT_WM_NONREPARENTING=1 # Fixing misbehaving Java applications
 export THEME=dark
 export XDG_SESSION_TYPE=X11
+# export GDK_BACKEND=X11
+export QT_QPA_PLATFORM=xcb
 # export XDG_SESSION_TYPE=wayland
 export XDG_SESSION_CLASS=user
 export XDG_MENU_PREFIX=lxde-

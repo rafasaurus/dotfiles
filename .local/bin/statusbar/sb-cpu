@@ -5,6 +5,7 @@ source sb-essentials
 no_turbo=$(cat /sys/devices/system/cpu/intel_pstate/no_turbo)
 freq=$(cat /sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq  | awk '{printf("%.1f\n", $1/1024000, fhz)}')
 load=$(top -b -n1 | grep "Cpu(s)" | awk '{print $2 + $4}')
+# RAPL_PATH="/sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj" && ([ ! -f "$RAPL_PATH" ] || notify-send "RAPL energy meter not found\!"
 
 case $BLOCK_BUTTON in
     1) if [ $no_turbo == '0' ]; then 

@@ -9,11 +9,13 @@ voltage=$(cat /sys/class/power_supply/BAT0/voltage_now)
 time_left=$(upower -d | grep "time to empty:" | awk '{print $4}' | head -1)
 time_left="$time_left"h
 
-let wattage="$current/10000*$voltage/100000"
+let "wattage = (current * voltage) / 1000000000"
+wattage=$(echo "scale=2; $wattage / 1000" | bc)
 
 source sb-essentials
 
 case $BLOCK_BUTTON in
+	1) POPUP_TERMINAL -e battop ;;
 	3) notify-send "🔋 Battery module" "🔋: discharging
 🛑: not charging
 ♻: stagnant charge
@@ -42,5 +44,7 @@ for battery in /sys/class/power_supply/BAT?*; do
 	# Will make a warn variable if discharging and low
 	[ "$status" = "🔋" ] && [ "$capacity" -le 25 ] && warn="❗"
 	# Prints the info
-	printf "%s%s%d %dmW%s" "$status" "$warn" "$capacity" "$wattage" " $time_left"; unset warn
+	# printf "%s%s%d %.1fW%s" "$status" "$warn" "$capacity" "$wattage" " $time_left"; unset warn
+    echo "wattage|string|$wattage}}"
+    echo ""
 done && exit 0
