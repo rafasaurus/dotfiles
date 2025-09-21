@@ -86,9 +86,12 @@ install-tmux :
 	cd tmux-${TMUX_VERSION} && ./configure && make && sudo make install
 install-gui :
 	cd external/dwl && sudo make install -j
-	cp patches/dwlb-config.h && cd external/dwlb && sudo make install -j
+	cp patches/dwlb-config.h external/dwlb/config.h && cd external/dwlb && sudo make install -j
+	cd dwlb-status && make install
 uninstall-gui :
 	cd external/dwl && sudo make uninstall
+	external/dwlb && sudo make uninstall -j
+	cd dwlb-status && make uninstall
 	sudo rm /usr/share/xsessions/dwm.desktop
 
 uninstall-udev :
