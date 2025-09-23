@@ -220,9 +220,9 @@ static void airpods_text(char *out, size_t outsz) {
     if (WIFEXITED(status)) {
         int exit_code = WEXITSTATUS(status);
         if (exit_code == 1) {
-            snprintf(out, outsz, "🎧 ✓");  /* connected */
+            snprintf(out, outsz, "🎧 ^fg(00FF00)✓^fg()");  /* connected - green checkmark */
         } else {
-            snprintf(out, outsz, "🎧 ✗");  /* disconnected */
+            snprintf(out, outsz, "🎧 ^fg(FF5555)x^fg()");  /* disconnected - red x */
         }
     } else {
         snprintf(out, outsz, "🎧 ??");
