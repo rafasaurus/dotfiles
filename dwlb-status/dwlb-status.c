@@ -21,6 +21,7 @@ static const int    VOL_EVERY      = 3;   /* poll volume every N ticks */
 static const int    BATT_EVERY     = 20;  /* poll battery every N ticks */
 static const int    TIME_EVERY     = 8;   /* poll date/time every N ticks */
 static const int    DISK_EVERY     = 120; /* poll disk every N ticks */
+static const int    AIRPODS_EVERY  = 3;  /* poll airpods every N ticks (~10 seconds) */
 
 /* ---------- Helpers ---------- */
 static inline uint64_t now_us(void) {
@@ -207,6 +208,27 @@ static void volume_text(char *out, size_t outsz) {
     else      snprintf(out, outsz, "🔊 %d%%", vol);
 }
 
+/* Check airpods connection status (polled infrequently) */
+static void airpods_text(char *out, size_t outsz) {
+    FILE *fp = popen("airpods -s 2>/dev/null", "r");
+    if (!fp) {
+        snprintf(out, outsz, "🎧 ??");
+        return;
+    }
+    
+    int status = pclose(fp);
+    if (WIFEXITED(status)) {
+        int exit_code = WEXITSTATUS(status);
+        if (exit_code == 1) {
+            snprintf(out, outsz, "🎧 ✓");  /* connected */
+        } else {
+            snprintf(out, outsz, "🎧 ✗");  /* disconnected */
+        }
+    } else {
+        snprintf(out, outsz, "🎧 ??");
+    }
+}
+
 /* Exec dwlb -status all "<text>" */
 static void send_to_dwlb(const char *text) {
     pid_t pid = fork();
@@ -254,6 +276,7 @@ int main(int argc, char **argv) {
     char batt_text_buf[64] = "🔋 ??";
     char time_text_buf[64] = "📅 -- 🕒 --:--";
     char disk_text_buf[64] = "💾 --/--";
+    char airpods_text_buf[64] = "🎧 ??";
     char power_str[96]     = "^fg(FFD700)⚡^fg() 0.0W 0.0W"; /* persisted; updated by RAPL cadence */
 
     /* HOME path */
@@ -271,6 +294,15 @@ int main(int argc, char **argv) {
         snprintf(vol_block, sizeof vol_block,
                  "^lm(pamixer -t)^rm(pavucontrol)^su(pamixer -i 5)^sd(pamixer -d 5)%s^sd()^su()^rm()^lm()",
                  vol_text_buf);
+
+        /* Airpods (left-click=toggle connection) */
+        if (tick % AIRPODS_EVERY == 1) {
+            airpods_text(airpods_text_buf, sizeof airpods_text_buf);
+        }
+        char airpods_block[200];
+        snprintf(airpods_block, sizeof airpods_block,
+                 "^lm(airpods)%s^lm()",
+                 airpods_text_buf);
 
         /* RAPL power: first SoC (RAPL1), then CPU (RAPL0) — update every rapl_every ticks */
         if (tick % rapl_every == 1) {
@@ -345,8 +377,8 @@ int main(int argc, char **argv) {
         /* Compose & send (date/time at end) */
         char bar[1400];
         snprintf(bar, sizeof bar,
-            " %s | %s | %s | %s | %s | %s | %s | %s ",
-            vol_block, power_str, temp_str, cpu_block, ram_str, disk_text_buf, batt_text_buf, time_text_buf);
+            " %s | %s | %s | %s | %s | %s | %s | %s | %s ",
+            vol_block, airpods_block, power_str, temp_str, cpu_block, ram_str, disk_text_buf, batt_text_buf, time_text_buf);
 
         send_to_dwlb(bar);
 

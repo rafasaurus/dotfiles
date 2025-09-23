@@ -1,0 +1,17 @@
+#!/bin/sh
+set -x
+device=00:F3:9F:6E:01:01
+
+if [ "${1-}" = "-s" ] || [ "${1-}" = "--status" ]; then
+  bluetoothctl info "$device" | grep -q "Connected: yes" && exit 1 || exit 0
+fi
+
+if bluetoothctl info "$device" | grep -q "Connected: yes"; then
+  bluetoothctl disconnect "$device"
+  echo "disconnected"
+  exit 0
+fi
+
+bluetoothctl connect $device
+echo "connected"
+exit 1
