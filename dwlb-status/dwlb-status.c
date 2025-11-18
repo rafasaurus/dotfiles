@@ -295,13 +295,13 @@ int main(int argc, char **argv) {
                  "^lm(pamixer -t)^rm(pavucontrol)^su(pamixer -i 5)^sd(pamixer -d 5)%s^sd()^su()^rm()^lm()",
                  vol_text_buf);
 
-        /* Airpods (left-click=toggle connection) */
+        /* Airpods (left-click=toggle connection, right-click=librepods) */
         if (tick % AIRPODS_EVERY == 1) {
             airpods_text(airpods_text_buf, sizeof airpods_text_buf);
         }
         char airpods_block[200];
         snprintf(airpods_block, sizeof airpods_block,
-                 "^lm(airpods)%s^lm()",
+                 "^lm(airpods)^rm(librepods)%s^rm()^lm()",
                  airpods_text_buf);
 
         /* RAPL power: first SoC (RAPL1), then CPU (RAPL0) — update every rapl_every ticks */
