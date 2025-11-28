@@ -2,26 +2,30 @@
 # run every 10 minutes with crontab -e 
 # */2 * * * * export DISPLAY=:0.0 && $HOME/.local/bin/autored
 
+set -x
+pkill gammastep
+gammastep -x &
+pkill gammastep
 current_hour=$(date +%H)
-[ -f /tmp/noautored ] && redshift -x && exit 0
+[ -f /tmp/noautored ] && pkill gammastep && exit 0
 case $current_hour in
     00|01|02|03|04|05|06)
-        redshift -PO 3000
+        gammastep -PO 3000
         ;;
     07|08|09|10|11)
-        redshift -x
+        pkill gammastep
         ;;
     12|13|14|15|16|17|18|19|20)
-        redshift -x
+        pkill gammastep
         ;;
     21)
-        redshift -PO 6000
+        gammastep -PO 6000
         ;;
     22)
-        redshift -PO 4500
+        gammastep -PO 4500
         ;;
     23)
-        redshift -PO 3500
+        gammastep -PO 3500
         ;;
     *)
         echo "Invalid hour!"
