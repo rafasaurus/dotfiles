@@ -7,6 +7,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/statvfs.h>
+#include <sys/wait.h>
 #include <dirent.h>
 #include <ctype.h>
 #include <errno.h>
@@ -236,7 +237,9 @@ static void send_to_dwlb(const char *text) {
         execlp("dwlb", "dwlb", "-status", "all", text, (char*)NULL);
         _exit(127);
     }
-    (void)pid;
+    if (pid > 0) {
+        waitpid(pid, NULL, 0);
+    }
 }
 
 int main(int argc, char **argv) {
