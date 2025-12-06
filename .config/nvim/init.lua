@@ -1,5 +1,4 @@
 vim.api.nvim_command('source ~/.config/nvim/config.vim')
-local nvim_lsp = require('lspconfig')
 
 require('mason-config')
 require('gen-llama')

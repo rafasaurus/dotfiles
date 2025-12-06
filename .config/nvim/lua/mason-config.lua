@@ -33,11 +33,7 @@ local on_attach = function(client, bufnr)
     buf_set_keymap('n', '<leader>f',        '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 end
 
-local nvim_lsp = require('lspconfig')
-local util = require 'lspconfig/util'
-
--- pip install python-lsp-ruff
-nvim_lsp.pylsp.setup {
+vim.lsp.config('pylsp',  {
 	settings = {
 		pylsp = {
 			plugins = {
@@ -61,33 +57,24 @@ nvim_lsp.pylsp.setup {
 		pydocstyle = { maxLineLength = 200, };
 		flake8 = { maxLineLength = 200, };
 	}
-}
+})
 
-nvim_lsp.cmake.setup {
+vim.lsp.config('cmake', {
 	cmd = { "cmake-language-server" },
 	filetypes = { "cmake" },
-	root_dir = util.root_pattern('CMakePresets.json', 'CTestConfig.cmake', '.git', 'build', 'cmake'),
+    root_dir = vim.fs.root(0, {"CMakePresets.json", "cmake"}),
 	init_options = {
 		buildDirectory = "build";
 	}
-}
+})
 
-local use_ccls = false
+vim.lsp.config('clangd', {
+    on_attach = on_attach,
+    cmd = { "clangd" },
+    filetypes = { "c", "cpp", "objc", "objcpp" },
+    root_dir = vim.fs.root(0, { "compile_commands.json", "build/compile_commands.json" }),
+})
 
--- how to build ccls?
--- https://github.com/MaskRay/ccls/wiki/Build
-if use_ccls then
-    nvim_lsp.ccls.setup {
-        on_attach = on_attach,
-        cmd = { "ccls" },
-        filetypes = { "c", "cpp", "objc", "objcpp" },
-        root_dir = util.root_pattern("compile_commands.json", "build/compile_commands.json"),
-    }
-else
-    nvim_lsp.clangd.setup {
-        on_attach = on_attach,
-        cmd = { "clangd" },
-        filetypes = { "c", "cpp", "objc", "objcpp" },
-        root_dir = util.root_pattern("compile_commands.json", "build/compile_commands.json"),
-    }
-end
+vim.lsp.enable('clangd')
+vim.lsp.enable('cmake')
+vim.lsp.enable('pylsp')
