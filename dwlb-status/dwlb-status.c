@@ -268,7 +268,7 @@ int main(int argc, char **argv) {
     char time_text_buf[64] = "📅 -- 🕒 --:--";
     char disk_text_buf[64] = "💾 --/--";
     char airpods_text_buf[64] = "🎧 ??";
-    char power_str[96]     = "^fg(FFD700)⚡^fg() 0.0W 0.0W"; /* persisted; updated by RAPL cadence */
+    char power_str[64]     = "^fg(FFD700)⚡^fg() 0.0W 0.0W"; /* persisted; updated by RAPL cadence */
 
     /* HOME path */
     const char *home = getenv("HOME");
@@ -294,6 +294,10 @@ int main(int argc, char **argv) {
         snprintf(airpods_block, sizeof airpods_block,
                  "^lm(airpods)^rm(librepods)%s^rm()^lm()",
                  airpods_text_buf);
+
+        char duck_block[128];
+        snprintf(duck_block, sizeof duck_block,
+                 "^lm(sh -c 'pgrep -x wmbubble >/dev/null || wmbubble &')^rm(pkill -x wmbubble)🦆^rm()^lm()");
 
         /* RAPL power: first SoC (RAPL1), then CPU (RAPL0) — update every rapl_every ticks */
         if (tick % rapl_every == 1) {
@@ -368,8 +372,8 @@ int main(int argc, char **argv) {
         /* Compose & send (date/time at end) */
         char bar[1400];
         snprintf(bar, sizeof bar,
-            " %s | %s | %s | %s | %s | %s | %s | %s | %s ",
-            vol_block, airpods_block, power_str, temp_str, cpu_block, ram_str, disk_text_buf, batt_text_buf, time_text_buf);
+            " %s | %s | %s | %s | %s | %s | %s | %s | %s | %s ",
+            vol_block, airpods_block, power_str, duck_block, temp_str, cpu_block, ram_str, disk_text_buf, batt_text_buf, time_text_buf);
 
         printf("%s\n", bar);
         fflush(stdout);
