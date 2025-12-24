@@ -7,12 +7,10 @@ dbus-update-activation-environment --systemd --all & \
 pipewire & \
 pipewire-pulse & \
 wireplumber & \
-dwlmsg -w > /tmp/dwl_info & \
 dwlb -ipc & \
 dwlb-status | dwlb -status-stdin all & \
 swaybg -i /home/rafael/.config/wall.png & \
 dunst & \
-wmbubble & \
 syncthing --no-browser & \
 surf hackernews.com & \
 bluetoothctl power on & \
