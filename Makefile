@@ -89,9 +89,9 @@ install-gui :
 	cp patches/dwlb-config.h external/dwlb/config.h && cd external/dwlb && sudo make install -j
 	cd dwlb-status && make install
 uninstall-gui :
-	cd external/dwl && sudo make uninstall
-	external/dwlb && sudo make uninstall -j
-	cd dwlb-status && make uninstall
+	cd external/dwl && sudo make uninstall && make clean
+	cd external/dwlb && sudo make uninstall -j && make clean
+	cd dwlb-status && make uninstall && make clean
 	sudo rm /usr/share/xsessions/dwm.desktop
 
 uninstall-udev :
