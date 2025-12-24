@@ -230,18 +230,6 @@ static void airpods_text(char *out, size_t outsz) {
     }
 }
 
-/* Exec dwlb -status all "<text>" */
-static void send_to_dwlb(const char *text) {
-    pid_t pid = fork();
-    if (pid == 0) {
-        execlp("dwlb", "dwlb", "-status", "all", text, (char*)NULL);
-        _exit(127);
-    }
-    if (pid > 0) {
-        waitpid(pid, NULL, 0);
-    }
-}
-
 int main(int argc, char **argv) {
     /* RAPL sampling frequency (in ticks): default, env, CLI -r N */
     int rapl_every = RAPL_EVERY_DEFAULT;
@@ -383,7 +371,8 @@ int main(int argc, char **argv) {
             " %s | %s | %s | %s | %s | %s | %s | %s | %s ",
             vol_block, airpods_block, power_str, temp_str, cpu_block, ram_str, disk_text_buf, batt_text_buf, time_text_buf);
 
-        send_to_dwlb(bar);
+        printf("%s\n", bar);
+        fflush(stdout);
 
         /* Sleep */
         struct timespec req = { (time_t)LOOP_SLEEP_SEC, (long)((LOOP_SLEEP_SEC - (time_t)LOOP_SLEEP_SEC) * 1e9) };
