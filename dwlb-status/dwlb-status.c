@@ -17,7 +17,7 @@
 #define RAPL_EVERY_DEFAULT 5   /* sample RAPL each tick by default (set via -r or env RAPL_EVERY) */
 #endif
 
-static const double LOOP_SLEEP_SEC = 0.8; /* main refresh period */
+static const double LOOP_SLEEP_SEC = 1.2; /* main refresh period */
 static const int    VOL_EVERY      = 3;   /* poll volume every N ticks */
 static const int    BATT_EVERY     = 20;  /* poll battery every N ticks */
 static const int    TIME_EVERY     = 8;   /* poll date/time every N ticks */
@@ -248,14 +248,17 @@ int main(int argc, char **argv) {
     /* RAPL paths */
     const char *PKG_CPU = "/sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj"; /* RAPL0: CPU */
     const char *PKG_SOC = "/sys/class/powercap/intel-rapl/intel-rapl:1/energy_uj"; /* RAPL1: SoC */
+    bool has_rapl = path_readable(PKG_CPU);
 
     /* CPU temp path (discover once) */
     char *cpu_temp_path = find_coretemp_input_path();
 
     /* Baselines */
     uint64_t prev_cpu_uj = 0, prev_soc_uj = 0, prev_us = 0;
-    read_u64_file(PKG_CPU, &prev_cpu_uj);
-    read_u64_file(PKG_SOC, &prev_soc_uj);
+    if (has_rapl) {
+        read_u64_file(PKG_CPU, &prev_cpu_uj);
+        read_u64_file(PKG_SOC, &prev_soc_uj);
+    }
     prev_us = now_us();
 
     uint64_t prev_idle=0, prev_total=0;
@@ -299,8 +302,8 @@ int main(int argc, char **argv) {
         snprintf(duck_block, sizeof duck_block,
                  "^lm(sh -c 'pgrep -x wmbubble >/dev/null || wmbubble &')^rm(pkill -x wmbubble)🦆^rm()^lm()");
 
-        /* RAPL power: first SoC (RAPL1), then CPU (RAPL0) — update every rapl_every ticks */
-        if (tick % rapl_every == 1) {
+        /* RAPL power: update every rapl_every ticks, only if supported */
+        if (has_rapl && (tick % rapl_every == 1)) {
             uint64_t cur_cpu_uj=0, cur_soc_uj=0, cur_us=now_us();
             read_u64_file(PKG_CPU, &cur_cpu_uj);
             read_u64_file(PKG_SOC, &cur_soc_uj);
@@ -314,6 +317,8 @@ int main(int argc, char **argv) {
                      (unsigned long long)(soc_w10/10ull), (unsigned long long)(soc_w10%10ull),
                      (unsigned long long)(cpu_w10/10ull), (unsigned long long)(cpu_w10%10ull));
             prev_cpu_uj = cur_cpu_uj; prev_soc_uj = cur_soc_uj; prev_us = cur_us;
+        } else if (!has_rapl) {
+            strcpy(power_str, ""); /* hide power info if not supported */
         }
 
         /* CPU temperature */
@@ -371,9 +376,17 @@ int main(int argc, char **argv) {
 
         /* Compose & send (date/time at end) */
         char bar[1400];
-        snprintf(bar, sizeof bar,
-            " %s | %s | %s | %s | %s | %s | %s | %s | %s | %s ",
-            vol_block, airpods_block, power_str, duck_block, temp_str, cpu_block, ram_str, disk_text_buf, batt_text_buf, time_text_buf);
+        int n = 0;
+        n += snprintf(bar + n, sizeof bar - n, " %s ", vol_block);
+        n += snprintf(bar + n, sizeof bar - n, "| %s ", airpods_block);
+        if (has_rapl) n += snprintf(bar + n, sizeof bar - n, "| %s ", power_str);
+        n += snprintf(bar + n, sizeof bar - n, "| %s ", duck_block);
+        n += snprintf(bar + n, sizeof bar - n, "| %s ", temp_str);
+        n += snprintf(bar + n, sizeof bar - n, "| %s ", cpu_block);
+        n += snprintf(bar + n, sizeof bar - n, "| %s ", ram_str);
+        n += snprintf(bar + n, sizeof bar - n, "| %s ", disk_text_buf);
+        n += snprintf(bar + n, sizeof bar - n, "| %s ", batt_text_buf);
+        n += snprintf(bar + n, sizeof bar - n, "| %s ", time_text_buf);
 
         printf("%s\n", bar);
         fflush(stdout);
