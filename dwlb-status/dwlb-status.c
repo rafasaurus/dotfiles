@@ -192,26 +192,26 @@ static void battery_text(char *out, size_t outsz) {
     snprintf(out, outsz, "%s %s%%%s", icon, pct_s, eta);
 }
 
-/* Read pamixer outputs (polled infrequently) */
+/* Read pamixer outputs (polled infrequently) - with timeout to prevent hangs */
 static void volume_text(char *out, size_t outsz) {
     FILE *fp;
     char buf[64];
     bool mute = false;
     int vol = 0;
 
-    fp = popen("pamixer --get-mute 2>/dev/null", "r");
+    fp = popen("timeout 1 pamixer --get-mute 2>/dev/null", "r");
     if (fp) { if (fgets(buf, sizeof buf, fp)) mute = (strncmp(buf, "true", 4) == 0); pclose(fp); }
 
-    fp = popen("pamixer --get-volume 2>/dev/null", "r");
+    fp = popen("timeout 1 pamixer --get-volume 2>/dev/null", "r");
     if (fp) { if (fgets(buf, sizeof buf, fp)) vol = atoi(buf); pclose(fp); }
 
     if (mute) snprintf(out, outsz, "🔇 mute");
     else      snprintf(out, outsz, "🔊 %d%%", vol);
 }
 
-/* Check airpods connection status (polled infrequently) */
+/* Check airpods connection status (polled infrequently) - with timeout to prevent hangs */
 static void airpods_text(char *out, size_t outsz) {
-    FILE *fp = popen("airpods -s 2>/dev/null", "r");
+    FILE *fp = popen("timeout 2 airpods -s 2>/dev/null", "r");
     if (!fp) {
         snprintf(out, outsz, "🎧 ??");
         return;
@@ -248,17 +248,14 @@ int main(int argc, char **argv) {
     /* RAPL paths */
     const char *PKG_CPU = "/sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj"; /* RAPL0: CPU */
     const char *PKG_SOC = "/sys/class/powercap/intel-rapl/intel-rapl:1/energy_uj"; /* RAPL1: SoC */
-    bool has_rapl = path_readable(PKG_CPU);
 
     /* CPU temp path (discover once) */
     char *cpu_temp_path = find_coretemp_input_path();
 
     /* Baselines */
     uint64_t prev_cpu_uj = 0, prev_soc_uj = 0, prev_us = 0;
-    if (has_rapl) {
-        read_u64_file(PKG_CPU, &prev_cpu_uj);
-        read_u64_file(PKG_SOC, &prev_soc_uj);
-    }
+    read_u64_file(PKG_CPU, &prev_cpu_uj);
+    read_u64_file(PKG_SOC, &prev_soc_uj);
     prev_us = now_us();
 
     uint64_t prev_idle=0, prev_total=0;
@@ -302,8 +299,8 @@ int main(int argc, char **argv) {
         snprintf(duck_block, sizeof duck_block,
                  "^lm(sh -c 'pgrep -x wmbubble >/dev/null || wmbubble &')^rm(pkill -x wmbubble)🦆^rm()^lm()");
 
-        /* RAPL power: update every rapl_every ticks, only if supported */
-        if (has_rapl && (tick % rapl_every == 1)) {
+        /* RAPL power: first SoC (RAPL1), then CPU (RAPL0) — update every rapl_every ticks */
+        if (tick % rapl_every == 1) {
             uint64_t cur_cpu_uj=0, cur_soc_uj=0, cur_us=now_us();
             read_u64_file(PKG_CPU, &cur_cpu_uj);
             read_u64_file(PKG_SOC, &cur_soc_uj);
@@ -317,8 +314,6 @@ int main(int argc, char **argv) {
                      (unsigned long long)(soc_w10/10ull), (unsigned long long)(soc_w10%10ull),
                      (unsigned long long)(cpu_w10/10ull), (unsigned long long)(cpu_w10%10ull));
             prev_cpu_uj = cur_cpu_uj; prev_soc_uj = cur_soc_uj; prev_us = cur_us;
-        } else if (!has_rapl) {
-            strcpy(power_str, ""); /* hide power info if not supported */
         }
 
         /* CPU temperature */
@@ -376,17 +371,9 @@ int main(int argc, char **argv) {
 
         /* Compose & send (date/time at end) */
         char bar[1400];
-        int n = 0;
-        n += snprintf(bar + n, sizeof bar - n, " %s ", vol_block);
-        n += snprintf(bar + n, sizeof bar - n, "| %s ", airpods_block);
-        if (has_rapl) n += snprintf(bar + n, sizeof bar - n, "| %s ", power_str);
-        n += snprintf(bar + n, sizeof bar - n, "| %s ", duck_block);
-        n += snprintf(bar + n, sizeof bar - n, "| %s ", temp_str);
-        n += snprintf(bar + n, sizeof bar - n, "| %s ", cpu_block);
-        n += snprintf(bar + n, sizeof bar - n, "| %s ", ram_str);
-        n += snprintf(bar + n, sizeof bar - n, "| %s ", disk_text_buf);
-        n += snprintf(bar + n, sizeof bar - n, "| %s ", batt_text_buf);
-        n += snprintf(bar + n, sizeof bar - n, "| %s ", time_text_buf);
+        snprintf(bar, sizeof bar,
+            " %s | %s | %s | %s | %s | %s | %s | %s | %s | %s ",
+            vol_block, airpods_block, power_str, duck_block, temp_str, cpu_block, ram_str, disk_text_buf, batt_text_buf, time_text_buf);
 
         printf("%s\n", bar);
         fflush(stdout);
