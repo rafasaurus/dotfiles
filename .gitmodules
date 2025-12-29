@@ -4,9 +4,6 @@
 [submodule "external/dwlb"]
 	path = external/dwlb
 	url = https://github.com/kolunmi/dwlb
-[submodule "external/wmbubble"]
-	path = external/wmbubble
-	url = https://github.com/rnjacobs/wmbubble
 [submodule "external/dwl"]
 	path = external/dwl
 	url = https://github.com/rafasaurus/dwl
