@@ -87,10 +87,12 @@ install-tmux :
 install-gui :
 	cd external/dwl && sudo make install -j
 	cp patches/dwlb-config.h external/dwlb/config.h && cd external/dwlb && sudo make install -j
+	cd external/wlbubble && sudo make install -j
 	cd dwlb-status && make install
 uninstall-gui :
 	cd external/dwl && sudo make uninstall && make clean
 	cd external/dwlb && sudo make uninstall -j && make clean
+	cd external/wlbubble && sudo make uninstall -j && make clean
 	cd dwlb-status && make uninstall && make clean
 	sudo rm /usr/share/xsessions/dwm.desktop
 
