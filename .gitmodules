@@ -7,3 +7,6 @@
 [submodule "external/dwl"]
 	path = external/dwl
 	url = https://github.com/rafasaurus/dwl
+[submodule "external/wlbubble"]
+	path = external/wlbubble
+	url = https://github.com/rafasaurus/wlbubble
