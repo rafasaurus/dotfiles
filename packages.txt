@@ -84,3 +84,4 @@ wlroots0.19
 sudo-rs
 nm-connection-editor
 swaylock
+otf-cascadia-code

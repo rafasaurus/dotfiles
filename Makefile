@@ -1,35 +1,9 @@
-#
-# Install manually
-# libxft-bgra-git
-# ttf-devicons
-# ttf-dejavu for monospaced
-# If we want to use universal style for both qt and gtk, we shall
-# install qt5-styleplugins package from git or AUR
-
 stow_dirs = $(wildcard .)
-TMUX_VERSION=3.4
-IGNORE_FLAGS= --ignore "Makefile" \
-		--ignore ".config/wall.png" \
-		--ignore ".docs" \
-		--ignore "\.gitignore" \
-		--ignore "\.gitmodules" \
-		--ignore "external" \
-		--ignore "README" \
-		--ignore "etc" \
-		--ignore "tmux-${TMUX_VERSION}" \
-		--ignore "paru" \
-		--ignore ".gtkrc-2.0" \
-		--ignore "local-ai" \
-		--ignore "dwm.desktop" \
-		--ignore "patches" \
-		--ignore "dwlb-status" \
-		--ignore "packages.txt" \
 
-# Phony targets for make
 .PHONY: stow restow destow install-prereqs install-paru
-.PHONY: install-udev install-tmux install-gui lean-gui install-themes
-.PHONY: uninstall-gui uninstall-udev install-full install-android-env
-.PHONY: install-film-android uninstall-film-android
+.PHONY: install-udev install-gui install-themes install-android-env
+.PHONY: install-film-android
+.PHONY: uninstall-gui uninstall-udev install-full uninstall-film-android
 
 stow :
 	# if mimeapps exists as file delele it, if its a symlink or does not exists do nothing
@@ -43,52 +17,33 @@ stow :
 	[ -d $(HOME)/.local/share/fonts ] || mkdir -p $(HOME)/.local/share/fonts
 	[ -d $(HOME)/.cache/zsh ] || mkdir -p $(HOME)/.cache/zsh
 	[ -d $(HOME)/.todo ] || mkdir $(HOME)/.todo
-	stow --target $(HOME) --verbose $(stow_dirs) $(IGNORE_FLAGS)
-	@echo ''
-	@echo ''
-	@echo '******************************************************'
-	@echo 'Please read what should be manually installed'
-	@echo 'Primarily udevs and fonts'
-	@echo '******************************************************'
-	@echo ''
+	stow --target $(HOME) --verbose $(stow_dirs)
 
 restow :
-	stow --target $(HOME) --verbose --restow $(stow_dirs) $(IGNORE_FLAGS)
+	stow --target $(HOME) --verbose --restow $(stow_dirs)
 
 destow :
-	stow -D --target $(HOME) --verbose $(stow_dirs) $(IGNORE_FLAGS)
+	stow -D --target $(HOME) --verbose $(stow_dirs)
 
 install-prereqs :
 	sudo pacman -S --needed - < packages.txt
 
-	@echo ''
-	@echo ''
-	@echo '******************************************************'
-	@echo 'Please read what should be manually installed'
-	@echo 'enable pipewire-pulse.service and socket per user'
-	@echo 'systemctl --user enable pipewire-pulse.service'
-	@echo 'systemctl --user enable pipewire-pulse.socket'
-	@echo 'in order to use xsessions, you should run <install-gui>'
-	@echo '******************************************************'
-	@echo ''
-
 install-paru :
 	[ -d paru ] || git clone https://aur.archlinux.org/paru.git 
 	cd paru && makepkg -si
-	paru -S --noconfirm ttf-twemoji-color yambar startw
+	paru -S --noconfirm ttf-twemoji-color yambar startw ttf-devicons qt5-styleplugins
+
 install-udev :
 	sudo cp -r etc/udev/rules.d/* /etc/udev/rules.d/
 	sudo udevadm control --reload-rules && sudo udevadm trigger
-install-tmux :
-	wget https://github.com/tmux/tmux/releases/download/${TMUX_VERSION}/tmux-${TMUX_VERSION}.tar.gz
-	tar xf tmux-${TMUX_VERSION}.tar.gz
-	rm -f tmux-${TMUX_VERSION}.tar.gz
-	cd tmux-${TMUX_VERSION} && ./configure && make && sudo make install
+
 install-gui :
+	cp .config/wall.png $(HOME)/.config/wall.png
 	cd external/dwl && sudo make install -j
 	cp patches/dwlb-config.h external/dwlb/config.h && cd external/dwlb && sudo make install -j
 	cd external/wlbubble && sudo make install -j
 	cd dwlb-status && make install
+
 uninstall-gui :
 	cd external/dwl && sudo make uninstall && make clean
 	cd external/dwlb && sudo make uninstall -j && make clean
@@ -98,18 +53,25 @@ uninstall-gui :
 
 uninstall-udev :
 	sudo rm -r /etc/udev/rules.d/*
+
 install-themes : 
+	[ -d $(HOME)/.themes ] || mkdir $(HOME)/.themes
 	git clone https://github.com/B00merang-Project/Mac-OS-9 ~/.themes/Mac-OS-9
+
 install-mimir :
 	cd ./external/mimir && git chckout main && make install
+
 install-full :  install-paru install-prereqs install-mimir
 	echo "done full installation"
+
 install-android-env :
 	cp .local/bin/mimir_armv7l $(shell dirname `which sh`)
+
 install-film-android :
 	apt install exiftool which
 	mkdir -p $(HOME)/.local/bin
 	cp -r .local/bin/luts/ $(HOME)/.local/bin/ && echo "copied luts"
 	cp -r .local/bin/film $(shell dirname `which sh`) && echo "copied film script"
+
 uninstall-film-android :
 	rm -r $(shell dirname `which sh`)/512x512 $(shell which film)

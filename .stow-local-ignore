@@ -1,0 +1,16 @@
+Makefile
+\.docs
+\.gitignore
+\.gitmodules
+\.git
+\.config/wall.png
+external
+README
+etc
+paru
+\.gtkrc-2.0
+local-ai
+dwm.desktop
+patches
+dwlb-status
+packages.txt
