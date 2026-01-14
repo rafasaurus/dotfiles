@@ -9,7 +9,7 @@ pipewire &
 pipewire-pulse &
 wireplumber &
 syncthing --no-browser &
-dwlb -ipc -font "charcoal:size=13" -scale 2 &
+dwlb -ipc -font "charcoal:size=12" &
 dwlb-status | dwlb -status-stdin all &
 swaybg -i $HOME/.config/wall.png &
 wmbubble &
