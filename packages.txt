@@ -49,7 +49,7 @@ pass
 qtpass
 mlocate
 lsof
-lxappearance-gtk3
+lxappearance
 cmake
 libc++abi
 libc++
@@ -71,7 +71,8 @@ xdg-desktop-portal
 xdg-desktop-portal-gtk
 xdg-desktop-portal-wlr
 gammastep
-nsxiv pavucontrol
+nsxiv
+pavucontrol
 wlroots0.19
 sudo-rs
 nm-connection-editor
