@@ -2,6 +2,6 @@
 [Desktop Entry]
 Type=Application
 Name=Example
-Exec=pcmanfm
-Icon=pcmanfm
+Exec=thunar
+Icon=thunar
 Terminal=false
