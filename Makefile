@@ -8,7 +8,6 @@ stow_dirs = $(wildcard .)
 stow :
 	# if mimeapps exists as file delele it, if its a symlink or does not exists do nothing
 	[ -L ~/.config/mimeapps.list ] || ([ -f ~/.config/mimeapps.list ] && rm ~/.config/mimeapps.list ) || echo ""
-	[ -L ~/.gtkrc-2.0 ] || ([ -d ~/.gtkrc-2.0 ] && rm ~/.gtkrc-2.0) || echo ""
 	[ -d $(HOME)/.config ] || mkdir $(HOME)/.config
 	[ -d $(HOME)/.local ] || mkdir $(HOME)/.local
 	[ -d $(HOME)/.local/share ] || mkdir -p $(HOME)/.local/share
