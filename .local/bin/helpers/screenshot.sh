@@ -1,4 +1,6 @@
 #!/bin/sh
+# Wayland screenshoter has argument -s for selection mode
+
 case "$1" in
   -h|--help) echo "Usage: $(basename "$0") [-s|--select]"; exit;;
   -s|--select) S="$(slurp)" || exit; set -- -g "$S";;

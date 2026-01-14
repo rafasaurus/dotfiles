@@ -6,35 +6,23 @@
 alias ka="killall" \
     sudo='sudo-rs' \
     dmenu='wmenu' \
-    sxiv='$(which nsxiv)' \
     vi='/usr/bin/vim' \
     rm='trash' \
-    cam='ranger ~/phone/Camera/' \
     ls="ls -hN --color=auto --group-directories-first" \
     grep="grep --color=auto" \
     diff="diff --color=auto" \
     ffmpeg="ffmpeg -hide_banner" \
-    doc='$BROWSER /usr/share/doc/arch-wiki/html/en > /dev/null' \
-    d='todo.sh' \
-    weather='curl https://wttr.in/stepanakert' \
-    dict='sdcv' \
+    document_archlinux='$BROWSER /usr/share/doc/arch-wiki/html/en > /dev/null' \
+    weather='curl wttr.in/yerevan' \
     cp='cp -iv' \
-    inav='~/software/inav/INAV\ Configurator/inav-configurator' \
-    wallpaper='sxiv ~/Dropbox/wallpaper' \
-    bton='bluetoothctl power on' \
-    btoff='bluetoothctl power off' \
     paru='paru --bottomup' \
-    study='mpv ~/Videos/study.mp4' \
     tree='exa --tree --level=2 --long -a --header --git' \
     sl='ls' \
     noise='mpv ~/Music/white_noise.mp3' \
-    qtcreator='~/Qt/Tools/QtCreator/bin/qtcreator' \
-    lf='lfub' \
-    xlcip='xclip -in -selection clipboard' \
     diff='diff --strip-trailing-cr' \
     oneko='oneko -rv -fg \#CCCCCC -speed 13' \
 
 command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
-# command -v nsxiv >/dev/null && alias sxiv="nsxiv" sxivdiff="nsxiv -d"
+command -v nsxiv >/dev/null && alias sxiv="nsxiv" sxivdiff="nsxiv -d"
 
 vf() { fzf | xargs -r -I % $EDITOR % ;}

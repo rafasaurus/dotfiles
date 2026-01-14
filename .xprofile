@@ -30,4 +30,3 @@ export MOZ_USE_XINPUT2=1
 # export MESA_LOADER_DRIVER_OVERRIDE=iris
 
 alias POPUP_TERMINAL="st -f ComicCode-Bold:size=12 -g 140x30+330+220 -n \"popup\""
-$HOME/startup.sh

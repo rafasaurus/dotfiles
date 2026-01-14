@@ -1,1 +1,2 @@
-source ~/.bash_profile
+#!/bin/sh
+[ -f ~/.profile ] && . ~/.profile

@@ -2,7 +2,7 @@
 
 # docker pull intelanalytics/ipex-llm-inference-cpp-xpu:latest
 # https://dev.to/itlackey/run-ollama-on-intel-arc-gpu-ipex-4e4k
-docker run -d --restart=always \
+docker run -d \
     --net=bridge \
     --device=/dev/dri \
     -p 11434:11434 \

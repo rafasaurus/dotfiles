@@ -19,3 +19,5 @@
     path = sshfs/workspace/.gitconfig-job
 [includeIf "gitdir:~/sshfs1/workspace/"]
     path = sshfs1/workspace/.gitconfig-job
+[core]
+	autocrlf = input

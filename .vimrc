@@ -26,12 +26,10 @@ endif
 
 call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter'
-" Plug 'itchyny/lightline.vim'
 
 " quickscope https://www.youtube.com/watch?v=EsGSwNySNMU
 " Plug 'srstevenson/vim-picker'
 Plug 'tpope/vim-scriptease'
-" cxiw to chan swap words, cxc to clear
 Plug 'tommcdo/vim-exchange'
 Plug 'unblevable/quick-scope'
 Plug 'tomtom/tcomment_vim'
@@ -39,27 +37,16 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'junegunn/goyo.vim'
 Plug 'coldfix/hexHighlight'
-Plug 'scrooloose/nerdtree'
-Plug 'derekwyatt/vim-fswitch' " switching header and sourc in cpp
 Plug 'rking/ag.vim'
 Plug 'JamshedVesuna/vim-markdown-preview'
-" WORKS WITH NERDTREE:
-Plug 'ryanoasis/vim-devicons'
 Plug 'mbbill/undotree'
-Plug 'junegunn/fzf', { 'do': { ->fzf#install() } }
-Plug 'junegunn/fzf.vim'
 Plug 'gruvbox-community/gruvbox'
-Plug 'tweekmonster/startuptime.vim'
 Plug 'kyoz/purify', { 'rtp': 'vim' }
 call plug#end()
 
-" PLUGIN CONFIGS:
-" let g:lightline = {'colorscheme': 'wombat'}
-" let g:syntastic_python_checkers = ['pylint']
-" T-Comment
+" commend and uncomment
 map <leader>c <c-_><c-_> 
 
-" Tabs and Spaces
 set expandtab
 set tabstop=4
 set softtabstop=4
@@ -80,6 +67,11 @@ set showmatch " highlight matching [{()}]
 set scrolloff=2 " keep cursor 3 lines away from screen border
 set laststatus=2 " for powerline
 
+set number
+set relativenumber
+set timeout
+set timeoutlen=150
+
 " CREATE THE TAGS FILE INSTALL CTAGS FIRST:
 command! MakeTags !ctags -R .
 command! MakeTagsCppFull !ctags -R --c++-kinds=+p --fields=+iaS --extra=+q /usr/include
@@ -88,17 +80,6 @@ command! MakeTagsPython !ctags -R --languages=python "/usr/lib/python3.9/site-pa
 " - Use ^t to jump back up the tags stack
 " - Use ^t for ambigious tags
 
-" SHORTCUTS FOR TABS:
-nnoremap tn :tabnew<Space>
-nnoremap tk :tabnext<CR>
-nnoremap tj :tabprev<CR>
-nnoremap th :tabfirst<CR>
-nnoremap tl :tablast<CR>
-
-" SAVE XRESOURCES IN EVERY WRITE AND RELOAD:
-autocmd BufWritePost ~/.Xresources,~/.Xdefaults !xrdb %
-autocmd BufWritePost ~/.github/dwm !update-mime-database ~/.local/share/mime %
-autocmd BufRead ~/Dropbox/todo.txt :Goyo
 autocmd VimLeave * call system("xsel -ib", getreg('+')) " Prevent Vim from clearing the clipboard on exit
 
 " RUNING MAKE WITH PYTHON:
@@ -130,111 +111,28 @@ endif
 if has("autocmd")
     au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | 
 endif
-" RESIZE SPLIT:
+
 nnoremap <C-h> :vertical resize -5<cr>
 nnoremap <C-j> :resize +5<cr>
 nnoremap <C-k> :resize -5<cr>
 nnoremap <C-l> :vertical resize +5<cr>
-nnoremap <leader>h :split<Space>
-nnoremap <leader>v :vsplit<Space>
-nnoremap <leader>n :NERDTreeToggle<cr>
-nnoremap <leader><space> :noh<cr>
-nnoremap <leader><tab> :FZF<cr>
-nnoremap <leader>s  :FSHere<cr> " vim-fswitch
 
 " CLIPBOARD COPY ALIAS:
 map qq "+
 map qw "+
 
-set number
-set relativenumber
-" Update bindekeys when sxhdrc is updated
-autocmd BufWritePost *sxhkdrc !pkill sxhkd; sleep 1; setsid sxhkd &
-autocmd BufWritePost ~/.Xresources,~/.Xdefaults !xrdb %
-set timeout 
-set timeoutlen=150
-
-" set t_Co=256
-" set background=dark
-" highlight Normal ctermbg=NONE
-" highlight nonText ctermbg=NONE
-let b:ale_linters = ['flake8', 'pylint']
-" Disable warnings about trailing whitespace for Python files.
-let b:ale_warn_about_trailing_whitespace = 0
-
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-" MARKDOWN PREVIEWER PETTINGS
-" let vim_markdown_preview_github=1
-let vim_markdown_preview_hotkey='<C-m>'
-let vim_markdown_preview_browser='chromium'
-let vim_markdown_preview_use_xdg_open=1
-" let vim_markdown_preview_temp_file=1
-
 set updatetime=850
-
 set spell
 set spelllang=en_us
 set background=dark
 
-" " QUICKSCOPE TRIGGER A HIGHLIGHT IN THE APPROPRIATE DIRECTION WHEN PRESSING THESE KEYS:
-" let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-
-" CODI PLUGIN SETUP FOR REPL WITH VIM
-highlight CodiVirtualText guifg=cyan
-let g:codi#virtual_text_prefix = "❯ "
-
-
-" ======== Ag command cheat sheet ========
-"
-"               e    to open file and close the quickfix window
-"               o    to open (same as enter)
-"               go   to preview file (open but maintain focus on ag.vim results)
-"               t    to open in new tab
-"               T    to open in new tab silently
-"               h    to open in horizontal split
-"               H    to open in horizontal split silently
-"               v    to open in vertical split
-"               gv   to open in vertical split silently
-"               q    to close the quickfix window
-"
-"
-" " ======== vim picker command mappings ========
-" nmap <unique> <leader>pe <Plug>(PickerEdit)
-" nmap <unique> <leader>ps <Plug>(PickerSplit)
-" nmap <unique> <leader>pt <Plug>(PickerTabedit)
-" nmap <unique> <leader>pv <Plug>(PickerVsplit)
-" nmap <unique> <leader>pb <Plug>(PickerBuffer)
-" nmap <unique> <leader>p] <Plug>(PickerTag)
-" nmap <unique> <leader>pw <Plug>(PickerStag)
-" nmap <unique> <leader>po <Plug>(PickerBufferTag)
-" nmap <unique> <leader>ph <Plug>(PickerHelp)
-
-let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
-let $FZF_DEFAULT_OPTS='--reverse'
-let &t_SI = "\e[6 q"
-let &t_EI = "\e[2 q"
-
-" Optionally reset the cursor on start:
-augroup myCmds
-au!
-autocmd VimEnter * silent !echo -ne "\e[2 q"
-augroup END
-
 :imap kj <Esc>
 :imap jk <Esc>
 
-" color gruvbox
-color elflord
-
 " search and highlight but do not jump
 nnoremap * :keepjumps normal! mi*`i<CR>
-" let g:ale_set_highlights = 0
-let g:fzf_tags_command = 'ctags -R'
 
-if executable('ag')
-  set grepprg=ag\ --vimgrep\ $*
-  set grepformat^=%f:%l:%c:%m
-endif
 color purify

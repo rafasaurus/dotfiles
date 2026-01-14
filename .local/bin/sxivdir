@@ -1,5 +1,5 @@
 #/bin/sh
-
+# This script is to open all photos to view in sxiv where file "$1" is 
 image=$1
 image_number_in_directory=$(ls -p $(dirname $image) | grep -v / | grep $(basename $image) -n | awk '{print $1}' FS=":")
 sxiv $(dirname $image) -a -n $image_number_in_directory

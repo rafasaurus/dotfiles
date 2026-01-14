@@ -5,7 +5,7 @@ HISTSIZE= HISTFILESIZE=30000 # Infinite history.
 HISTFILE=~/.cache/bash/history
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-[ -f "$HOME/.config/aliasrc" ] && source "$HOME/.config/aliasrc"
+[ -f "$HOME/.aliasrc" ] && source "$HOME/.aliasrc"
 
 prompt_mimir_cmd() {
     if [ $? != 0 ]; then

@@ -3,6 +3,8 @@
 [ -f ~/.wprofile ] && . ~/.wprofile
 
 export XDG_RUNTIME_DIR=/tmp/xdg-runtime-$(id -u)
+export XCURSOR_THEME="macOS"
+export XCURSOR_SIZE=24
 mkdir -p $XDG_RUNTIME_DIR
 
 dbus-run-session dwl -s 'wlinit.sh'

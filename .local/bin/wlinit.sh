@@ -1,21 +1,22 @@
 #!/bin/sh
-# example https://github.com/FluffyJay1/dots/blob/master/.scripts/wlinit.sh
+# Startup script for wayland session
 
-systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP QT_QPA_PLATFORMTHEME &
+systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP QT_QPA_PLATFORMTHEME XCURSOR_THEME XCURSOR_SIZE &
 dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &
 dbus-update-activation-environment --systemd --all &
-killall pipewire pipewire-pulse wireplumber syncthing
+killall pipewire pipewire-pulse wireplumber syncthing wmbubble
 pipewire &
 pipewire-pulse &
 wireplumber &
 syncthing --no-browser &
-dwlb -ipc &
+dwlb -ipc -font "charcoal:size=13" -scale 2 &
 dwlb-status | dwlb -status-stdin all &
 swaybg -i $HOME/.config/wall.png &
-dunst &
+wmbubble &
 surf hackernews.com &
 bluetoothctl power on &
 wlr-randr --output eDP-1 --mode 1920x1200@120.000000Hz &
+dunst &
 notify-send "Welcome to Rice of rafasaurus" &
 
 # /usr/lib/xdg-desktop-portal-gtk &

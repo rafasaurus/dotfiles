@@ -67,16 +67,24 @@ lfcd () {
         [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
     fi
 }
-bindkey -s '^o' 'lfcd\n'
 
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line
-bindkey '^e' edit-command-line
+# use ctrl+shift+e for vim editing mode
+bindkey '^[[E' edit-command-line
+# Move to the end of the line
+bindkey '^E' end-of-line
+# Move to the start of the line
+bindkey '^A' beginning-of-line
+# Move forward one word
+bindkey "^[f" forward-word
+# Move backward one word
+bindkey "^[b" backward-word
 
 # Load aliases and shortcuts if existent.
 [ -f "$HOME/.config/shortcutrc" ] && source "$HOME/.config/shortcutrc"
-[ -f "$HOME/.config/aliasrc" ] && source "$HOME/.config/aliasrc"
-[ -f $HOME/workspace/work_env.sh ] && source $HOME/workspace/work_env.sh
+[ -f "$HOME/.aliasrc" ] && source "$HOME/.aliasrc"
+[ -f $HOME/workspace/environment/work_env.sh ] && source $HOME/workspace/environment/work_env.sh
 
 # Load zsh-syntax-highlighting; should be last.
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
