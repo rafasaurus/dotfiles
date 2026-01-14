@@ -1,9 +1,0 @@
-#!/bin/bash
-
-while true; do
-    TEMP=$(cat "$CPU_TEMP_PATH")
-    CPU_TEMP="$(sensors  | grep coretemp -A 2 | grep Package | awk '{print $4}')"
-    echo "CPU_TEMP|string|$CPU_TEMP"
-    echo ""
-    sleep 3
-done

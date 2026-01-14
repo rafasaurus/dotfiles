@@ -1,8 +1,0 @@
-#!/bin/sh
-while true; do
-    home_disk=$(df -h | grep home | awk '{print $2 "/" $3}')
-    # home_disk="$home_disk"
-    echo "HOME_DISK|string|$home_disk"
-    echo ""
-    sleep 10
-done
