@@ -6,7 +6,7 @@ rofi
 sxhkd
 arandr
 ranger
-dunst
+mako
 imagemagick
 ffmpeg
 networkmanager

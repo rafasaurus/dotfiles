@@ -16,7 +16,7 @@ wmbubble &
 surf hackernews.com &
 bluetoothctl power on &
 wlr-randr --output eDP-1 --mode 1920x1200@120.000000Hz &
-dunst &
+mako &
 notify-send "Welcome to Rice of rafasaurus" &
 
 # /usr/lib/xdg-desktop-portal-gtk &
