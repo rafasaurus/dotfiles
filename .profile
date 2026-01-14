@@ -11,7 +11,7 @@ export LIBVA_DRIVER_NAME=iHD
 PATH=$PATH:$HOME/.scripts/tools
 PATH=$PATH:$HOME/.scripts/commands
 PATH=$PATH:$HOME/.local/bin
-PATH=$PATH:$HOME/.local/bin/utils
+PATH=$PATH:$HOME/.local/bin/helpers
 PATH=$PATH:$HOME/.local/bin/scripts
 PATH=$PATH:$HOME/.local/bin/scripts/tools
 PATH=$PATH:$HOME/.local/bin/scripts/commands
@@ -19,7 +19,7 @@ PATH=$PATH:$HOME/.local/bin/screenlayout
 PATH=$PATH:$HOME/.local/bin/statusbar
 PATH=$PATH:$HOME/go/bin
 PATH=$PATH:/var/lib/snapd/snap/bin
-PATH=$PATH:/opt/gcc-arm-none-eabi-9-2020-q2-update/bin
+PATH=$PATH:/opt/gcc-arm-none-eabi-10-2020-q4-major/bin/
 
 # This is the list for lf icons:
 export LF_ICONS="di=📁:\

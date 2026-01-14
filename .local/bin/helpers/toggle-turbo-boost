@@ -1,0 +1,10 @@
+#!/bin/sh
+
+sh -c 'current=$(cat /sys/devices/system/cpu/intel_pstate/no_turbo); echo $((1-current)) | tee /sys/devices/system/cpu/intel_pstate/no_turbo'
+
+if [[ $(cat "/sys/devices/system/cpu/intel_pstate/no_turbo") -eq 1 ]]; then
+    notify-send "turbo boost disabled"
+else
+    notify-send "turbo boost enabled"
+fi
+
