@@ -1,6 +1,6 @@
 stow_dirs = $(wildcard .)
 
-.PHONY: stow restow destow install-prereqs install-paru
+.PHONY: stow restow destow install-prereqs install-paru install-paru-packages
 .PHONY: install-udev install-gui install-themes install-android-env
 .PHONY: install-film-android
 .PHONY: uninstall-gui uninstall-udev install-full uninstall-film-android
@@ -30,11 +30,14 @@ install-prereqs :
 install-paru :
 	[ -d paru ] || git clone https://aur.archlinux.org/paru.git 
 	cd paru && makepkg -si
-	paru -S --noconfirm ttf-twemoji-color yambar startw ttf-devicons qt5-styleplugins
+
+install-paru-packages:
+	paru -S --noconfirm ttf-apple-color startw ttf-devicons qt5-styleplugins
 
 install-udev :
 	sudo cp -r etc/udev/rules.d/* /etc/udev/rules.d/
 	sudo udevadm control --reload-rules && sudo udevadm trigger
+reinstall : install-gui install-prereqs
 
 install-gui :
 	cp .config/wall.png $(HOME)/.config/wall.png
