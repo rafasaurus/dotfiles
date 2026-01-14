@@ -32,7 +32,7 @@ install-paru :
 	cd paru && makepkg -si
 
 install-paru-packages:
-	paru -S --noconfirm ttf-apple-color startw ttf-devicons qt5-styleplugins
+	paru -S --noconfirm ttf-apple-emoji startw ttf-devicons qt5-styleplugins
 
 install-udev :
 	sudo cp -r etc/udev/rules.d/* /etc/udev/rules.d/
