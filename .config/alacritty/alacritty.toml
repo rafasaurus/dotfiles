@@ -5,6 +5,10 @@ draw_bold_text_with_bright_colors = true
 cursor = "#528bff"
 text = "CellBackground"
 
+[cursor]
+blink_interval = 333
+blink_timeout = 0
+
 [colors.normal]
 black = "#1c1f24"
 blue = "#51afef"
@@ -52,8 +56,8 @@ family = "ComicCode"
 style = "Italic"
 
 [font.normal]
-family = "monospace"
-style = "Regular"
+family = "ComicCode"
+style = "medium"
 
 [font.offset]
 x = 0
