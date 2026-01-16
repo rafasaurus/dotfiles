@@ -20,6 +20,7 @@ install-prereqs :
 install-paru :
 	[ -d paru ] || git clone https://aur.archlinux.org/paru.git 
 	cd paru && makepkg -si
+	rm -rf paru
 
 install-paru-packages:
 	paru -S --noconfirm ttf-apple-emoji startw ttf-devicons qt5-styleplugins
