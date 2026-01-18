@@ -42,7 +42,6 @@ upower
 the_silver_searcher
 ripgrep
 redshift
-bluez-cups
 bluez-utils
 bluez
 pass
