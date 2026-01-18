@@ -7,9 +7,10 @@ dbus-update-activation-environment --systemd --all &
 killall pipewire pipewire-pulse wireplumber syncthing wmbubble
 pipewire &
 pipewire-pulse &
+sleep 0.5
 wireplumber &
 syncthing --no-browser &
-dwlb -ipc -font "charcoal:size=12" &
+dwlb -ipc -font "monospace:bold:size=12" &
 dwlb-status | dwlb -status-stdin all &
 swaybg -i $HOME/.config/wall.png &
 wmbubble &

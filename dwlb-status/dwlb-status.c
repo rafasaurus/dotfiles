@@ -372,7 +372,7 @@ int main(int argc, char **argv) {
         /* Compose & send (date/time at end) */
         char bar[1400];
         snprintf(bar, sizeof bar,
-            " %s | %s | %s | %s | %s | %s | %s | %s | %s | %s ",
+            "%s %s %s %s %s %s %s %s %s %s",
             vol_block, airpods_block, power_str, duck_block, temp_str, cpu_block, ram_str, disk_text_buf, batt_text_buf, time_text_buf);
 
         printf("%s\n", bar);
