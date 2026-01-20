@@ -351,7 +351,7 @@ int main(int argc, char **argv) {
             if (!read_disk_bytes(home, &used_b, &tot_b)) { read_disk_bytes("/", &used_b, &tot_b); }
             double used = (double)used_b / (1024.0*1024.0*1024.0);
             double tot  = (double)tot_b  / (1024.0*1024.0*1024.0);
-            snprintf(disk_text_buf, sizeof disk_text_buf, "💾 %.1f/%.1fGiB", used, tot);
+            snprintf(disk_text_buf, sizeof disk_text_buf, "💾 %.0f/%.0fMib", used, tot);
         }
 
         /* Battery – moderately infrequent */
