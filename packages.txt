@@ -77,3 +77,4 @@ sudo-rs
 nm-connection-editor
 swaylock
 otf-cascadia-code
+qrencode
