@@ -8,9 +8,9 @@ autoload -U colors && colors
 HISTSIZE=40000
 SAVEHIST=40000
 HISTFILE=~/.cache/zsh/history
-setopt    appendhistory     #Append history to the history file (no overwriting)
-setopt    sharehistory      #Share history across terminals
-setopt    incappendhistory  #Immediately append to the history file, not just when a term is killed
+setopt    APPEND_HISTORY     #Append history to the history file (no overwriting)
+setopt    SHARE_HISTORY      #Share history across terminals
+setopt    INC_APPEND_HISTORY  #Immediately append to the history file, not just when a term is killed
 
 # Basic auto/tab complete:
 autoload -U compinit
@@ -92,7 +92,13 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # Mimir git prompt
 autoload -Uz add-zsh-hook
-prompt_mimir_cmd() { mimir }
+prompt_mimir_cmd() {
+    if command -v mimir >/dev/null 2>&1; then
+        mimir
+    else
+        echo  "[$PWD]"
+    fi
+}
 add-zsh-hook precmd prompt_mimir_cmd
 
 prompt_symbol='❯'
@@ -104,9 +110,6 @@ history() { fc -lim "*$@*" 1 }
 
 # [ -f /usr/bin/fortune ] && [ -f /usr/bin/cowsay ] && fortune | cowsay
 bindkey "^?" backward-delete-char
-
-# share history across all zsh sessions
-setopt share_history
 
 up-line-or-local-history() {
     zle set-local-history 1
@@ -126,3 +129,6 @@ bindkey '^[OB' down-line-or-history   # Cursor down
 bindkey '^[[1;5A' up-line-or-local-history    # [CTRL] + Cursor up
 bindkey '^[[1;5B' down-line-or-local-history  # [CTRL] + Cursor down
 [ -f $HOME/workspace/work_env.sh ] && source $HOME/workspace/work_env.sh
+
+[ -f "$HOME/.secrets" ] && source "$HOME/.secrets"
+[ -f "$HOME/.helpers" ] && source "$HOME/.helpers"
