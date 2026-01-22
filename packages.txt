@@ -48,7 +48,7 @@ pass
 qtpass
 mlocate
 lsof
-lxappearance
+nwg-look
 cmake
 libc++abi
 libc++
