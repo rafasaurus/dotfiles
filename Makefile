@@ -2,7 +2,7 @@ stow_dirs = $(wildcard .)
 
 .PHONY: stow restow destow install-prereqs install-paru install-paru-packages
 .PHONY: install-udev install-gui install-themes install-android-env
-.PHONY: install-film-android
+.PHONY: install-film-android install-cursors
 .PHONY: uninstall-gui uninstall-udev install-full uninstall-film-android
 
 stow : check_dirs
@@ -16,6 +16,15 @@ destow :
 
 install-prereqs :
 	sudo pacman -S --needed - < packages.txt
+
+install-cursors :
+	rm -rf apple_cursor
+	git clone https://github.com/ful1e5/apple_cursor
+	cd apple_cursor && python3.8 -m venv env
+	cd apple_cursor && source env/bin/activate && pip install clickgen && \
+		git checkout v2.0.0 && \
+		ctgen build.toml -s 30 -p x11 -d "bitmaps/macOS-BigSur" -n "dwlcursor" -c "Custom Sizes macOS XCursors" && \
+		cp themes/dwlcursor ~/.icons/ -r
 
 install-paru :
 	[ -d paru ] || git clone https://aur.archlinux.org/paru.git 
