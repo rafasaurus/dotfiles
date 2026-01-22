@@ -1,9 +1,6 @@
 stow_dirs = $(wildcard .)
 
-.PHONY: stow restow destow install-prereqs install-paru install-paru-packages
-.PHONY: install-udev install-gui install-themes install-android-env
-.PHONY: install-film-android install-cursors
-.PHONY: uninstall-gui uninstall-udev install-full uninstall-film-android
+.PHONY: all
 
 stow : check_dirs
 	stow --target $(HOME) --verbose $(stow_dirs)
@@ -20,10 +17,13 @@ install-prereqs :
 install-cursors :
 	rm -rf apple_cursor
 	git clone https://github.com/ful1e5/apple_cursor
-	cd apple_cursor && python3.8 -m venv env
+	cd apple_cursor && python -m venv env
 	cd apple_cursor && source env/bin/activate && pip install clickgen && \
 		git checkout v2.0.0 && \
-		ctgen build.toml -s 30 -p x11 -d "bitmaps/macOS-BigSur" -n "dwlcursor" -c "Custom Sizes macOS XCursors" && \
+		wget https://github.com/ful1e5/apple_cursor/releases/download/v1.2.0/bitmaps.zip && \
+		unzip bitmaps.zip && \
+		mv macOSBigSur/* bitmaps/macOS-BigSur/ && \
+		ctgen build.toml -s 29 -p x11 -d "bitmaps/macOS-BigSur" -n "dwlcursor" -c "Custom Sizes macOS XCursors" && \
 		cp themes/dwlcursor ~/.icons/ -r
 
 install-paru :
