@@ -28,6 +28,7 @@ install-cursors:
 	mv macOSBigSur/* bitmaps/macOS-BigSur/
 	ctgen build.toml -s 29 -p x11 -d "bitmaps/macOS-BigSur" -n "dwlcursor" -c "Custom Sizes macOS XCursors"
 	cp themes/dwlcursor ~/.icons/ -r
+	echo "you have to install cursor with nwg-look in wayland"
 
 install-paru :
 	[ -d paru ] || git clone https://aur.archlinux.org/paru.git 
