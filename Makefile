@@ -81,19 +81,17 @@ check_dirs:
 	[ -d $(HOME)/.cache/zsh ] || mkdir -p $(HOME)/.cache/zsh
 	[ -d $(HOME)/.todo ] || mkdir $(HOME)/.todo
 
-.ONESHELL
 install-cursors:
 	rm -rf apple_cursor
 	git clone https://github.com/ful1e5/apple_cursor
-	cd apple_cursor
-	python -m venv env
-	. env/bin/activate
-	pip install clickgen
-	git checkout v2.0.0
-	wget https://github.com/ful1e5/apple_cursor/releases/download/v1.2.0/bitmaps.zip
-	unzip bitmaps.zip
-	mv macOSBigSur/* bitmaps/macOS-BigSur/
-	ctgen build.toml -s 29 -p x11 -d "bitmaps/macOS-BigSur" -n "dwlcursor" -c "Custom Sizes macOS XCursors"
+	cd apple_cursor && \
+	python -m venv env && \
+	. env/bin/activate && \
+	pip install clickgen && \
+	git checkout v2.0.0 && \
+	wget https://github.com/ful1e5/apple_cursor/releases/download/v1.2.0/bitmaps.zip && \
+	unzip bitmaps.zip && \
+	mv macOSBigSur/* bitmaps/macOS-BigSur/ && \
+	ctgen build.toml -s 29 -p x11 -d "bitmaps/macOS-BigSur" -n "dwlcursor" -c "Custom Sizes macOS XCursors" && \
 	cp themes/dwlcursor ~/.icons/ -r
-	echo "you have to install cursor with nwg-look in wayland"
-
+	@echo "you have to install cursor with nwg-look in wayland"
