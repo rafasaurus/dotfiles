@@ -1,9 +1,9 @@
 stow_dirs = $(wildcard .)
 
-.PHONY: stow restow destow install-prereqs install-paru install-paru-packages
-.PHONY: install-udev install-gui install-themes install-android-env
-.PHONY: install-film-android install-cursors
-.PHONY: uninstall-gui uninstall-udev install-full uninstall-film-android
+.PHONY: all stow restow destow install-prereqs install-paru \
+        install-paru-packages install-udev install-gui install-themes \
+        install-mimir install-full install-android-env install-film-android \
+        uninstall-gui uninstall-udev check_dirs install-cursors
 
 stow : check_dirs
 	stow --target $(HOME) --verbose $(stow_dirs)
@@ -18,9 +18,11 @@ install-prereqs :
 	sudo pacman -S --needed - < packages.txt
 
 install-paru :
-	[ -d paru ] || git clone https://aur.archlinux.org/paru.git 
-	cd paru && makepkg -si
-	rm -rf paru
+	@if ! command -v paru >/dev/null; then \
+		git clone https://aur.archlinux.org/paru.git && \
+		cd paru && makepkg -si --noconfirm && \
+		cd .. && rm -rf paru; \
+	fi
 
 install-paru-packages:
 	paru -S --noconfirm ttf-apple-emoji startw qt5-styleplugins
@@ -33,16 +35,15 @@ reinstall : install-gui install-prereqs install-paru-packages
 
 install-gui :
 	cp .config/wall.png $(HOME)/.config/wall.png
-	cd external/dwl && sudo make install -j
-	cp patches/dwlb-config.h external/dwlb/config.h && cd external/dwlb && sudo make install -j
-	cd external/wlbubble && sudo make install -j
-	cd dwlb-status && make install
+	sudo $(MAKE) -C external/dwl install -j
+	sudo $(MAKE) -C external/wlbubble install -j
+	$(MAKE) -C dwlb-status install
+	cp patches/dwlb-config.h external/dwlb/config.h && \
+		sudo $(MAKE) -C external/dwlb install -j
 
 uninstall-gui :
-	cd external/dwl && sudo make uninstall && make clean
-	cd external/dwlb && sudo make uninstall -j && make clean
-	cd external/wlbubble && sudo make uninstall -j && make clean
-	cd dwlb-status && make uninstall && make clean
+	sudo $(MAKE) -C external/dwl uninstall
+	$(MAKE) -C dwlb-status uninstall
 
 uninstall-udev :
 	sudo rm -r /etc/udev/rules.d/*

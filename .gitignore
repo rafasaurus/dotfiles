@@ -51,3 +51,5 @@ wallpaper
 .config/nvim/plugged/
 .config/ranger/colorschemes/__init__.py
 .config/ranger/colorschemes/__pycache__
+apple_cursor
+dwlb-status/dwlb-status
