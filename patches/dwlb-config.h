@@ -25,7 +25,7 @@ static bool active_color_title = true;
 // scale
 static uint32_t buffer_scale = 1;
 // font
-static char *fontstr = "charcoal:size=12.5";
+static char *fontstr = "monospace:bold:size=12.5";
 // tag names
 static char *tags_names[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
