@@ -1,6 +1,9 @@
 stow_dirs = $(wildcard .)
 
-.PHONY: all
+.PHONY: stow restow destow install-prereqs install-paru install-paru-packages
+.PHONY: install-udev install-gui install-themes install-android-env
+.PHONY: install-film-android install-cursors
+.PHONY: uninstall-gui uninstall-udev install-full uninstall-film-android
 
 stow : check_dirs
 	stow --target $(HOME) --verbose $(stow_dirs)
@@ -13,22 +16,6 @@ destow :
 
 install-prereqs :
 	sudo pacman -S --needed - < packages.txt
-
-.ONESHELL:
-install-cursors:
-	rm -rf apple_cursor
-	git clone https://github.com/ful1e5/apple_cursor
-	cd apple_cursor
-	python -m venv env
-	. env/bin/activate
-	pip install clickgen
-	git checkout v2.0.0
-	wget https://github.com/ful1e5/apple_cursor/releases/download/v1.2.0/bitmaps.zip
-	unzip bitmaps.zip
-	mv macOSBigSur/* bitmaps/macOS-BigSur/
-	ctgen build.toml -s 29 -p x11 -d "bitmaps/macOS-BigSur" -n "dwlcursor" -c "Custom Sizes macOS XCursors"
-	cp themes/dwlcursor ~/.icons/ -r
-	echo "you have to install cursor with nwg-look in wayland"
 
 install-paru :
 	[ -d paru ] || git clone https://aur.archlinux.org/paru.git 
@@ -56,7 +43,6 @@ uninstall-gui :
 	cd external/dwlb && sudo make uninstall -j && make clean
 	cd external/wlbubble && sudo make uninstall -j && make clean
 	cd dwlb-status && make uninstall && make clean
-	sudo rm /usr/share/xsessions/dwm.desktop
 
 uninstall-udev :
 	sudo rm -r /etc/udev/rules.d/*
@@ -94,4 +80,20 @@ check_dirs:
 	[ -d $(HOME)/.local/share/fonts ] || mkdir -p $(HOME)/.local/share/fonts
 	[ -d $(HOME)/.cache/zsh ] || mkdir -p $(HOME)/.cache/zsh
 	[ -d $(HOME)/.todo ] || mkdir $(HOME)/.todo
+
+.ONESHELL
+install-cursors:
+	rm -rf apple_cursor
+	git clone https://github.com/ful1e5/apple_cursor
+	cd apple_cursor
+	python -m venv env
+	. env/bin/activate
+	pip install clickgen
+	git checkout v2.0.0
+	wget https://github.com/ful1e5/apple_cursor/releases/download/v1.2.0/bitmaps.zip
+	unzip bitmaps.zip
+	mv macOSBigSur/* bitmaps/macOS-BigSur/
+	ctgen build.toml -s 29 -p x11 -d "bitmaps/macOS-BigSur" -n "dwlcursor" -c "Custom Sizes macOS XCursors"
+	cp themes/dwlcursor ~/.icons/ -r
+	echo "you have to install cursor with nwg-look in wayland"
 
