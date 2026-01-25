@@ -31,7 +31,7 @@ install-udev :
 	sudo cp -r etc/udev/rules.d/* /etc/udev/rules.d/
 	sudo udevadm control --reload-rules && sudo udevadm trigger
 
-reinstall : install-gui install-prereqs install-paru-packages
+reinstall : uninstall-gui install-gui install-prereqs install-paru-packages
 
 install-gui :
 	cp .config/wall.png $(HOME)/.config/wall.png
