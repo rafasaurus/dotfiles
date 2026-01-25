@@ -7,7 +7,7 @@ alias ka="killall" \
     sudo='sudo-rs' \
     dmenu='wmenu' \
     vi='/usr/bin/vim' \
-    rm='trash' \
+    rm='trash-rm' \
     ls="ls -hN --color=auto --group-directories-first" \
     grep="grep --color=auto" \
     diff="diff --color=auto" \

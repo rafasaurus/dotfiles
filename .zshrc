@@ -1,8 +1,6 @@
-# https://gist.github.com/LukeSmithxyz/e62f26e55ea8b0ed41a65912fbebbe52
-# Enable colors and change prompt:
-
 autoload -U colors && colors
-# PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+stty -ixon # Disable ctrl-s and ctrl-q.
+setopt autocd #Allows you to cd into directory merely by typing the directory name.
 
 # History in cache directory:
 HISTSIZE=140000
@@ -22,6 +20,19 @@ _comp_options+=(globdots)		# Include hidden files.
 # vi mode
 bindkey -v
 export KEYTIMEOUT=1
+bindkey -M viins '^G' vi-cmd-mode
+bindkey -s -M viins '\e' ''
+bindkey -M viins '\ed' kill-word
+
+# Restore "Bash-style" behavior in Insert Mode
+bindkey -M viins '^W' backward-kill-word    # Delete word
+bindkey -M viins '^U' backward-kill-line    # Delete back to start of line
+bindkey -M viins '^K' kill-line             # Delete forward to end of line
+bindkey -M viins '^A' beginning-of-line     # Move to start
+bindkey -M viins '^E' end-of-line           # Move to end
+bindkey -M viins '^P' up-line-or-history    # Previous command
+bindkey -M viins '^N' down-line-or-history  # Next command
+bindkey -M viins '^Y' yank                  # Paste deleted text
 
 # Use vim keys in tab complete menu:
 bindkey -M menuselect 'h' vi-backward-char
@@ -57,17 +68,6 @@ zle -N zle-line-init
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
-# Use lf to switch directories and bind it to ctrl-o
-lfcd () {
-    tmp="$(mktemp)"
-    lf -last-dir-path="$tmp" "$@"
-    if [ -f "$tmp" ]; then
-        dir="$(cat "$tmp")"
-        /bin/rm -f "$tmp"
-        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
-    fi
-}
-
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line
 # use ctrl+shift+e for vim editing mode
@@ -80,11 +80,6 @@ bindkey '^A' beginning-of-line
 bindkey "^[f" forward-word
 # Move backward one word
 bindkey "^[b" backward-word
-
-# Load aliases and shortcuts if existent.
-[ -f "$HOME/.config/shortcutrc" ] && source "$HOME/.config/shortcutrc"
-[ -f "$HOME/.aliasrc" ] && source "$HOME/.aliasrc"
-[ -f $HOME/workspace/environment/work_env.sh ] && source $HOME/workspace/environment/work_env.sh
 
 # Load zsh-syntax-highlighting; should be last.
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
@@ -105,32 +100,8 @@ prompt_symbol='❯'
 PROMPT="%(?.%F{magenta}.%F{red})${prompt_symbol}%f "
 
 history() { fc -lim "*$@*" 1 }
-# In case fzf-history-widget does not work
-# bindkey '^r' history-incremental-search-backward
-
-# [ -f /usr/bin/fortune ] && [ -f /usr/bin/cowsay ] && fortune | cowsay
-bindkey "^?" backward-delete-char
-
-up-line-or-local-history() {
-    zle set-local-history 1
-    zle up-line-or-history
-    zle set-local-history 0
-}
-zle -N up-line-or-local-history
-down-line-or-local-history() {
-    zle set-local-history 1
-    zle down-line-or-history
-    zle set-local-history 0
-}
-zle -N down-line-or-local-history
-
-bindkey '^[OA' up-line-or-history     # Cursor up
-bindkey '^[OB' down-line-or-history   # Cursor down
-bindkey '^[[1;5A' up-line-or-local-history    # [CTRL] + Cursor up
-bindkey '^[[1;5B' down-line-or-local-history  # [CTRL] + Cursor down
 [ -f $HOME/workspace/work_env.sh ] && source $HOME/workspace/work_env.sh
 
 [ -f "$HOME/.secrets" ] && source "$HOME/.secrets"
 [ -f "$HOME/.helpers" ] && source "$HOME/.helpers"
-# Deletes forward word in Vi Insert mode without exiting to Normal mode
-bindkey -M viins "^[d" kill-word
+[ -f "$HOME/.aliasrc" ] && source "$HOME/.aliasrc"
