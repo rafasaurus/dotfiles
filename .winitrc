@@ -7,4 +7,4 @@ export XCURSOR_THEME="dwlcursor"
 export XCURSOR_SIZE=29
 mkdir -p $XDG_RUNTIME_DIR
 
-dbus-run-session dwl -s 'wlinit.sh'
+dbus-run-session dwl -s 'wlinit.sh' 2>&1 | tee /tmp/dwl.log

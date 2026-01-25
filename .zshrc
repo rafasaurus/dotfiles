@@ -5,8 +5,8 @@ autoload -U colors && colors
 # PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
 
 # History in cache directory:
-HISTSIZE=40000
-SAVEHIST=40000
+HISTSIZE=140000
+SAVEHIST=140000
 HISTFILE=~/.cache/zsh/history
 setopt    APPEND_HISTORY     #Append history to the history file (no overwriting)
 setopt    SHARE_HISTORY      #Share history across terminals
@@ -132,3 +132,5 @@ bindkey '^[[1;5B' down-line-or-local-history  # [CTRL] + Cursor down
 
 [ -f "$HOME/.secrets" ] && source "$HOME/.secrets"
 [ -f "$HOME/.helpers" ] && source "$HOME/.helpers"
+# Deletes forward word in Vi Insert mode without exiting to Normal mode
+bindkey -M viins "^[d" kill-word

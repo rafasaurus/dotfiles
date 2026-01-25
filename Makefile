@@ -40,6 +40,8 @@ install-gui :
 	$(MAKE) -C dwlb-status install
 	cp patches/dwlb-config.h external/dwlb/config.h && \
 		sudo $(MAKE) -C external/dwlb install -j
+	pushd external/dwlb && git checkout -f . && \
+		sed -i 's/CFLAGS += -Wall -Wextra -Wno-unused-parameter -Wno-format-truncation -g/CFLAGS += -Wall -Wextra -Wno-unused-parameter -Wno-format-truncation -O2 -march=native/' Makefile
 
 uninstall-gui :
 	sudo $(MAKE) -C external/dwl uninstall

@@ -78,3 +78,5 @@ nm-connection-editor
 swaylock
 otf-cascadia-code
 qrencode
+fcft
+tllist

@@ -53,3 +53,5 @@ wallpaper
 .config/ranger/colorschemes/__pycache__
 apple_cursor
 dwlb-status/dwlb-status
+.secrets
+.helpers

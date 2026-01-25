@@ -14,12 +14,9 @@ dwlb -ipc -font "monospace:bold:size=12.5" &
 dwlb-status | dwlb -status-stdin all &
 swaybg -i $HOME/.config/wall.png &
 wmbubble &
-surf hackernews.com &
 bluetoothctl power on &
-wlr-randr --output eDP-1 --mode 1920x1200@120.000000Hz &
+autored
+xrdb -merge ~/.Xresources &
+# wlr-randr --output eDP-1 --mode 1920x1200@120.000000Hz &
 mako &
 notify-send "Welcome to Rice of rafasaurus" &
-
-# /usr/lib/xdg-desktop-portal-gtk &
-# /usr/lib/xdg-desktop-portal-wlr &
-# /usr/libexec/polkit-gnome-authentication-agent-1 &
