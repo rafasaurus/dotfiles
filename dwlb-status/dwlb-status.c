@@ -281,7 +281,7 @@ int main(int argc, char **argv) {
         if (tick % VOL_EVERY == 1) {
             volume_text(vol_text_buf, sizeof vol_text_buf);
         }
-        char vol_block[200];
+        char vol_block[128];
         snprintf(vol_block, sizeof vol_block,
                  "^lm(pamixer -t)^rm(pavucontrol)^su(pamixer -i 5)^sd(pamixer -d 5)%s^sd()^su()^rm()^lm()",
                  vol_text_buf);
@@ -290,7 +290,7 @@ int main(int argc, char **argv) {
         if (tick % AIRPODS_EVERY == 1) {
             airpods_text(airpods_text_buf, sizeof airpods_text_buf);
         }
-        char airpods_block[200];
+        char airpods_block[128];
         snprintf(airpods_block, sizeof airpods_block,
                  "^lm(airpods)^rm(librepods)%s^rm()^lm()",
                  airpods_text_buf);
@@ -298,6 +298,10 @@ int main(int argc, char **argv) {
         char duck_block[128];
         snprintf(duck_block, sizeof duck_block,
                  "^lm(sh -c 'pgrep -x wmbubble >/dev/null || wmbubble &')^rm(pkill -x wmbubble)🦆^rm()^lm()");
+
+        char launcher_block[128];
+        snprintf(launcher_block, sizeof launcher_block,
+                 "^lm(sh -c 'fuzzel &')🐧^lm()");
 
         /* RAPL power: first SoC (RAPL1), then CPU (RAPL0) — update every rapl_every ticks */
         if (tick % rapl_every == 1) {
@@ -372,8 +376,8 @@ int main(int argc, char **argv) {
         /* Compose & send (date/time at end) */
         char bar[1400];
         snprintf(bar, sizeof bar,
-            "%s %s %s %s %s %s %s %s %s %s",
-            vol_block, airpods_block, power_str, duck_block, temp_str, cpu_block, ram_str, disk_text_buf, batt_text_buf, time_text_buf);
+            "%s %s %s %s %s %s %s %s %s %s %s",
+            vol_block, airpods_block, power_str, duck_block, temp_str, cpu_block, ram_str, disk_text_buf, batt_text_buf, time_text_buf, launcher_block);
 
         printf("%s\n", bar);
         fflush(stdout);
