@@ -41,6 +41,14 @@ bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -v '^?' backward-delete-char
 
+autoload -U edit-command-line
+zle -N edit-command-line # Edit line in vim with ctrl-e:
+bindkey '^E' end-of-line # Move to the end of the line
+bindkey -M viins '^Xe' edit-command-line # hold Ctrl, tap X, release both, tap e
+bindkey '^A' beginning-of-line # Move to the start of the line
+bindkey "^[f" forward-word # Move forward one word
+bindkey "^[b" backward-word # Move backward one word
+
 # Change cursor shape for different vi modes.
 [ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
 
@@ -67,19 +75,6 @@ zle -N zle-line-init
 
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
-
-# Edit line in vim with ctrl-e:
-autoload edit-command-line; zle -N edit-command-line
-# use ctrl+shift+e for vim editing mode
-bindkey '^[[E' edit-command-line
-# Move to the end of the line
-bindkey '^E' end-of-line
-# Move to the start of the line
-bindkey '^A' beginning-of-line
-# Move forward one word
-bindkey "^[f" forward-word
-# Move backward one word
-bindkey "^[b" backward-word
 
 # Load zsh-syntax-highlighting; should be last.
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
