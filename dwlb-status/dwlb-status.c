@@ -11,11 +11,20 @@
 #include <dirent.h>
 #include <ctype.h>
 #include <errno.h>
+#include <signal.h>
 
 /* ---------- Tunables ---------- */
 #ifndef RAPL_EVERY_DEFAULT
 #define RAPL_EVERY_DEFAULT 5   /* sample RAPL each tick by default (set via -r or env RAPL_EVERY) */
 #endif
+
+/* Signal mapping: 0=Vol, 1=Batt, 2=Airpods, 3=Disk, 4=Time */
+volatile sig_atomic_t update_flags[5] = {0};
+
+static void handle_sig(int sig) {
+    int idx = sig - SIGRTMIN;
+    if (idx >= 0 && idx < 5) update_flags[idx] = 1;
+}
 
 static const double LOOP_SLEEP_SEC = 1.2; /* main refresh period */
 static const int    VOL_EVERY      = 3;   /* poll volume every N ticks */
@@ -231,6 +240,46 @@ static void airpods_text(char *out, size_t outsz) {
 }
 
 int main(int argc, char **argv) {
+    /* Signal mode: ./dwlb-status --signal N */
+    for (int i = 1; i < argc; ++i) {
+        if (strcmp(argv[i], "--signal") == 0 && i + 1 < argc) {
+            int sig_idx = atoi(argv[++i]);
+            if (sig_idx < 0 || sig_idx >= 5) return 1;
+
+            /* Find other dwlb-status processes and signal them */
+            DIR *dir = opendir("/proc");
+            if (!dir) return 1;
+            struct dirent *de;
+            pid_t my_pid = getpid();
+            while ((de = readdir(dir))) {
+                if (!isdigit(de->d_name[0])) continue;
+                pid_t pid = atoi(de->d_name);
+                if (pid == my_pid) continue;
+
+                char cmdpath[256];
+                snprintf(cmdpath, sizeof(cmdpath), "/proc/%d/comm", pid);
+                FILE *f = fopen(cmdpath, "r");
+                if (f) {
+                    char comm[256];
+                    if (fgets(comm, sizeof(comm), f)) {
+                        comm[strcspn(comm, "\n")] = 0;
+                        if (strcmp(comm, "dwlb-status") == 0) {
+                            kill(pid, SIGRTMIN + sig_idx);
+                        }
+                    }
+                    fclose(f);
+                }
+            }
+            closedir(dir);
+            return 0;
+        }
+    }
+
+    /* Register signal handlers for the main process */
+    for (int i = 0; i < 5; ++i) {
+        signal(SIGRTMIN + i, handle_sig);
+    }
+
     /* RAPL sampling frequency (in ticks): default, env, CLI -r N */
     int rapl_every = RAPL_EVERY_DEFAULT;
     const char *ev = getenv("RAPL_EVERY");
@@ -276,6 +325,26 @@ int main(int argc, char **argv) {
 
     for (;;) {
         ++tick;
+
+        /* Signal-triggered updates */
+        if (update_flags[0]) { update_flags[0] = 0; volume_text(vol_text_buf, sizeof vol_text_buf); }
+        if (update_flags[1]) { update_flags[1] = 0; battery_text(batt_text_buf, sizeof batt_text_buf); }
+        if (update_flags[2]) { update_flags[2] = 0; airpods_text(airpods_text_buf, sizeof airpods_text_buf); }
+        if (update_flags[3]) { update_flags[3] = 0; 
+            uint64_t used_b=0, tot_b=0;
+            if (!read_disk_bytes(home, &used_b, &tot_b)) { read_disk_bytes("/", &used_b, &tot_b); }
+            double used = (double)used_b / (1024.0*1024.0*1024.0);
+            double tot  = (double)tot_b  / (1024.0*1024.0*1024.0);
+            snprintf(disk_text_buf, sizeof disk_text_buf, "💾 %.0f/%.0fMib", used, tot);
+        }
+        if (update_flags[4]) { update_flags[4] = 0;
+            time_t t = time(NULL);
+            struct tm tm; localtime_r(&t, &tm);
+            char date[16], timebuf[16];
+            strftime(date, sizeof date, "%Y-%m-%d", &tm);
+            strftime(timebuf, sizeof timebuf, "%H:%M", &tm);
+            snprintf(time_text_buf, sizeof time_text_buf, "📅 %s 🕒 %s", date, timebuf);
+        }
 
         /* Volume (left-click=mute, right-click=pavucontrol, scroll ±5%) */
         if (tick % VOL_EVERY == 1) {
@@ -382,9 +451,12 @@ int main(int argc, char **argv) {
         printf("%s\n", bar);
         fflush(stdout);
 
-        /* Sleep */
+        /* Sleep - interrupted by signals */
         struct timespec req = { (time_t)LOOP_SLEEP_SEC, (long)((LOOP_SLEEP_SEC - (time_t)LOOP_SLEEP_SEC) * 1e9) };
-        nanosleep(&req, NULL);
+        if (nanosleep(&req, NULL) == -1 && errno == EINTR) {
+            /* Signal received, loop back immediately to process flags and redraw */
+            continue;
+        }
     }
 
     /* never reached */
