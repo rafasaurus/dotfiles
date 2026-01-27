@@ -25,13 +25,13 @@ static void handle_sig(int sig) {
     int idx = sig - SIGRTMIN;
     if (idx >= 0 && idx < 5) update_flags[idx] = 1;
 }
-#define MINIMAL_PERIOD 3
-static const double LOOP_SLEEP_SEC = MINIMAL_PERIOD; /* main refresh period */
-static const int    VOL_EVERY      = MINIMAL_PERIOD;   /* poll volume every N ticks */
-static const int    BATT_EVERY     = 10;  /* poll battery every N ticks */
-static const int    TIME_EVERY     = 1;   /* poll date/time every N ticks */
-static const int    DISK_EVERY     = 60; /* poll disk every N ticks */
-static const int    AIRPODS_EVERY  = MINIMAL_PERIOD;  /* poll airpods every N ticks (~10 seconds) */
+
+static const double LOOP_SLEEP_SEC = 1.2; /* main refresh period */
+static const int    VOL_EVERY      = 3;   /* poll volume every N ticks */
+static const int    BATT_EVERY     = 20;  /* poll battery every N ticks */
+static const int    TIME_EVERY     = 8;   /* poll date/time every N ticks */
+static const int    DISK_EVERY     = 120; /* poll disk every N ticks */
+static const int    AIRPODS_EVERY  = 3;  /* poll airpods every N ticks (~10 seconds) */
 
 /* ---------- Helpers ---------- */
 static inline uint64_t now_us(void) {
