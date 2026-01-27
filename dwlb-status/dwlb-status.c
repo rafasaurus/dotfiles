@@ -25,13 +25,13 @@ static void handle_sig(int sig) {
     int idx = sig - SIGRTMIN;
     if (idx >= 0 && idx < 5) update_flags[idx] = 1;
 }
-
-static const double LOOP_SLEEP_SEC = 1.2; /* main refresh period */
-static const int    VOL_EVERY      = 3;   /* poll volume every N ticks */
-static const int    BATT_EVERY     = 20;  /* poll battery every N ticks */
-static const int    TIME_EVERY     = 8;   /* poll date/time every N ticks */
-static const int    DISK_EVERY     = 120; /* poll disk every N ticks */
-static const int    AIRPODS_EVERY  = 3;  /* poll airpods every N ticks (~10 seconds) */
+#define MINIMAL_PERIOD 3
+static const double LOOP_SLEEP_SEC = MINIMAL_PERIOD; /* main refresh period */
+static const int    VOL_EVERY      = MINIMAL_PERIOD;   /* poll volume every N ticks */
+static const int    BATT_EVERY     = 10;  /* poll battery every N ticks */
+static const int    TIME_EVERY     = 1;   /* poll date/time every N ticks */
+static const int    DISK_EVERY     = 60; /* poll disk every N ticks */
+static const int    AIRPODS_EVERY  = MINIMAL_PERIOD;  /* poll airpods every N ticks (~10 seconds) */
 
 /* ---------- Helpers ---------- */
 static inline uint64_t now_us(void) {
@@ -214,8 +214,15 @@ static void volume_text(char *out, size_t outsz) {
     fp = popen("timeout 1 pamixer --get-volume 2>/dev/null", "r");
     if (fp) { if (fgets(buf, sizeof buf, fp)) vol = atoi(buf); pclose(fp); }
 
-    if (mute) snprintf(out, outsz, "🔇 mute");
-    else      snprintf(out, outsz, "🔊 %d%%", vol);
+    if (mute) {
+        snprintf(out, outsz, "🔇 mute");
+    } else if (vol >= 0 && vol < 33) {
+        snprintf(out, outsz, "🔈 %d%%", vol);
+    } else if (vol <= 66) {
+        snprintf(out, outsz, "🔉 %d%%", vol);
+    } else {
+        snprintf(out, outsz, "🔊 %d%%", vol);
+    }
 }
 
 /* Check airpods connection status (polled infrequently) - with timeout to prevent hangs */
