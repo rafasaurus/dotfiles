@@ -42,13 +42,13 @@ if has("autocmd")
     au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | 
 endif
 " BETTER BACKUP AND RESTORE MECHANISM:
-set directory=${XDG_DATA_HOME}/nvim/dirs/tmp   " directory to place swap files in
-set backup                              " make backup files
-set backupdir=${XDG_DATA_HOME}/nvim/dirs/backups       " where to put backup files
+let &directory = $XDG_DATA_HOME . '/nvim/dirs/tmp//'
+set backup
+let &backupdir = $XDG_DATA_HOME . '/nvim/dirs/backups//'
 set undofile
-set undodir=${XDG_DATA_HOME}/nvim/undodir udf
+let &undodir = $XDG_DATA_HOME . '/nvim/undodir//'
 
-let g:yankring_history_dir = '${XDG_DATA_HOME}/nvim/dirs/' " store yankring history file there too
+let g:yankring_history_dir = expand('$XDG_DATA_HOME') . 'nvim/dirs/'
 if !isdirectory(&backupdir) " create needed directories if they don't exist
     call mkdir(&backupdir, "p")
 endif
