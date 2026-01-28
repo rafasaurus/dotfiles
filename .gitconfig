@@ -6,7 +6,7 @@
 [merge]
     tool = vimdiff
 [mergetool "vimdiff"]
-    path = nvim
+    path = $EDITOR
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
@@ -21,3 +21,4 @@
     path = sshfs1/workspace/.gitconfig-job
 [core]
 	autocrlf = input
+    editor = $EDITOR
