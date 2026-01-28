@@ -1,4 +1,4 @@
-general.import = ["light.toml"]
+general.import = ["dark.toml"]
 
 [cursor]
 blink_interval = 333
