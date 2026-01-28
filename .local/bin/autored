@@ -3,11 +3,12 @@
 # run every 10 minutes with crontab -e 
 # */2 * * * * export DISPLAY=:0.0 && $HOME/.local/bin/autored
 
-set -x
 pkill gammastep
-gammastep -x &
-sleep 0.01
-pkill gammastep
+if [[ $1 != 0 ]] then
+    gammastep -O $1
+    exit
+fi
+
 current_hour=$(date +%H)
 [ -f /tmp/noautored ] && pkill gammastep && exit 0
 case $current_hour in
