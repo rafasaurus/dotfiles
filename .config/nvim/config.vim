@@ -136,3 +136,21 @@ noremap <leader>c :Commentary<cr>
 
 color purify
 let g:gitgutter_diff_base = 'origin/master'
+function! SetThemeFromAlacritty()
+  let config_file = expand('~/.config/alacritty/alacritty.toml')
+  if filereadable(config_file)
+    let config_content = readfile(config_file)
+    for line in config_content
+      if line =~ 'light\.toml'
+        set background=light
+        let g:gruvbox_contrast_light = 'light'
+        colorscheme gruvbox
+        return
+      endif
+    endfor
+  endif
+  set background=dark
+  colorscheme purify
+endfunction
+
+call SetThemeFromAlacritty()

@@ -1,0 +1,93 @@
+#!/bin/bash
+
+set -e
+
+CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/alacritty"
+CONFIG_FILE="${CONFIG_DIR}/alacritty.toml"
+
+show_help() {
+    cat << EOF
+Usage: $0 [OPTION] [THEME]
+
+Switch Alacritty terminal theme between dark and light.
+
+Options:
+    -a, --auto      Automatically toggle between dark and light themes
+    -h, --help      Show this help message
+
+Arguments:
+    THEME           Theme to switch to: 'dark' or 'light'
+                    Required if -a is not specified
+
+Examples:
+    $0 dark              Switch to dark theme
+    $0 light             Switch to light theme
+    $0 -a                Toggle between dark and light themes
+    $0 --auto            Same as -a
+
+EOF
+}
+
+detect_current_theme() {
+    if [ ! -f "$CONFIG_FILE" ]; then
+        echo "dark"
+        return
+    fi
+    
+    if grep -q "light\.toml" "$CONFIG_FILE" 2>/dev/null; then
+        echo "light"
+    else
+        echo "dark"
+    fi
+}
+
+switch_theme() {
+    local theme="$1"
+    
+    if [ "$theme" != "dark" ] && [ "$theme" != "light" ]; then
+        echo "Error: Theme must be 'dark' or 'light'" >&2
+        exit 1
+    fi
+    
+    if [ ! -f "$CONFIG_FILE" ]; then
+        echo "Error: alacritty.toml not found at $CONFIG_FILE" >&2
+        exit 1
+    fi
+    
+    if [ ! -f "${CONFIG_DIR}/${theme}.toml" ]; then
+        echo "Error: ${theme}.toml not found at ${CONFIG_DIR}/${theme}.toml" >&2
+        exit 1
+    fi
+    
+    sed -i "s|^general\.import = \[.*\]|general.import = [\"${theme}.toml\"]|" "$CONFIG_FILE"
+    
+    echo "Switched to ${theme} theme"
+}
+
+if [ $# -eq 0 ]; then
+    show_help
+    exit 1
+fi
+
+case "$1" in
+    -h|--help)
+        show_help
+        exit 0
+        ;;
+    -a|--auto)
+        current_theme=$(detect_current_theme)
+        if [ "$current_theme" = "light" ]; then
+            switch_theme "dark"
+        else
+            switch_theme "light"
+        fi
+        ;;
+    dark|light)
+        switch_theme "$1"
+        ;;
+    *)
+        echo "Error: Invalid argument '$1'" >&2
+        echo "Use -h for help" >&2
+        exit 1
+        ;;
+esac

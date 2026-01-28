@@ -1,41 +1,8 @@
-[colors]
-draw_bold_text_with_bright_colors = true
-
-[colors.cursor]
-cursor = "#528bff"
-text = "CellBackground"
+general.import = ["light.toml"]
 
 [cursor]
 blink_interval = 333
 blink_timeout = 0
-
-[colors.normal]
-black = "#1c1f24"
-blue = "#51afef"
-cyan = "#5699af"
-green = "#98be65"
-magenta = "#c678dd"
-red = "#ff6c6b"
-white = "#55FF55"
-yellow = "#ffcc00"
-
-[colors.bright]
-black = "#5b6268"
-blue = "#3071db"
-cyan = "#46d9ff"
-green = "#4db5bd"
-magenta = "#a9a1e1"
-red = "#ff8c00"
-white = "#dfdfdf"
-yellow = "#ffea00"
-
-[colors.primary]
-background = "#1e2124"
-foreground = "#00ff00"
-
-[colors.selection]
-background = "#3e4451"
-text = "CellForeground"
 
 [env]
 TERM = "xterm-256color"
