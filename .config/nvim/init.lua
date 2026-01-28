@@ -1,7 +1,6 @@
 vim.api.nvim_command('source ~/.config/nvim/config.vim')
 
 require('mason-config')
-require('gen-llama')
 
 require('telescope').setup{
   defaults = {

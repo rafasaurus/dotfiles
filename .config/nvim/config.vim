@@ -15,7 +15,6 @@ endif
 call plug#begin()
 Plug 'mbbill/undotree'
 Plug 'unblevable/quick-scope'
-Plug 'David-Kunz/gen.nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'tpope/vim-commentary'
 Plug 'morhetz/gruvbox'
