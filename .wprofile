@@ -31,3 +31,7 @@ export SUDO_ASKPASS="$HOME/.local/bin/dmenupass"
 export MOZ_USE_XINPUT2=1
 export MOZ_ENABLE_WAYLAND=1
 export XDG_DESKTOP_PORTAL_BACKEND=xdg-desktop-portal-wlr
+export XDG_RUNTIME_DIR=/tmp/xdg-runtime-$(id -u)
+export XCURSOR_THEME="dwlcursor"
+export XCURSOR_SIZE=29
+mkdir -p $XDG_RUNTIME_DIR
