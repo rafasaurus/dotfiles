@@ -23,7 +23,7 @@ Plug 'f-person/git-blame.nvim'
 Plug 'williamboman/mason.nvim', { 'tag': 'stable' }
 Plug 'williamboman/mason-lspconfig.nvim', { 'tag': 'stable' }
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
+Plug 'nvim-telescope/telescope.nvim',
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'junegunn/goyo.vim'
 Plug 'kyoz/purify', { 'rtp': 'vim' }
