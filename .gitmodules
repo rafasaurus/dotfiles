@@ -3,7 +3,7 @@
 	url = https://github.com/rafasaurus/mimir
 [submodule "external/dwlb"]
 	path = external/dwlb
-	url = https://github.com/kolunmi/dwlb
+	url = https://github.com/rafasaurus/dwlb
 [submodule "external/dwl"]
 	path = external/dwl
 	url = https://github.com/rafasaurus/dwl
