@@ -3,8 +3,10 @@ stow_dirs = $(wildcard .)
 .PHONY: all stow restow destow install-prereqs install-paru \
         install-paru-packages install-udev install-gui install-themes \
         install-mimir install-full install-android-env install-film-android \
-        uninstall-gui uninstall-udev check_dirs install-cursors
+        uninstall-gui uninstall-udev check_dirs install-cursors toggle
 
+toggle:
+	./toggle-git.sh
 stow : check_dirs
 	stow --target $(HOME) --verbose $(stow_dirs)
 
