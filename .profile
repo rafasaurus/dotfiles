@@ -1,6 +1,3 @@
-#
-# ~/.bash_profile
-#
 export VISUAL="/usr/bin/vim" # for crontab -e
 export EDITOR=nvim 
 export TERMINAL=alacritty
