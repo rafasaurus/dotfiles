@@ -1,15 +1,11 @@
 #!/bin/bash
 
-# Configuration
 START_HOUR=21
-END_HOUR=23
+END_HOUR=7
 START_K=6500
 END_K=3000
 
-current_hour=$(date +%H)
-current_min=$(date +%M)
-current_total_min=$((10#$current_hour * 60 + 10#$current_min))
-
+current_total_min=$((10#$(date +%H) * 60 + 10#$(date +%M)))
 start_total_min=$((START_HOUR * 60))
 end_total_min=$((END_HOUR * 60))
 
@@ -24,18 +20,15 @@ if [[ $1 != "" ]]; then
     exit 0
 fi
 
-if [ "$current_total_min" -lt "$start_total_min" ]; then
-    pkill gammastep
-elif [ "$current_total_min" -ge "$end_total_min" ]; then
-    gammastep -PO "$END_K"
-else
-    elapsed=$((current_total_min - start_total_min))
-    duration=$((end_total_min - start_total_min))
+duration=$(( (end_total_min - start_total_min + 1440) % 1440 ))
+elapsed=$(( (current_total_min - start_total_min + 1440) % 1440 ))
 
+if [ "$elapsed" -ge "$duration" ]; then
+    pkill gammastep
+else
     diff=$((START_K - END_K))
     reduction=$(( (diff * elapsed) / duration ))
     target_k=$((START_K - reduction))
 
     gammastep -PO "$target_k"
-    notify-send "Setting gamma to $target_k"
 fi
