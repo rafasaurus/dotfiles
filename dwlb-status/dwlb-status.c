@@ -377,7 +377,7 @@ int main(int argc, char **argv) {
 
         char launcher_block[128];
         snprintf(launcher_block, sizeof launcher_block,
-                 "^lm(sh -c 'fuzzel &')^rm(sh -c '$TERMINAL -e \"/usr/bin/sl\"')🐧^rm()^lm()");
+                 "^lm(sh -c 'fuzzel &')^rm(autored)🐧^rm()^lm()");
 
         /* RAPL power: first SoC (RAPL1), then CPU (RAPL0) — update every rapl_every ticks */
         if (tick % rapl_every == 1) {

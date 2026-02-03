@@ -1,39 +1,41 @@
-#!/bin/sh
-# Script automatically applies gamma to reduce eye strain
-# run every 10 minutes with crontab -e 
-# */2 * * * * export DISPLAY=:0.0 && $HOME/.local/bin/autored
+#!/bin/bash
+
+# Configuration
+START_HOUR=21
+END_HOUR=23
+START_K=6500
+END_K=3000
+
+current_hour=$(date +%H)
+current_min=$(date +%M)
+current_total_min=$((10#$current_hour * 60 + 10#$current_min))
+
+start_total_min=$((START_HOUR * 60))
+end_total_min=$((END_HOUR * 60))
 
 pkill gammastep
 gammastep -x &
 pkill gammastep
-if [[ $1 != "" ]] then
-    gammastep -PO $1
-    exit
+
+[ -f /tmp/noautored ] && exit 0
+
+if [[ $1 != "" ]]; then
+    gammastep -PO "$1"
+    exit 0
 fi
 
-current_hour=$(date +%H)
-[ -f /tmp/noautored ] && pkill gammastep && exit 0
-case $current_hour in
-    00|01|02|03|04|05|06)
-        gammastep -PO 3000
-        ;;
-    07|08|09|10|11)
-        pkill gammastep
-        ;;
-    12|13|14|15|16|17|18|19|20)
-        pkill gammastep
-        ;;
-    21)
-        gammastep -PO 6000
-        ;;
-    22)
-        gammastep -PO 4500
-        ;;
-    23)
-        gammastep -PO 3500
-        ;;
-    *)
-        echo "Invalid hour!"
-        exit 1
-        ;;
-esac
+if [ "$current_total_min" -lt "$start_total_min" ]; then
+    pkill gammastep
+elif [ "$current_total_min" -ge "$end_total_min" ]; then
+    gammastep -PO "$END_K"
+else
+    elapsed=$((current_total_min - start_total_min))
+    duration=$((end_total_min - start_total_min))
+
+    diff=$((START_K - END_K))
+    reduction=$(( (diff * elapsed) / duration ))
+    target_k=$((START_K - reduction))
+
+    gammastep -PO "$target_k"
+    notify-send "Setting gamma to $target_k"
+fi
