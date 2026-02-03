@@ -16,7 +16,7 @@ pkill gammastep
 [ -f /tmp/noautored ] && exit 0
 
 if [[ $1 != "" ]]; then
-    gammastep -PO "$1"
+    gammastep -O "$1" &
     exit 0
 fi
 
@@ -30,5 +30,5 @@ else
     reduction=$(( (diff * elapsed) / duration ))
     target_k=$((START_K - reduction))
 
-    gammastep -PO "$target_k"
+    gammastep -O "$target_k" &
 fi
