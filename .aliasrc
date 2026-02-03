@@ -21,6 +21,7 @@ alias ka="killall" \
     noise='mpv ~/Music/white_noise.mp3' \
     diff='diff --strip-trailing-cr' \
     oneko='oneko -rv -fg \#CCCCCC -speed 13' \
+    rg='rg --ignore-case' \
 
 command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
 command -v nsxiv >/dev/null && alias sxiv="nsxiv" sxivdiff="nsxiv -d"

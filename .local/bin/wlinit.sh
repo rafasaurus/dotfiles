@@ -17,6 +17,6 @@ wmbubble &
 bluetoothctl power on &
 autored
 xrdb -merge ~/.Xresources &
-# wlr-randr --output eDP-1 --mode 1920x1200@120.000000Hz &
+wlr-randr --output eDP-1 --mode 1920x1200@120
 mako &
 notify-send "Welcome to Rice of rafasaurus" &

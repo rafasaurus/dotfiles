@@ -71,7 +71,7 @@ vim.lsp.config('cmake', {
 vim.lsp.config('clangd', {
     on_attach = on_attach,
     cmd = { "clangd" },
-    filetypes = { "c", "cpp", "objc", "objcpp" },
+    filetypes = { "h", "c", "cpp", "objc", "objcpp" },
     root_dir = vim.fs.root(0, { "compile_commands.json", "build/compile_commands.json" }),
 })
 

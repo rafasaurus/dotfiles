@@ -4,6 +4,8 @@
 # */2 * * * * export DISPLAY=:0.0 && $HOME/.local/bin/autored
 
 pkill gammastep
+gammastep -x &
+pkill gammastep
 if [[ $1 != "" ]] then
     gammastep -PO $1
     exit

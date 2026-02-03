@@ -95,7 +95,7 @@ prompt_symbol='❯'
 PROMPT="%(?.%F{magenta}.%F{red})${prompt_symbol}%f "
 
 history() { fc -lim "*$@*" 1 }
-[ -f $HOME/workspace/work_env.sh ] && source $HOME/workspace/work_env.sh
+[ -f $HOME/workspace/environment/work_env.sh ] && source $HOME/workspace/environment/work_env.sh
 
 [ -f "$HOME/.secrets" ] && source "$HOME/.secrets"
 [ -f "$HOME/.helpers" ] && source "$HOME/.helpers"
