@@ -1,13 +1,16 @@
 #!/bin/bash
 
-START_HOUR=21
+# Configuration
+START_TRANSITION_HOUR=21
+END_TRANSITION_HOUR=24
 END_HOUR=7
 START_K=6500
-END_K=3000
+END_K=3500
 
 current_total_min=$((10#$(date +%H) * 60 + 10#$(date +%M)))
-start_total_min=$((START_HOUR * 60))
-end_total_min=$((END_HOUR * 60))
+start_trans_min=$((START_TRANSITION_HOUR * 60))
+end_trans_min=$((END_TRANSITION_HOUR * 60))
+end_hour_min=$((END_HOUR * 60))
 
 pkill gammastep
 gammastep -x &
@@ -16,19 +19,37 @@ pkill gammastep
 [ -f /tmp/noautored ] && exit 0
 
 if [[ $1 != "" ]]; then
-    gammastep -O "$1" &
+    gammastep -PO "$1"
     exit 0
 fi
 
-duration=$(( (end_total_min - start_total_min + 1440) % 1440 ))
-elapsed=$(( (current_total_min - start_total_min + 1440) % 1440 ))
-
-if [ "$elapsed" -ge "$duration" ]; then
-    pkill gammastep
+is_active=0
+# Check if current time is between START_TRANSITION and END_HOUR
+if [ "$start_trans_min" -le "$end_hour_min" ]; then
+    if [ "$current_total_min" -ge "$start_trans_min" ] && [ "$current_total_min" -lt "$end_hour_min" ]; then
+        is_active=1
+    fi
 else
-    diff=$((START_K - END_K))
-    reduction=$(( (diff * elapsed) / duration ))
-    target_k=$((START_K - reduction))
+    if [ "$current_total_min" -ge "$start_trans_min" ] || [ "$current_total_min" -lt "$end_hour_min" ]; then
+        is_active=1
+    fi
+fi
 
-    gammastep -O "$target_k" &
+if [ "$is_active" -eq 0 ]; then
+    pkill gammastep
+    exit 0
+fi
+
+# Check if we are in the transition phase or the steady phase
+trans_duration=$(( (end_trans_min - start_trans_min + 1440) % 1440 ))
+time_since_start=$(( (current_total_min - start_trans_min + 1440) % 1440 ))
+
+if [ "$time_since_start" -lt "$trans_duration" ]; then
+    diff=$((START_K - END_K))
+    reduction=$(( (diff * time_since_start) / trans_duration ))
+    target_k=$((START_K - reduction))
+    gammastep -PO "$target_k"
+    notify-send "setting monitor gamma $target_k"
+else
+    gammastep -PO "$END_K"
 fi
