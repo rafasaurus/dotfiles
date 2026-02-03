@@ -1,55 +1,39 @@
-#!/bin/bash
-
-# Configuration
-START_TRANSITION_HOUR=21
-END_TRANSITION_HOUR=24
-END_HOUR=7
-START_K=6500
-END_K=3500
-
-current_total_min=$((10#$(date +%H) * 60 + 10#$(date +%M)))
-start_trans_min=$((START_TRANSITION_HOUR * 60))
-end_trans_min=$((END_TRANSITION_HOUR * 60))
-end_hour_min=$((END_HOUR * 60))
+#!/bin/sh
+# Script automatically applies gamma to reduce eye strain
+# run every 10 minutes with crontab -e 
+# */2 * * * * export DISPLAY=:0.0 && $HOME/.local/bin/autored
 
 pkill gammastep
 gammastep -x &
 pkill gammastep
-
-[ -f /tmp/noautored ] && exit 0
-
-if [[ $1 != "" ]]; then
-    gammastep -PO "$1"
-    exit 0
+if [[ $1 != "" ]] then
+    gammastep -PO $1
+    exit
 fi
 
-is_active=0
-# Check if current time is between START_TRANSITION and END_HOUR
-if [ "$start_trans_min" -le "$end_hour_min" ]; then
-    if [ "$current_total_min" -ge "$start_trans_min" ] && [ "$current_total_min" -lt "$end_hour_min" ]; then
-        is_active=1
-    fi
-else
-    if [ "$current_total_min" -ge "$start_trans_min" ] || [ "$current_total_min" -lt "$end_hour_min" ]; then
-        is_active=1
-    fi
-fi
+current_hour=$(date +%H)
+current_minute=$(date +%M)
 
-if [ "$is_active" -eq 0 ]; then
-    pkill gammastep
-    exit 0
-fi
-
-# Check if we are in the transition phase or the steady phase
-trans_duration=$(( (end_trans_min - start_trans_min + 1440) % 1440 ))
-time_since_start=$(( (current_total_min - start_trans_min + 1440) % 1440 ))
-
-if [ "$time_since_start" -lt "$trans_duration" ]; then
-    diff=$((START_K - END_K))
-    reduction=$(( (diff * time_since_start) / trans_duration ))
-    target_k=$((START_K - reduction))
-    gammastep -PO "$target_k"
-    notify-send "setting monitor gamma $target_k"
-else
-    gammastep -PO "$END_K"
-fi
+[ -f /tmp/noautored ] && pkill gammastep && exit 0
+set -x
+case $current_hour in
+    00|01|02|03|04|05|06)
+        gammastep -PO 3000
+        ;;
+    07|08|09|10|11)
+        pkill gammastep
+        ;;
+    12|13|14|15|16|17|18|19|20)
+        pkill gammastep
+        ;;
+    21)
+        (( current_minute < 30 )) && gammastep -PO 5500 || gammastep -PO 4700 ;;
+    22)
+        (( current_minute < 30 )) && gammastep -PO 4200 || gammastep -PO 3900 ;;
+    23)
+        (( current_minute < 30 )) && gammastep -PO 3800 || gammastep -PO 3500 ;;
+    *)
+        echo "Invalid hour!"
+        exit 1
+        ;;
+esac
