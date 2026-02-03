@@ -353,13 +353,13 @@ int main(int argc, char **argv) {
             snprintf(time_text_buf, sizeof time_text_buf, "📅 %s 🕒 %s", date, timebuf);
         }
 
-        /* Volume (left-click=mute, right-click=pavucontrol, scroll ±5%) */
+        /* Volume (left-click=mute, right-click=pavucontrol, scroll ±2%) */
         if (tick % VOL_EVERY == 1) {
             volume_text(vol_text_buf, sizeof vol_text_buf);
         }
-        char vol_block[128];
+        char vol_block[256];
         snprintf(vol_block, sizeof vol_block,
-                 "^lm(pamixer -t)^rm(pavucontrol)^su(pamixer -i 5)^sd(pamixer -d 5)%s^sd()^su()^rm()^lm()",
+                 "^lm(pamixer -t)^rm(pavucontrol)^us(sh -c \"pamixer -i 2; dwlb-status --signal 0\")^ds(sh -c \"pamixer -d 2; dwlb-status --signal 0\")%s^ds()^us()^rm()^lm()",
                  vol_text_buf);
 
         /* Airpods (left-click=toggle connection, right-click=librepods) */
