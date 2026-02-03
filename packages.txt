@@ -41,7 +41,6 @@ pamixer
 upower
 the_silver_searcher
 ripgrep
-redshift
 bluez-utils
 bluez
 pass
@@ -63,6 +62,7 @@ tumbler
 thunar
 slurp
 wl-clipboard
+wtype
 grim
 fuzzel
 swaybg
