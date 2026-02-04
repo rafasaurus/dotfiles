@@ -31,15 +31,16 @@ typedef struct {
     char buffer[128];
 } __attribute__((aligned(64))) Unit;
 
-/* Signal mapping: bitmask for 0=Vol, 1=Batt, 2=Airpods, 3=Disk, 4=Time */
+/* Signal mapping: bitmask for units */
 volatile sig_atomic_t update_mask = 0;
 
 static void handle_sig(int sig) {
     int idx = sig - SIGRTMIN;
-    if (idx >= 0 && idx < 5) update_mask |= (1 << idx);
+    if (idx >= 0 && idx < 32) update_mask |= (1 << idx);
 }
 
 static const double LOOP_SLEEP_SEC = 1.2; /* main refresh period */
+static const int    THEME_EVERY    = 100; /* poll theme every N ticks */
 static const int    VOL_EVERY      = 3;   /* poll volume every N ticks */
 static const int    BATT_EVERY     = 20;  /* poll battery every N ticks */
 static const int    TIME_EVERY     = 8;   /* poll date/time every N ticks */
@@ -273,6 +274,15 @@ static void time_text(char *out, size_t outsz) {
     snprintf(out, outsz, "📅 %s 🕒 %s", date, timebuf);
 }
 
+static void theme_text(char *out, size_t outsz) {
+    int ret = system("switch-theme -r >/dev/null 2>&1");
+    if (ret == 0) {
+        snprintf(out, outsz, "🌘");
+    } else {
+        snprintf(out, outsz, "🌖");
+    }
+}
+
 static void disk_text(char *out, size_t outsz) {
     const char *home = getenv("HOME");
     if (!home) home = "/";
@@ -423,14 +433,14 @@ int main(int argc, char **argv) {
     for (int i = 1; i < argc; ++i) {
         if (strcmp(argv[i], "--signal") == 0 && i + 1 < argc) {
             int sig_idx = atoi(argv[++i]);
-            if (sig_idx < 0 || sig_idx >= 5) return 1;
+            if (sig_idx < 0 || sig_idx >= 32) return 1;
             send_signal(sig_idx);
             return 0;
         }
     }
 
     /* Register signal handlers for the main process */
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 32; ++i) {
         signal(SIGRTMIN + i, handle_sig);
     }
 
@@ -464,9 +474,9 @@ int main(int argc, char **argv) {
             .update = volume_text,
             .left_click = "pamixer -t",
             .right_click = "pavucontrol",
-            .scroll_up = "sh -c \"pamixer -i 2; dwlb-status --signal 0\"",
-            .scroll_down = "sh -c \"pamixer -d 2; dwlb-status --signal 0\"",
-            .signal_idx = 0
+            .scroll_up = "sh -c \"pamixer -i 2; dwlb-status --signal 1\"",
+            .scroll_down = "sh -c \"pamixer -d 2; dwlb-status --signal 1\"",
+            .signal_idx = 1
         },
         {
             .name = "Airpods",
@@ -519,13 +529,20 @@ int main(int argc, char **argv) {
             .name = "Battery",
             .interval = BATT_EVERY,
             .update = battery_text,
-            .signal_idx = 1
+            .signal_idx = 4
         },
         {
             .name = "Time",
             .interval = TIME_EVERY,
             .update = time_text,
-            .signal_idx = 4
+            .signal_idx = 5
+        },
+        {
+            .name = "Theme",
+            .interval = THEME_EVERY,
+            .update = theme_text,
+            .left_click = "sh -c 'switch-theme -a; dwlb-status --signal 0'",
+            .signal_idx = 0
         },
         {
             .name = "Launcher",
