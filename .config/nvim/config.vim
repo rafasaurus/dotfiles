@@ -40,23 +40,31 @@ set bg=dark
 if has("autocmd")
     au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | 
 endif
-" BETTER BACKUP AND RESTORE MECHANISM:
-let &directory = $XDG_DATA_HOME . '/nvim/dirs/tmp//'
-set backup
-let &backupdir = $XDG_DATA_HOME . '/nvim/dirs/backups//'
-set undofile
-let &undodir = $XDG_DATA_HOME . '/nvim/undodir//'
 
-let g:yankring_history_dir = expand('$XDG_DATA_HOME') . 'nvim/dirs/'
-if !isdirectory(&backupdir) " create needed directories if they don't exist
-    call mkdir(&backupdir, "p")
+let data_dir = expand($XDG_DATA_HOME)
+if empty(data_dir)
+    let data_dir = expand('$HOME/.local/share')
 endif
-if !isdirectory(&directory)
-    call mkdir(&directory, "p")
-endif
-if !isdirectory(&undodir)
-    call mkdir(&undodir, "p")
-endif
+
+" BETTER BACKUP AND RESTORE MECHANISM:
+let &directory = data_dir . '/nvim/dirs/tmp//'
+set backup
+let &backupdir = data_dir . '/nvim/dirs/backups//'
+set undofile
+let &undodir = data_dir . '/nvim/undodir//'
+
+let g:yankring_history_dir = data_dir . '/nvim/dirs/'
+
+" Helper function to create directories if missing
+function! s:MakeDir(path)
+    if !isdirectory(a:path)
+        call mkdir(a:path, "p")
+    endif
+endfunction
+
+call s:MakeDir(&backupdir)
+call s:MakeDir(&directory)
+call s:MakeDir(&undodir)
 
 " Tabs and Spaces
 set expandtab
@@ -89,14 +97,6 @@ set wildmenu
 
 " search and highlight but do not jump
 nnoremap * :keepjumps normal! mi*`i<CR>
-autocmd BufWritePost *sxhkdrc !pkill sxhkd; sleep 1; setsid sxhkd &
-
-
-" Ag silversearcher
-if executable('ag')
-    set grepprg=ag\ --vimgrep\ $*
-    set grepformat^=%f:%l:%c:%m
-endif
 
 command! Format execute 'lua vim.lsp.buf.formatting()'
 
@@ -154,3 +154,9 @@ function! SetThemeFromAlacritty()
 endfunction
 
 call SetThemeFromAlacritty()
+
+if executable('entr')
+    let s:file = expand('~/.config/alacritty/alacritty.toml')
+    let s:cmd  = printf('echo %s | entr -n nvim --server %s --remote-send ":call SetThemeFromAlacritty()<CR>"', s:file, v:servername)
+    if executable('entr') | call jobstart(['sh', '-c', s:cmd]) | endif
+endif
