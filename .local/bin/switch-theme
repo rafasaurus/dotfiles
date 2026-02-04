@@ -13,18 +13,11 @@ Switch Alacritty terminal theme between dark and light.
 
 Options:
     -a, --auto      Automatically toggle between dark and light themes
+    -r              Return status (1 for light, 0 for dark)
     -h, --help      Show this help message
 
 Arguments:
     THEME           Theme to switch to: 'dark' or 'light'
-                    Required if -a is not specified
-
-Examples:
-    $0 dark              Switch to dark theme
-    $0 light             Switch to light theme
-    $0 -a                Toggle between dark and light themes
-    $0 --auto            Same as -a
-
 EOF
 }
 
@@ -44,7 +37,7 @@ detect_current_theme() {
 switch_theme() {
     local theme="$1"
     
-    if [ "$theme" != "dark" ] && [ "$theme" != "light" ]; then
+    if [[ "$theme" != "dark" && "$theme" != "light" ]]; then
         echo "Error: Theme must be 'dark' or 'light'" >&2
         exit 1
     fi
@@ -60,9 +53,10 @@ switch_theme() {
     fi
     
     sed -i "s|^general\.import = \[.*\]|general.import = [\"${theme}.toml\"]|" "$CONFIG_FILE"
-    
     echo "Switched to ${theme} theme"
 }
+
+# --- Logic Flow ---
 
 if [ $# -eq 0 ]; then
     show_help
@@ -73,6 +67,17 @@ case "$1" in
     -h|--help)
         show_help
         exit 0
+        ;;
+    -r)
+        # Status mode: 1 for light, 0 for dark
+        current=$(detect_current_theme)
+        if [ "$current" = "light" ]; then
+            echo "1"
+            exit 1
+        else
+            echo "0"
+            exit 0
+        fi
         ;;
     -a|--auto)
         current_theme=$(detect_current_theme)
@@ -87,7 +92,6 @@ case "$1" in
         ;;
     *)
         echo "Error: Invalid argument '$1'" >&2
-        echo "Use -h for help" >&2
         exit 1
         ;;
 esac
