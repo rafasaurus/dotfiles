@@ -15,7 +15,7 @@
 
 /* ---------- Tunables ---------- */
 #ifndef RAPL_EVERY_DEFAULT
-#define RAPL_EVERY_DEFAULT 5   /* sample RAPL each tick by default (set via -r or env RAPL_EVERY) */
+#define RAPL_EVERY_DEFAULT 2   /* sample RAPL each tick by default (set via -r or env RAPL_EVERY) */
 #endif
 
 typedef struct {
@@ -576,7 +576,7 @@ int main(int argc, char **argv) {
                     update_needed = true;
                 }
             }
-            if (__builtin_expect(tick % units[i].interval == 1, 0)) {
+            if (tick % units[i].interval == 0) {
                 update_needed = true;
             }
 
