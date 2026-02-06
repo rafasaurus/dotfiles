@@ -1,9 +1,10 @@
 stow_dirs = $(wildcard .)
 
 .PHONY: all stow restow destow install-prereqs install-paru \
-        install-paru-packages install-udev install-gui install-themes \
-        install-mimir install-full install-android-env install-film-android \
-        uninstall-gui uninstall-udev check_dirs install-cursors toggle
+	install-paru-packages install-udev install-gui install-themes \
+	install-mimir install-full install-android-env install-film-android \
+	install-neovim \
+	uninstall-gui uninstall-udev check_dirs install-cursors toggle \
 
 toggle:
 	./toggle-git.sh
@@ -101,3 +102,15 @@ install-cursors:
 	ctgen build.toml -s 29 -p x11 -d "bitmaps/macOS-BigSur" -n "dwlcursor" -c "Custom Sizes macOS XCursors" && \
 	cp themes/dwlcursor ~/.icons/ -r
 	@echo "you have to install cursor with nwg-look in wayland"
+
+install-neovim:
+	@set -e; \
+	BASE_URL="https://github.com/neovim/neovim/releases/download/nightly"; \
+	INSTALL_DIR="$(HOME)/.local/bin"; \
+	APPIMAGE="nvim-linux-x86_64.appimage"; \
+	[ -d "$$INSTALL_DIR" ] || { echo "$$INSTALL_DIR does not exist"; exit 1; }; \
+	case "$$(uname -m)" in \
+		aarch64|arm64) APPIMAGE="nvim-linux-arm64.appimage" ;; \
+	esac; \
+	curl -L "$$BASE_URL/$$APPIMAGE" -o "$$INSTALL_DIR/nvim"; \
+	chmod +x "$$INSTALL_DIR/nvim"
