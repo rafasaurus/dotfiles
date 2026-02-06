@@ -13,7 +13,7 @@ static bool bottom = false;
 // hide vacant tags
 static bool hide_vacant = false;
 // vertical pixel padding above and below text
-static uint32_t vertical_padding = 3;
+static uint32_t vertical_padding = 4;
 // allow in-line color commands in status text
 static bool status_commands = true;
 // center title text
