@@ -474,9 +474,9 @@ int main(int argc, char **argv) {
             .update = volume_text,
             .left_click = "pamixer -t",
             .right_click = "pavucontrol",
-            .scroll_up = "sh -c \"pamixer -i 2; dwlb-status --signal 1\"",
-            .scroll_down = "sh -c \"pamixer -d 2; dwlb-status --signal 1\"",
-            .signal_idx = 1
+            .scroll_up = "sh -c \"pamixer -i 2; dwlb-status --signal 0\"",
+            .scroll_down = "sh -c \"pamixer -d 2; dwlb-status --signal 0\"",
+            .signal_idx = 0
         },
         {
             .name = "Airpods",
@@ -484,7 +484,7 @@ int main(int argc, char **argv) {
             .update = airpods_text,
             .left_click = "airpods",
             .right_click = "librepods",
-            .signal_idx = 2
+            .signal_idx = -1
         },
         {
             .name = "Power",
@@ -523,26 +523,26 @@ int main(int argc, char **argv) {
             .name = "Disk",
             .interval = DISK_EVERY,
             .update = disk_text,
-            .signal_idx = 3
+            .signal_idx = -1
         },
         {
             .name = "Battery",
             .interval = BATT_EVERY,
             .update = battery_text,
-            .signal_idx = 4
+            .signal_idx = -1
         },
         {
             .name = "Time",
             .interval = TIME_EVERY,
             .update = time_text,
-            .signal_idx = 5
+            .signal_idx = -1
         },
         {
             .name = "Theme",
             .interval = THEME_EVERY,
             .update = theme_text,
-            .left_click = "sh -c 'switch-theme -a; dwlb-status --signal 0'",
-            .signal_idx = 0
+            .left_click = "sh -c 'switch-theme -a; dwlb-status --signal 1'",
+            .signal_idx = 1
         },
         {
             .name = "Launcher",
