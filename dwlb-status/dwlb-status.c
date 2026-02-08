@@ -342,7 +342,7 @@ static void power_text(char *out, size_t outsz) {
     uint64_t d_soc = (cur_soc_uj > prev_soc_uj_g) ? (cur_soc_uj - prev_soc_uj_g) : 0;
     uint64_t cpu_w10 = (d_cpu * 10ull + dus/2ull) / dus;
     uint64_t soc_w10 = (d_soc * 10ull + dus/2ull) / dus;
-    snprintf(out, outsz, "^fg(FFD700)⚡^fg() %llu.%lluW %llu.%lluW",
+    snprintf(out, outsz, "^fg(FFD700)⚡^fg() %llu.%llu/%llu.%lluW",
              (unsigned long long)(soc_w10/10ull), (unsigned long long)(soc_w10%10ull),
              (unsigned long long)(cpu_w10/10ull), (unsigned long long)(cpu_w10%10ull));
     prev_cpu_uj_g = cur_cpu_uj; prev_soc_uj_g = cur_soc_uj; prev_us_g = cur_us;
