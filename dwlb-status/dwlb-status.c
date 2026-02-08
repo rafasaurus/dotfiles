@@ -12,6 +12,8 @@
 #include <ctype.h>
 #include <errno.h>
 #include <signal.h>
+#include <fcntl.h>
+#include <inttypes.h>
 
 #define LOOP_DELAY_SEC 1.2
 #define RAPL_DEFAULT   2
@@ -19,7 +21,8 @@
 /* Data Structures */
 
 typedef struct {
-    void (*update)(char *buf, size_t len);
+    void (*update)(void *ctx, char *buf, size_t len);
+    void *ctx;
     const char *label;
     const char *onLeft;
     const char *onMiddle;
@@ -64,9 +67,24 @@ static bool readFileU64(const char *path, uint64_t *out) {
     if (!ok) return false;
     char *end = NULL;
     errno = 0;
-    unsigned long long v = strtoull(buf, &end, 10);
+    uint64_t v = strtoull(buf, &end, 10);
     if (errno != 0) return false;
-    *out = (uint64_t)v;
+    *out = v;
+    return true;
+}
+
+static bool readFdU64(int fd, uint64_t *out) {
+    if (fd < 0) return false;
+    char buf[64];
+    lseek(fd, 0, SEEK_SET);
+    ssize_t n = read(fd, buf, sizeof(buf) - 1);
+    if (n <= 0) return false;
+    buf[n] = 0;
+    char *end = NULL;
+    errno = 0;
+    uint64_t v = strtoull(buf, &end, 10);
+    if (errno != 0) return false;
+    *out = v;
     return true;
 }
 
@@ -90,6 +108,34 @@ static inline void applyTag(char *buf, size_t *len, const char *tag, const char 
         memcpy(buf, inner, w + 1);
         *len = w;
     }
+}
+
+static void buildLine(Module *modules, int count, char *line, size_t size) {
+    char *p = line;
+    size_t rem = size;
+    
+    for (int i = 0; i < count; i++) {
+        char seg[512];
+        size_t segLen = strlen(modules[i].buffer);
+        memcpy(seg, modules[i].buffer, segLen + 1);
+        
+        applyTag(seg, &segLen, "lm", modules[i].onLeft);
+        applyTag(seg, &segLen, "mm", modules[i].onMiddle);
+        applyTag(seg, &segLen, "rm", modules[i].onRight);
+        applyTag(seg, &segLen, "us", modules[i].onScrollUp);
+        applyTag(seg, &segLen, "ds", modules[i].onScrollDown);
+
+        if (rem > segLen + 1) {
+            memcpy(p, seg, segLen);
+            p += segLen;
+            if (i < count - 1) {
+                *p++ = ' ';
+                rem--;
+            }
+            rem -= segLen;
+        }
+    }
+    *p = 0;
 }
 
 /* Initialization */
@@ -149,18 +195,58 @@ static void initHwmon(void) {
     }
 }
 
+/* Module Contexts */
+
+typedef struct {
+    int fd_pkg;
+    int fd_core;
+} TempCtx;
+
+typedef struct {
+    int fd_stat;
+} CpuCtx;
+
+typedef struct {
+    int fd_mem;
+} RamCtx;
+
+typedef struct {
+    int fd_rapl0;
+    int fd_rapl1;
+} PowerCtx;
+
+typedef struct {
+    int fd_cap;
+    int fd_stat;
+    int fd_enNow;
+    int fd_enFull;
+    int fd_pwr;
+} BatCtx;
+
 /* Module Updaters */
 
-static void updateVolume(char *out, size_t sz) {
+static void updateVolume(void *ctx, char *out, size_t sz) {
+    (void)ctx;
     char buf[64] = {0};
     bool mute = false;
     int vol = 0;
 
-    runCmd("timeout 1 pamixer --get-mute 2>/dev/null", buf, sizeof(buf));
-    mute = (strncmp(buf, "true", 4) == 0);
-    
-    runCmd("timeout 1 pamixer --get-volume 2>/dev/null", buf, sizeof(buf));
-    vol = atoi(buf);
+    FILE *fp = popen("pamixer --get-mute --get-volume", "r");
+    if (fp) {
+        if (fgets(buf, sizeof(buf), fp)) {
+            char *space = strchr(buf, ' ');
+            if (space) {
+                *space = 0;
+                mute = (strcmp(buf, "true") == 0);
+                vol = atoi(space + 1);
+            } else {
+                /* Fallback if pamixer doesn't support combined output or format is different */
+                mute = (strncmp(buf, "true", 4) == 0);
+                if (fgets(buf, sizeof(buf), fp)) vol = atoi(buf);
+            }
+        }
+        pclose(fp);
+    }
 
     if (mute) snprintf(out, sz, "🔇 mute");
     else if (vol < 33) snprintf(out, sz, "🔈 %d%%", vol);
@@ -168,7 +254,8 @@ static void updateVolume(char *out, size_t sz) {
     else snprintf(out, sz, "🔊 %d%%", vol);
 }
 
-static void updateAirpods(char *out, size_t sz) {
+static void updateAirpods(void *ctx, char *out, size_t sz) {
+    (void)ctx;
     FILE *fp = popen("timeout 2 airpods -s 2>/dev/null", "r");
     if (!fp) { snprintf(out, sz, "🎧 ??"); return; }
     int status = pclose(fp);
@@ -179,7 +266,8 @@ static void updateAirpods(char *out, size_t sz) {
     }
 }
 
-static void updateTime(char *out, size_t sz) {
+static void updateTime(void *ctx, char *out, size_t sz) {
+    (void)ctx;
     time_t t = time(NULL);
     struct tm tm; 
     localtime_r(&t, &tm);
@@ -189,11 +277,13 @@ static void updateTime(char *out, size_t sz) {
     snprintf(out, sz, "📅 %s 🕒 %s", d, tb);
 }
 
-static void updateTheme(char *out, size_t sz) {
+static void updateTheme(void *ctx, char *out, size_t sz) {
+    (void)ctx;
     snprintf(out, sz, system("switch-theme -r >/dev/null 2>&1") == 0 ? "🌘" : "🌖");
 }
 
-static void updateDisk(char *out, size_t sz) {
+static void updateDisk(void *ctx, char *out, size_t sz) {
+    (void)ctx;
     const char *path = getenv("HOME") ? getenv("HOME") : "/";
     struct statvfs v;
     if (statvfs(path, &v) != 0 && statvfs("/", &v) != 0) { snprintf(out, sz, "💾 err"); return; }
@@ -203,88 +293,91 @@ static void updateDisk(char *out, size_t sz) {
     snprintf(out, sz, "💾 %.0f/%.0fMib", total - avail, total);
 }
 
-static void updateBattery(char *out, size_t sz) {
-    const char *base = "/sys/class/power_supply/BAT0";
-    if (access(base, R_OK) != 0) { snprintf(out, sz, "🔋 ??"); return; }
+static void updateBattery(void *ctx, char *out, size_t sz) {
+    BatCtx *b = (BatCtx *)ctx;
+    uint64_t enNow=0, enFull=0, pwr=0, pct=0;
+    char status[16]="Unknown";
 
-    uint64_t enNow=0, enFull=0, pwr=0, volt=0, cur=0, chgNow=0, chgFull=0;
-    char path[128], pctS[8]="??", status[16]="Unknown";
-
-    snprintf(path, sizeof(path), "%s/capacity", base);
-    runCmd("cat " "/sys/class/power_supply/BAT0/capacity", pctS, sizeof(pctS));
-    snprintf(path, sizeof(path), "%s/status", base);
-    runCmd("cat " "/sys/class/power_supply/BAT0/status", status, sizeof(status));
-
-    readFirstU64("/sys/class/power_supply/BAT0/energy_now", "/sys/class/power_supply/BAT0/energy_now_uwh", &enNow);
-    readFirstU64("/sys/class/power_supply/BAT0/energy_full", "/sys/class/power_supply/BAT0/energy_full_uwh", &enFull);
-    readFileU64("/sys/class/power_supply/BAT0/power_now", &pwr);
-
-    /* Fallback calculation */
-    if ((!enNow || !enFull || !pwr)) {
-        readFileU64("/sys/class/power_supply/BAT0/charge_now", &chgNow);
-        readFileU64("/sys/class/power_supply/BAT0/charge_full", &chgFull);
-        readFileU64("/sys/class/power_supply/BAT0/voltage_now", &volt);
-        readFileU64("/sys/class/power_supply/BAT0/current_now", &cur);
-        if (volt > 0) {
-            if (!enNow) enNow = (chgNow * volt) / 1000000ull;
-            if (!enFull) enFull = (chgFull * volt) / 1000000ull;
-            if (!pwr) pwr = (cur * volt) / 1000000ull;
+    if (!readFdU64(b->fd_cap, &pct)) pct = 0;
+    
+    if (b->fd_stat >= 0) {
+        lseek(b->fd_stat, 0, SEEK_SET);
+        ssize_t n = read(b->fd_stat, status, sizeof(status)-1);
+        if (n > 0) {
+            status[n] = 0;
+            char *nl = strchr(status, '\n');
+            if (nl) *nl = 0;
         }
     }
+
+    readFdU64(b->fd_enNow, &enNow);
+    readFdU64(b->fd_enFull, &enFull);
+    readFdU64(b->fd_pwr, &pwr);
 
     char eta[32] = "";
     if (pwr > 0) {
         uint64_t hrs = 0;
-        if (strcmp(status, "Discharging") == 0) 
+        if (status[0] == 'D') /* Discharging */
             hrs = (enNow * 10ull + pwr/2ull) / pwr;
-        else if (strcmp(status, "Charging") == 0 && enFull > enNow) 
+        else if (status[0] == 'C' && enFull > enNow) /* Charging */
             hrs = ((enFull - enNow) * 10ull + pwr/2ull) / pwr;
         
-        if (hrs) snprintf(eta, sizeof(eta), " ~%llu.%lluh", hrs/10ull, hrs%10ull);
+        if (hrs) snprintf(eta, sizeof(eta), " ~%" PRIu64 ".%" PRIu64 "h", (uint64_t)(hrs/10ull), (uint64_t)(hrs%10ull));
     }
-    snprintf(out, sz, "%s %s%%%s", strcmp(status, "Charging") == 0 ? "🔌" : "🔋", pctS, eta);
+    snprintf(out, sz, "%s %" PRIu64 "%%%s", status[0] == 'C' ? "🔌" : "🔋", (uint64_t)pct, eta);
 }
 
-static void updateRam(char *out, size_t sz) {
-    FILE *f = fopen("/proc/meminfo", "re");
-    if (!f) { snprintf(out, sz, "🧠 --"); return; }
+static void updateRam(void *ctx, char *out, size_t sz) {
+    RamCtx *c = (RamCtx *)ctx;
+    if (c->fd_mem < 0) { snprintf(out, sz, "🧠 --"); return; }
     
-    char key[64]; 
-    uint64_t val, tot=0, avl=0;
-    while (fscanf(f, "%63s %llu %*s", key, &val) == 2) {
-        if (!strcmp(key, "MemTotal:")) tot = val;
-        else if (!strcmp(key, "MemAvailable:")) avl = val;
-        if (tot && avl) break;
+    lseek(c->fd_mem, 0, SEEK_SET);
+    char buf[1024];
+    ssize_t n = read(c->fd_mem, buf, sizeof(buf)-1);
+    if (n <= 0) { snprintf(out, sz, "🧠 --"); return; }
+    buf[n] = 0;
+
+    uint64_t tot=0, avl=0;
+    char *p = buf;
+    while (p && *p) {
+        if (strncmp(p, "MemTotal:", 9) == 0) tot = (uint64_t)strtoull(p + 9, NULL, 10);
+        else if (strncmp(p, "MemAvailable:", 13) == 0) avl = (uint64_t)strtoull(p + 13, NULL, 10);
+        p = strchr(p, '\n');
+        if (p) p++;
     }
-    fclose(f);
     
     double uGiB = (double)(tot - avl) / 1048576.0;
     double tGiB = (double)tot / 1048576.0;
     snprintf(out, sz, "🧠 %.1f/%.1fGiB", uGiB, tGiB);
 }
 
-static void updateTemp(char *out, size_t sz) {
+static void updateTemp(void *ctx, char *out, size_t sz) {
+    TempCtx *c = (TempCtx *)ctx;
     uint64_t pkg = 0, core = 0;
-    bool pOk = cpuPkgPath && readFileU64(cpuPkgPath, &pkg);
-    bool cOk = cpuCorePath && readFileU64(cpuCorePath, &core);
+    bool pOk = readFdU64(c->fd_pkg, &pkg);
+    bool cOk = readFdU64(c->fd_core, &core);
 
-    if (pOk && cOk) snprintf(out, sz, "🔥 %llu/%llu°C", pkg/1000, core/1000);
-    else if (pOk) snprintf(out, sz, "🔥 %llu°C", pkg/1000);
-    else if (cOk) snprintf(out, sz, "🔥 %llu°C", core/1000);
+    if (pOk && cOk) snprintf(out, sz, "🔥 %" PRIu64 "/%" PRIu64 "°C", pkg/1000, core/1000);
+    else if (pOk) snprintf(out, sz, "🔥 %" PRIu64 "°C", pkg/1000);
+    else if (cOk) snprintf(out, sz, "🔥 %" PRIu64 "°C", core/1000);
     else snprintf(out, sz, "🔥 ?°C");
 }
 
-static void updateCpu(char *out, size_t sz) {
-    FILE *f = fopen("/proc/stat", "re");
-    if (!f) return;
-    unsigned long long u, n, s, i, io, ir, so, st;
-    if (fscanf(f, "cpu %llu %llu %llu %llu %llu %llu %llu %llu", &u, &n, &s, &i, &io, &ir, &so, &st) < 8) {
-        fclose(f); return;
-    }
-    fclose(f);
+static void updateCpu(void *ctx, char *out, size_t sz) {
+    CpuCtx *c = (CpuCtx *)ctx;
+    if (c->fd_stat < 0) return;
+    
+    lseek(c->fd_stat, 0, SEEK_SET);
+    char buf[256];
+    ssize_t n = read(c->fd_stat, buf, sizeof(buf)-1);
+    if (n <= 0) return;
+    buf[n] = 0;
+
+    uint64_t u, n_val, s, i, io, ir, so, st;
+    if (sscanf(buf, "cpu %" SCNu64 " %" SCNu64 " %" SCNu64 " %" SCNu64 " %" SCNu64 " %" SCNu64 " %" SCNu64 " %" SCNu64, &u, &n_val, &s, &i, &io, &ir, &so, &st) < 8) return;
 
     uint64_t idle = i + io;
-    uint64_t total = u + n + s + i + io + ir + so + st;
+    uint64_t total = u + n_val + s + i + io + ir + so + st;
     uint64_t dTotal = total - prevCpuTotal;
     uint64_t dIdle = idle - prevCpuIdle;
     
@@ -295,10 +388,11 @@ static void updateCpu(char *out, size_t sz) {
     snprintf(out, sz, "📈 %u%%", pct);
 }
 
-static void updatePower(char *out, size_t sz) {
+static void updatePower(void *ctx, char *out, size_t sz) {
+    PowerCtx *c = (PowerCtx *)ctx;
     uint64_t cpuUj=0, socUj=0, now = getNowUs();
-    bool hCpu = readFileU64("/sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj", &cpuUj);
-    bool hSoc = readFileU64("/sys/class/powercap/intel-rapl/intel-rapl:1/energy_uj", &socUj);
+    bool hCpu = readFdU64(c->fd_rapl0, &cpuUj);
+    bool hSoc = readFdU64(c->fd_rapl1, &socUj);
     
     uint64_t dt = (now > prevTimeUs) ? (now - prevTimeUs) : 1;
     uint64_t dCpu = (hCpu && cpuUj >= prevCpuUj) ? (cpuUj - prevCpuUj) : 0;
@@ -308,17 +402,18 @@ static void updatePower(char *out, size_t sz) {
     uint64_t wSoc = (dSoc * 10ull + dt/2ull) / dt;
 
     if (hCpu && hSoc) 
-        snprintf(out, sz, "^fg(FFD700)⚡^fg() %llu.%llu/%llu.%lluW", wSoc/10, wSoc%10, wCpu/10, wCpu%10);
+        snprintf(out, sz, "^fg(FFD700)⚡^fg() %" PRIu64 ".%" PRIu64 "/%" PRIu64 ".%" PRIu64 "W", (uint64_t)(wSoc/10), (uint64_t)(wSoc%10), (uint64_t)(wCpu/10), (uint64_t)(wCpu%10));
     else if (hCpu) 
-        snprintf(out, sz, "^fg(FFD700)⚡^fg() %llu.%lluW", wCpu/10, wCpu%10);
+        snprintf(out, sz, "^fg(FFD700)⚡^fg() %" PRIu64 ".%" PRIu64 "W", (uint64_t)(wCpu/10), (uint64_t)(wCpu%10));
     else 
         snprintf(out, sz, "^fg(FFD700)⚡^fg() %s", hSoc ? "" : "?W");
 
     prevCpuUj = cpuUj; prevSocUj = socUj; prevTimeUs = now;
 }
 
-static void updateDuck(char *out, size_t sz) { snprintf(out, sz, "🦆"); }
-static void updateLauncher(char *out, size_t sz) { snprintf(out, sz, "🐧"); }
+static void updateDuck(void *ctx, char *out, size_t sz) { (void)ctx; snprintf(out, sz, "🦆"); }
+static void updateLauncher(void *ctx, char *out, size_t sz) { (void)ctx; snprintf(out, sz, "🐧"); }
+
 
 static void sendSignal(int idx) {
     DIR *d = opendir("/proc");
@@ -369,6 +464,24 @@ int main(int argc, char **argv) {
     readFileU64("/sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj", &prevCpuUj);
     prevTimeUs = getNowUs();
 
+    TempCtx tempCtx = {
+        .fd_pkg = cpuPkgPath ? open(cpuPkgPath, O_RDONLY | O_CLOEXEC) : -1,
+        .fd_core = cpuCorePath ? open(cpuCorePath, O_RDONLY | O_CLOEXEC) : -1
+    };
+    CpuCtx cpuCtx = { .fd_stat = open("/proc/stat", O_RDONLY | O_CLOEXEC) };
+    RamCtx ramCtx = { .fd_mem = open("/proc/meminfo", O_RDONLY | O_CLOEXEC) };
+    PowerCtx powerCtx = {
+        .fd_rapl0 = open("/sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj", O_RDONLY | O_CLOEXEC),
+        .fd_rapl1 = open("/sys/class/powercap/intel-rapl/intel-rapl:1/energy_uj", O_RDONLY | O_CLOEXEC)
+    };
+    BatCtx batCtx = {
+        .fd_cap = open("/sys/class/power_supply/BAT0/capacity", O_RDONLY | O_CLOEXEC),
+        .fd_stat = open("/sys/class/power_supply/BAT0/status", O_RDONLY | O_CLOEXEC),
+        .fd_enNow = open("/sys/class/power_supply/BAT0/energy_now", O_RDONLY | O_CLOEXEC),
+        .fd_enFull = open("/sys/class/power_supply/BAT0/energy_full", O_RDONLY | O_CLOEXEC),
+        .fd_pwr = open("/sys/class/power_supply/BAT0/power_now", O_RDONLY | O_CLOEXEC)
+    };
+
     Module modules[] = {
         { .update = updateVolume,   .interval = 3,       .signalId = 0,  .label = "Vol",
           .onLeft = "pamixer -t",   .onRight = "pavucontrol",
@@ -378,22 +491,22 @@ int main(int argc, char **argv) {
         { .update = updateAirpods,  .interval = 3,       .signalId = -1, .label = "Pods",
           .onLeft = "airpods",      .onRight = "librepods" },
         
-        { .update = updatePower,    .interval = raplInt, .signalId = -1, .label = "Pwr" },
+        { .update = updatePower,    .interval = raplInt, .signalId = -1, .label = "Pwr", .ctx = &powerCtx },
         
         { .update = updateDuck,     .interval = 9999,    .signalId = -1, .label = "Duck",
           .onLeft = "sh -c 'pgrep -x wmbubble >/dev/null || wmbubble &'",
           .onRight = "pkill -x wmbubble" },
         
-        { .update = updateTemp,     .interval = 1,       .signalId = -1, .label = "Temp" },
+        { .update = updateTemp,     .interval = 1,       .signalId = -1, .label = "Temp", .ctx = &tempCtx },
         
-        { .update = updateCpu,      .interval = 1,       .signalId = -1, .label = "CPU",
+        { .update = updateCpu,      .interval = 1,       .signalId = -1, .label = "CPU", .ctx = &cpuCtx,
           .onLeft = "cpupower-gui" },
         
-        { .update = updateRam,      .interval = 1,       .signalId = -1, .label = "RAM" },
+        { .update = updateRam,      .interval = 1,       .signalId = -1, .label = "RAM", .ctx = &ramCtx },
         
         { .update = updateDisk,     .interval = 120,     .signalId = -1, .label = "Disk" },
         
-        { .update = updateBattery,  .interval = 20,      .signalId = -1, .label = "Bat" },
+        { .update = updateBattery,  .interval = 20,      .signalId = -1, .label = "Bat", .ctx = &batCtx },
         
         { .update = updateTime,     .interval = 8,       .signalId = -1, .label = "Time" },
         
@@ -409,7 +522,7 @@ int main(int argc, char **argv) {
     bool timePassed = true; /* true = normal tick, false = signal interruption */
 
     /* Initial run: update all */
-    for (int i=0; i<count; ++i) modules[i].update(modules[i].buffer, sizeof(modules[i].buffer));
+    for (int i=0; i<count; ++i) modules[i].update(modules[i].ctx, modules[i].buffer, sizeof(modules[i].buffer));
 
     for (;;) {
         /* Only increment tick if we woke up from sleep naturally */
@@ -425,32 +538,12 @@ int main(int argc, char **argv) {
             bool timeDue = timePassed && (tick % modules[i].interval == 0);
 
             if (forced || timeDue) {
-                modules[i].update(modules[i].buffer, sizeof(modules[i].buffer));
+                modules[i].update(modules[i].ctx, modules[i].buffer, sizeof(modules[i].buffer));
             }
         }
 
-        char line[1024] = {0}, *p = line;
-        size_t rem = sizeof(line);
-        
-        for (int i = 0; i < count; i++) {
-            char seg[512];
-            size_t segLen = strlen(modules[i].buffer);
-            memcpy(seg, modules[i].buffer, segLen + 1);
-            
-            applyTag(seg, &segLen, "lm", modules[i].onLeft);
-            applyTag(seg, &segLen, "mm", modules[i].onMiddle);
-            applyTag(seg, &segLen, "rm", modules[i].onRight);
-            applyTag(seg, &segLen, "us", modules[i].onScrollUp);
-            applyTag(seg, &segLen, "ds", modules[i].onScrollDown);
-
-            if (rem > segLen + 1) {
-                memcpy(p, seg, segLen);
-                p += segLen;
-                if (i < count - 1) *p++ = ' ';
-                rem -= (segLen + 1);
-            }
-        }
-        *p = 0;
+        char line[1024];
+        buildLine(modules, count, line, sizeof(line));
         puts(line);
         fflush(stdout);
 
