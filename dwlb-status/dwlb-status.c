@@ -287,7 +287,7 @@ static void time_text(char *out, size_t outsz) {
     time_t t = time(NULL);
     struct tm tm; localtime_r(&t, &tm);
     char date[16], timebuf[16];
-    strftime(date, sizeof date, "%Y-%m-%d", &tm);
+    strftime(date, sizeof date, "%d-%m-%Y", &tm);
     strftime(timebuf, sizeof timebuf, "%H:%M", &tm);
     snprintf(out, outsz, "📅 %s 🕒 %s", date, timebuf);
 }
