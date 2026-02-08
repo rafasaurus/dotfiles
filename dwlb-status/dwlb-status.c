@@ -76,51 +76,69 @@ static bool read_first_existing_u64(const char *a, const char *b, uint64_t *out)
 
 static bool path_readable(const char *p) { return p && access(p, R_OK) == 0; }
 
-/* Scan hwmon for coretemp "Package id 0" temp input; fallback to any temp*_input */
-static char *find_coretemp_input_path(void) {
+static char *cpu_pkg_path_g = NULL;
+static char *cpu_core_path_g = NULL;
+
+/* Scan hwmon for coretemp "Package id 0" and "CPU" temp inputs */
+static void find_temp_paths(void) {
     DIR *root = opendir("/sys/class/hwmon");
-    if (!root) return NULL;
+    if (!root) return;
     struct dirent *de;
     while ((de = readdir(root))) {
         if (strncmp(de->d_name, "hwmon", 5) != 0) continue;
         char base[64];
         if (snprintf(base, sizeof base, "/sys/class/hwmon/%s", de->d_name) >= (int)sizeof(base)) continue;
-        char namep[72]; 
-        if (snprintf(namep, sizeof namep, "%s/name", base) >= (int)sizeof(namep)) continue;
-        FILE *nf = fopen(namep, "re");
-        if (!nf) continue;
-        char name[32] = {0};
-        if (fgets(name, sizeof name, nf)) {
-            for (char *p = name; *p; ++p) *p = tolower(*p);
-            if (strstr(name, "coretemp")) {
-                for (int i = 1; i <= 32; ++i) {
-                    char lbl[80]; 
-                    if (snprintf(lbl, sizeof lbl, "%s/temp%d_label", base, i) >= (int)sizeof(lbl)) continue;
-                    FILE *lf = fopen(lbl, "re");
-                    if (!lf) continue;
-                    char ltxt[32] = {0};
-                    if (fgets(ltxt, sizeof ltxt, lf)) {
-                        if (strncmp(ltxt, "Package id 0", 12) == 0) {
-                            char *res = NULL;
-                            if (asprintf(&res, "%s/temp%d_input", base, i) > 0) { fclose(lf); fclose(nf); closedir(root); return res; }
-                        }
-                    }
-                    fclose(lf);
-                }
-                for (int i = 1; i <= 32; ++i) {
-                    char inp[80]; 
-                    if (snprintf(inp, sizeof inp, "%s/temp%d_input", base, i) >= (int)sizeof(inp)) continue;
-                    if (access(inp, R_OK) == 0) {
-                        char *res = strdup(inp);
-                        if (res) { fclose(nf); closedir(root); return res; }
-                    }
+
+        for (int i = 1; i <= 32; ++i) {
+            char lbl[80];
+            if (snprintf(lbl, sizeof lbl, "%s/temp%d_label", base, i) >= (int)sizeof(lbl)) continue;
+            FILE *lf = fopen(lbl, "re");
+            if (!lf) continue;
+            char ltxt[32] = {0};
+            if (fgets(ltxt, sizeof ltxt, lf)) {
+                if (!cpu_pkg_path_g && strncmp(ltxt, "Package id 0", 12) == 0) {
+                    asprintf(&cpu_pkg_path_g, "%s/temp%d_input", base, i);
+                } else if (!cpu_core_path_g && strncmp(ltxt, "CPU", 3) == 0) {
+                    asprintf(&cpu_core_path_g, "%s/temp%d_input", base, i);
                 }
             }
+            fclose(lf);
         }
-        fclose(nf);
     }
     closedir(root);
-    return NULL;
+
+    /* Fallback if Package id 0 not found: look for coretemp name and any temp*_input */
+    if (!cpu_pkg_path_g) {
+        root = opendir("/sys/class/hwmon");
+        if (root) {
+            while ((de = readdir(root))) {
+                if (strncmp(de->d_name, "hwmon", 5) != 0) continue;
+                char base[64];
+                snprintf(base, sizeof base, "/sys/class/hwmon/%s", de->d_name);
+                char namep[72];
+                snprintf(namep, sizeof namep, "%s/name", base);
+                FILE *nf = fopen(namep, "re");
+                if (!nf) continue;
+                char name[32] = {0};
+                if (fgets(name, sizeof name, nf)) {
+                    for (char *p = name; *p; ++p) *p = tolower(*p);
+                    if (strstr(name, "coretemp")) {
+                        for (int i = 1; i <= 32; ++i) {
+                            char inp[80];
+                            snprintf(inp, sizeof inp, "%s/temp%d_input", base, i);
+                            if (access(inp, R_OK) == 0) {
+                                cpu_pkg_path_g = strdup(inp);
+                                break;
+                            }
+                        }
+                    }
+                }
+                fclose(nf);
+                if (cpu_pkg_path_g) break;
+            }
+            closedir(root);
+        }
+    }
 }
 
 /* Read first line of /proc/stat: returns idle and total jiffies */
@@ -313,16 +331,20 @@ static void ram_text(char *out, size_t outsz) {
     }
 }
 
-static char *cpu_temp_path_g = NULL;
 static void temp_text(char *out, size_t outsz) {
-    if (cpu_temp_path_g && path_readable(cpu_temp_path_g)) {
-        uint64_t milli = 0;
-        if (read_u64_file(cpu_temp_path_g, &milli)) {
-            snprintf(out, outsz, "🔥 %llu°C", (unsigned long long)(milli/1000ull));
-            return;
-        }
+    uint64_t pkg_milli = 0, core_milli = 0;
+    bool has_pkg = cpu_pkg_path_g && read_u64_file(cpu_pkg_path_g, &pkg_milli);
+    bool has_core = cpu_core_path_g && read_u64_file(cpu_core_path_g, &core_milli);
+
+    if (has_pkg && has_core) {
+        snprintf(out, outsz, "🔥 %llu/%llu°C", (unsigned long long)(pkg_milli/1000ull), (unsigned long long)(core_milli/1000ull));
+    } else if (has_pkg) {
+        snprintf(out, outsz, "🔥 %llu°C", (unsigned long long)(pkg_milli/1000ull));
+    } else if (has_core) {
+        snprintf(out, outsz, "🔥 %llu°C", (unsigned long long)(core_milli/1000ull));
+    } else {
+        snprintf(out, outsz, "🔥 ?°C");
     }
-    snprintf(out, outsz, "🔥 ?°C");
 }
 
 static uint64_t prev_idle_g=0, prev_total_g=0;
@@ -341,16 +363,30 @@ static void power_text(char *out, size_t outsz) {
     const char *PKG_CPU = "/sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj";
     const char *PKG_SOC = "/sys/class/powercap/intel-rapl/intel-rapl:1/energy_uj";
     uint64_t cur_cpu_uj=0, cur_soc_uj=0, cur_us=now_us();
-    read_u64_file(PKG_CPU, &cur_cpu_uj);
-    read_u64_file(PKG_SOC, &cur_soc_uj);
+    bool has_cpu = read_u64_file(PKG_CPU, &cur_cpu_uj);
+    bool has_soc = read_u64_file(PKG_SOC, &cur_soc_uj);
     uint64_t dus = (cur_us > prev_us_g) ? (cur_us - prev_us_g) : 1;
-    uint64_t d_cpu = (cur_cpu_uj > prev_cpu_uj_g) ? (cur_cpu_uj - prev_cpu_uj_g) : 0;
-    uint64_t d_soc = (cur_soc_uj > prev_soc_uj_g) ? (cur_soc_uj - prev_soc_uj_g) : 0;
+    
+    uint64_t d_cpu = (has_cpu && cur_cpu_uj >= prev_cpu_uj_g) ? (cur_cpu_uj - prev_cpu_uj_g) : 0;
+    uint64_t d_soc = (has_soc && cur_soc_uj >= prev_soc_uj_g) ? (cur_soc_uj - prev_soc_uj_g) : 0;
+    
     uint64_t cpu_w10 = (d_cpu * 10ull + dus/2ull) / dus;
     uint64_t soc_w10 = (d_soc * 10ull + dus/2ull) / dus;
-    snprintf(out, outsz, "^fg(FFD700)⚡^fg() %llu.%lluW %llu.%lluW",
-             (unsigned long long)(soc_w10/10ull), (unsigned long long)(soc_w10%10ull),
-             (unsigned long long)(cpu_w10/10ull), (unsigned long long)(cpu_w10%10ull));
+
+    if (has_cpu && has_soc) {
+        snprintf(out, outsz, "^fg(FFD700)⚡^fg() %llu.%llu/%llu.%lluW",
+                 (unsigned long long)(soc_w10/10ull), (unsigned long long)(soc_w10%10ull),
+                 (unsigned long long)(cpu_w10/10ull), (unsigned long long)(cpu_w10%10ull));
+    } else if (has_cpu) {
+        snprintf(out, outsz, "^fg(FFD700)⚡^fg() %llu.%lluW",
+                 (unsigned long long)(cpu_w10/10ull), (unsigned long long)(cpu_w10%10ull));
+    } else if (has_soc) {
+        snprintf(out, outsz, "^fg(FFD700)⚡^fg() %llu.%lluW",
+                 (unsigned long long)(soc_w10/10ull), (unsigned long long)(soc_w10%10ull));
+    } else {
+        snprintf(out, outsz, "^fg(FFD700)⚡^fg() ?W");
+    }
+
     prev_cpu_uj_g = cur_cpu_uj; prev_soc_uj_g = cur_soc_uj; prev_us_g = cur_us;
 }
 
@@ -459,7 +495,7 @@ int main(int argc, char **argv) {
     }
 
     /* CPU temp path (discover once) */
-    cpu_temp_path_g = find_coretemp_input_path();
+    find_temp_paths();
 
     /* Baselines */
     read_u64_file("/sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj", &prev_cpu_uj_g);
