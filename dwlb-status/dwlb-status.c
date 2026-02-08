@@ -75,10 +75,13 @@ static bool read_first_existing_u64(const char *a, const char *b, uint64_t *out)
 
 static bool path_readable(const char *p) { return p && access(p, R_OK) == 0; }
 
-/* Scan hwmon for coretemp "Package id 0" temp input; fallback to any temp*_input */
-static char *find_coretemp_input_path(void) {
+static char *cpu_temp_path_g = NULL;
+static char *cpu_core_path_g = NULL;
+
+/* Scan hwmon for coretemp "Package id 0" temp input and "Core 0" input */
+static void discover_temp_paths(void) {
     DIR *root = opendir("/sys/class/hwmon");
-    if (!root) return NULL;
+    if (!root) return;
     struct dirent *de;
     while ((de = readdir(root))) {
         if (strncmp(de->d_name, "hwmon", 5) != 0) continue;
@@ -99,27 +102,41 @@ static char *find_coretemp_input_path(void) {
                     if (!lf) continue;
                     char ltxt[32] = {0};
                     if (fgets(ltxt, sizeof ltxt, lf)) {
-                        if (strncmp(ltxt, "Package id 0", 12) == 0) {
-                            char *res = NULL;
-                            if (asprintf(&res, "%s/temp%d_input", base, i) > 0) { fclose(lf); fclose(nf); closedir(root); return res; }
+                        if (!cpu_temp_path_g && strncmp(ltxt, "Package id 0", 12) == 0) {
+                            asprintf(&cpu_temp_path_g, "%s/temp%d_input", base, i);
+                        } else if (!cpu_core_path_g && strncmp(ltxt, "Core 0", 6) == 0) {
+                            asprintf(&cpu_core_path_g, "%s/temp%d_input", base, i);
                         }
                     }
                     fclose(lf);
-                }
-                for (int i = 1; i <= 32; ++i) {
-                    char inp[80]; 
-                    if (snprintf(inp, sizeof inp, "%s/temp%d_input", base, i) >= (int)sizeof(inp)) continue;
-                    if (access(inp, R_OK) == 0) {
-                        char *res = strdup(inp);
-                        if (res) { fclose(nf); closedir(root); return res; }
-                    }
                 }
             }
         }
         fclose(nf);
     }
     closedir(root);
-    return NULL;
+
+    /* Fallback if Package id 0 not found */
+    if (!cpu_temp_path_g) {
+        root = opendir("/sys/class/hwmon");
+        if (root) {
+            while ((de = readdir(root))) {
+                if (strncmp(de->d_name, "hwmon", 5) != 0) continue;
+                char base[64];
+                snprintf(base, sizeof base, "/sys/class/hwmon/%s", de->d_name);
+                for (int i = 1; i <= 32; ++i) {
+                    char inp[80];
+                    snprintf(inp, sizeof inp, "%s/temp%d_input", base, i);
+                    if (access(inp, R_OK) == 0) {
+                        cpu_temp_path_g = strdup(inp);
+                        break;
+                    }
+                }
+                if (cpu_temp_path_g) break;
+            }
+            closedir(root);
+        }
+    }
 }
 
 /* Read first line of /proc/stat: returns idle and total jiffies */
@@ -303,16 +320,26 @@ static void ram_text(char *out, size_t outsz) {
     }
 }
 
-static char *cpu_temp_path_g = NULL;
 static void temp_text(char *out, size_t outsz) {
-    if (cpu_temp_path_g && path_readable(cpu_temp_path_g)) {
-        uint64_t milli = 0;
-        if (read_u64_file(cpu_temp_path_g, &milli)) {
-            snprintf(out, outsz, "🔥 %llu°C", (unsigned long long)(milli/1000ull));
-            return;
-        }
+    uint64_t pkg_milli = 0, core_milli = 0;
+    bool has_pkg = false, has_core = false;
+
+    if (cpu_temp_path_g && read_u64_file(cpu_temp_path_g, &pkg_milli)) {
+        has_pkg = true;
     }
-    snprintf(out, outsz, "🔥 ?°C");
+    if (cpu_core_path_g && read_u64_file(cpu_core_path_g, &core_milli)) {
+        has_core = true;
+    }
+
+    if (has_pkg && has_core) {
+        snprintf(out, outsz, "🔥 %llu/%llu°C", (unsigned long long)(pkg_milli/1000ull), (unsigned long long)(core_milli/1000ull));
+    } else if (has_pkg) {
+        snprintf(out, outsz, "🔥 %llu°C", (unsigned long long)(pkg_milli/1000ull));
+    } else if (has_core) {
+        snprintf(out, outsz, "🔥 %llu°C", (unsigned long long)(core_milli/1000ull));
+    } else {
+        snprintf(out, outsz, "🔥 ?°C");
+    }
 }
 
 static uint64_t prev_idle_g=0, prev_total_g=0;
@@ -453,7 +480,7 @@ int main(int argc, char **argv) {
     }
 
     /* CPU temp path (discover once) */
-    cpu_temp_path_g = find_coretemp_input_path();
+    discover_temp_paths();
 
     /* Baselines */
     read_u64_file("/sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj", &prev_cpu_uj_g);
@@ -549,25 +576,19 @@ int main(int argc, char **argv) {
 
     int tick = 0;
     for (;;) {
-        tick++;
-
         sig_atomic_t current_mask = update_mask;
-        if (__builtin_expect(current_mask != 0, 0)) {
-            update_mask = 0;
-        }
+        update_mask = 0;
 
         for (int i = 0; i < num_units; i++) {
             bool update_needed = false;
-            if (__builtin_expect(units[i].signal_idx != -1, 0)) {
-                if (current_mask & (1 << units[i].signal_idx)) {
-                    update_needed = true;
-                }
+            if (units[i].signal_idx != -1 && (current_mask & (1 << units[i].signal_idx))) {
+                update_needed = true;
             }
-            if (__builtin_expect(tick % units[i].interval == 1, 0)) {
+            if (tick % units[i].interval == 0) {
                 update_needed = true;
             }
 
-            if (__builtin_expect(update_needed, 0)) {
+            if (update_needed) {
                 units[i].update(units[i].buffer, sizeof(units[i].buffer));
             }
         }
@@ -579,7 +600,7 @@ int main(int argc, char **argv) {
             char rendered[512];
             size_t rlen = 0;
             render_unit(&units[i], rendered, &rlen);
-            if (__builtin_expect(p + rlen + 2 < end, 1)) {
+            if (p + rlen + 2 < end) {
                 memcpy(p, rendered, rlen);
                 p += rlen;
                 if (i < num_units - 1) {
@@ -596,6 +617,7 @@ int main(int argc, char **argv) {
         if (nanosleep(&req, NULL) == -1 && errno == EINTR) {
             continue;
         }
+        tick++;
     }
 
     return 0;
