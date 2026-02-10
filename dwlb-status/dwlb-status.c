@@ -505,9 +505,9 @@ int main(int argc, char **argv) {
             .update = volume_text,
             .left_click = "pamixer -t",
             .right_click = "pavucontrol",
-            .scroll_up = "sh -c \"pamixer -i 2; dwlb-status --signal 1\"",
-            .scroll_down = "sh -c \"pamixer -d 2; dwlb-status --signal 1\"",
-            .signal_idx = 1
+            .scroll_up = "sh -c \"pamixer -i 2; dwlb-status --signal 0\"",
+            .scroll_down = "sh -c \"pamixer -d 2; dwlb-status --signal 0\"",
+            .signal_idx = 0
         },
         {
             .name = "Airpods",
@@ -572,8 +572,8 @@ int main(int argc, char **argv) {
             .name = "Theme",
             .interval = THEME_EVERY,
             .update = theme_text,
-            .left_click = "sh -c 'switch-theme -a; dwlb-status --signal 0'",
-            .signal_idx = 0
+            .left_click = "sh -c 'switch-theme -a; dwlb-status --signal 1'",
+            .signal_idx = 1
         },
         {
             .name = "Launcher",
