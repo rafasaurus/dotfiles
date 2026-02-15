@@ -4,6 +4,7 @@ export TERMINAL=alacritty
 export BROWSER=brave
 export LD_LIBRARY_PATH="/usr/local/lib"
 export LIBVA_DRIVER_NAME=iHD
+export FZF_DEFAULT_OPTS='--color=fg:#00ff00,bg:#1e2124,hl:#00aacc'
 
 PATH=$PATH:$HOME/.scripts/tools
 PATH=$PATH:$HOME/.scripts/commands
