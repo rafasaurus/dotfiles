@@ -2,9 +2,13 @@
 	email = rafaelkgrigoryan@gmail.com
 	name = rafasaurus
 [diff]
-    tool = vimdiff
+    tool = nvim
+[difftool "nvim"]
+    cmd = nvim -d "$LOCAL" "$REMOTE"
 [merge]
-    tool = vimdiff
+    tool = nvim
+[mergetool "nvim"]
+    cmd = nvim -d "$LOCAL" "$REMOTE" "$MERGED"
 [mergetool "vimdiff"]
     path = $EDITOR
 [filter "lfs"]

@@ -10,8 +10,7 @@ pipewire-pulse &
 sleep 0.5
 wireplumber &
 syncthing --no-browser &
-dwlb -ipc -font "monospace:bold:size=12.5" &
-dwlb-status | dwlb -status-stdin all &
+relaunch_statusbar.sh
 swaybg -i $HOME/.config/wall.png &
 wmbubble &
 bluetoothctl power on &
