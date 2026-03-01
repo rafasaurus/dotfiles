@@ -11,7 +11,7 @@ sleep 0.5
 wireplumber &
 syncthing --no-browser &
 relaunch_statusbar.sh
-swaybg -i $HOME/.config/wall.png &
+set_wallpaper.sh
 wmbubble &
 bluetoothctl power on &
 autored

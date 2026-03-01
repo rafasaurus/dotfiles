@@ -11,7 +11,7 @@ do
             && notify-send "installed pywal-env")
 
     case "$1" in
-        "w") source $HOME/.local/share/pywal-env/bin/activate && backend=$(wal --backend | awk '{print $2}' | awk '/[a-z]/' | dmenu -i -p "choose pywal backend" -l 15) && wal -n -i "$file" --backend $backend && sleep 3 && xrdb ~/.cache/wal/.Xresources && setbg "$file" && echo $backend > ~/.config/pywal_backend || notify-send "wallpaper failed";;
+        "w") pkill swaybg ; cp $file ~/.config/wall-tile.png ; swaybg -m tile -i $file & ;;
         "q") apply-hald-clut.sh "$file" | xargs -L 1 notify-send ;;
         "l") $TERMINAL -e vim ~/.local/bin/apply-hald-clut.sh "$file" ;;
         "j") convert $file ${file}.jpg ;;
