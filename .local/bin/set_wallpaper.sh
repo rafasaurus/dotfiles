@@ -1,5 +1,4 @@
 #!/bin/sh
-set -x
 pkill swaybg
 
 if [ -f "$HOME/.config/wall-tile.png" ]; then 

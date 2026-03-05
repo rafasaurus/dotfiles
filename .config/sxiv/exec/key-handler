@@ -2,13 +2,12 @@
 
 while read file
 do
-    set -x 
     case "$1" in
         "w") pkill swaybg ; cp "$file" ~/.config/wall-tile.png ; swaybg -m tile -i "$file" & ;;
+        "W") pkill swaybg ; rm ~/.config/wall.png ; rm ~/.config/wall-tile.png ; cp "$file" ~/.config/wall.png ; swaybg -i "$file" & ;;
         "q") apply-hald-clut.sh "$file" | xargs -L 1 notify-send ;;
         "l") $TERMINAL -e vim ~/.local/bin/apply-hald-clut.sh "$file" ;;
         "j") convert $file ${file}.jpg ;;
-        "p") darktable "$file" ;;
         # "e") $TERMINAL -e vim ~/.config/sxiv/exec/key-handler & ;;
         "e") $TERMINAL -e vim  ~/.config/sxiv/exec/key-handler & ;;
         "o") pkill sxiv && sxiv -t `dirname "$file"` || notify-send "$file" ;;
@@ -29,13 +28,13 @@ do
         "f")
             convert -flop -flip "$file" "$file" ;;
         "y")
-            echo -n "$file" | xclip -selection clipboard &&
+            cat "$file" | wl-copy --type image/png &&
                 notify-send "$file copied to clipboard" & ;;
         "Y")
-            readlink -f "$file" | xclip -selection clipboard &&
+            readlink -f "$file" | wl-copy &&
                 notify-send "$(readlink -f "$file") copied to clipboard" & ;;
         "d")
             [ "$(printf "No\\nYes" | dmenu -i -p "Really delete $file?")" = "Yes" ] && rm "$file" && notify-send "$file deleted." ;;
-        "g")	ifinstalled gimp && gimp "$file" & ;;
+        "g")	gimp && gimp "$file" & ;;
             esac
 done
