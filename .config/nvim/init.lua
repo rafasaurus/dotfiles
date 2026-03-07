@@ -23,4 +23,5 @@ require "telescope".setup {
   }
 }
 
+require("keymaps")
 -- vim.lsp.set_log_level("debug")
