@@ -1,0 +1,16 @@
+#!/bin/bash
+
+WEEK=$(date +%G-W%V)
+
+OBSIDIAN_DIR="$HOME/obsidian/weekly-todos"
+NOTE="$OBSIDIAN_DIR/$WEEK.md"
+
+mkdir -p "$OBSIDIAN_DIR"
+
+if [ ! -f "$NOTE" ]; then
+    echo "New week detected! Checking for unfinished tasks..."
+    pushd "$HOME/obsidian" > /dev/null && python3 weekly_todo_roller.py
+    popd > /dev/null
+fi
+
+$EDITOR "$NOTE"
