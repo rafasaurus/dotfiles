@@ -1,8 +1,8 @@
 #!/bin/sh
 # Startup script for wayland session
 
-systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP QT_QPA_PLATFORMTHEME XCURSOR_THEME XCURSOR_SIZE &
-dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &
+systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_RUNTIME_DIR QT_QPA_PLATFORMTHEME XCURSOR_THEME XCURSOR_SIZE &
+dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_RUNTIME_DIR &
 dbus-update-activation-environment --systemd --all &
 killall pipewire pipewire-pulse wireplumber syncthing wmbubble
 pipewire &
@@ -19,3 +19,7 @@ xrdb -merge ~/.Xresources &
 wlr-randr --output eDP-1 --mode 1920x1200@120
 mako &
 notify-send "Welcome to Rice of rafasaurus" &
+
+# Restart portals to pick up new environment
+systemctl --user stop xdg-desktop-portal xdg-desktop-portal-wlr
+systemctl --user start xdg-desktop-portal xdg-desktop-portal-wlr
