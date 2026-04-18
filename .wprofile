@@ -31,5 +31,5 @@ export MOZ_USE_XINPUT2=1
 export MOZ_ENABLE_WAYLAND=1
 export XDG_DESKTOP_PORTAL_BACKEND=xdg-desktop-portal-wlr
 export XCURSOR_THEME="dwlcursor"
-export XCURSOR_SIZE=29
+export XCURSOR_SIZE=31
 
