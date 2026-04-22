@@ -1,0 +1,6 @@
+ttf-apple-emoji
+startw
+qt5-styleplugins
+python312
+python38
+librepods-git
