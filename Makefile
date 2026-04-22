@@ -1,13 +1,40 @@
 stow_dirs = $(wildcard .)
 
+.DEFAULT_GOAL := stow
+
 .PHONY: all stow restow destow install-prereqs install-paru \
-	install-paru-packages install-udev install-gui install-themes \
+	install-aur install-udev install-gui install-themes \
 	install-mimir install-full install-android-env install-film-android \
-	install-neovim \
-	uninstall-gui uninstall-udev check_dirs install-cursors toggle \
+	install-neovim reinstall reinstall-gui \
+	uninstall-gui uninstall-udev check_dirs install-cursors toggle help \
+
+help:
+	@printf "%-28s %s\n" "Target" "Description"
+	@printf "%-28s %s\n" "------" "-----------"
+	@printf "%-28s %s\n" "stow"              "Symlink dotfiles into HOME (default)"
+	@printf "%-28s %s\n" "restow"            "Re-symlink dotfiles (refresh)"
+	@printf "%-28s %s\n" "destow"            "Remove dotfile symlinks from HOME"
+	@printf "%-28s %s\n" "install-full"      "Bootstrap: paru + pacman pkgs + AUR pkgs + mimir"
+	@printf "%-28s %s\n" "install-prereqs"   "Install official packages via pacman (packages.txt)"
+	@printf "%-28s %s\n" "install-paru"      "Install paru AUR helper (if not present)"
+	@printf "%-28s %s\n" "install-aur"       "Install AUR packages via paru (packages-aur.txt)"
+	@printf "%-28s %s\n" "install-gui"       "Build and install dwl, dwlb, dwlb-status, wlbubble"
+	@printf "%-28s %s\n" "reinstall"         "Reinstall GUI + packages"
+	@printf "%-28s %s\n" "reinstall-gui"     "Reinstall GUI only"
+	@printf "%-28s %s\n" "uninstall-gui"     "Uninstall dwl and dwlb-status"
+	@printf "%-28s %s\n" "install-udev"      "Deploy udev rules and reload"
+	@printf "%-28s %s\n" "uninstall-udev"    "Remove all udev rules"
+	@printf "%-28s %s\n" "install-themes"    "Clone Mac-OS-9 GTK theme"
+	@printf "%-28s %s\n" "install-cursors"   "Build and install dwlcursor (Apple cursor)"
+	@printf "%-28s %s\n" "install-mimir"     "Install mimir from source"
+	@printf "%-28s %s\n" "install-neovim"    "Install neovim nightly AppImage"
+	@printf "%-28s %s\n" "install-android-env" "Install mimir ARM binary for Android"
+	@printf "%-28s %s\n" "install-film-android" "Install film tools for Android device"
+	@printf "%-28s %s\n" "toggle"            "Toggle git remote visibility"
 
 toggle:
 	./toggle-git.sh
+
 stow : check_dirs
 	stow --target $(HOME) --verbose $(stow_dirs)
 
@@ -27,14 +54,14 @@ install-paru :
 		cd .. && rm -rf paru; \
 	fi
 
-install-paru-packages:
-	paru -S --noconfirm ttf-apple-emoji startw qt5-styleplugins
+install-aur :
+	paru -S --needed - < packages-aur.txt
 
 install-udev :
 	sudo cp -r etc/udev/rules.d/* /etc/udev/rules.d/
 	sudo udevadm control --reload-rules && sudo udevadm trigger
 
-reinstall : uninstall-gui install-gui install-prereqs install-paru-packages
+reinstall : uninstall-gui install-gui install-prereqs install-aur
 reinstall-gui: uninstall-gui install-gui
 
 install-gui :
@@ -42,10 +69,11 @@ install-gui :
 	sudo $(MAKE) -C external/dwl install -j
 	sudo $(MAKE) -C external/wlbubble install -j
 	$(MAKE) -C dwlb-status install
-	cp patches/dwlb-config.h external/dwlb/config.h && \
-		sudo $(MAKE) -C external/dwlb install -j
-	pushd external/dwlb && git checkout -f . && \
-		sed -i 's/CFLAGS += -Wall -Wextra -Wno-unused-parameter -Wno-format-truncation -g/CFLAGS += -Wall -Wextra -Wno-unused-parameter -Wno-format-truncation -O2 -march=native/' Makefile
+	cd external/dwlb && \
+		cp ../../patches/dwlb-config.h config.h && \
+		sed -i 's/CFLAGS += -Wall -Wextra -Wno-unused-parameter -Wno-format-truncation -g/CFLAGS += -Wall -Wextra -Wno-unused-parameter -Wno-format-truncation -O2 -march=native/' Makefile && \
+		sudo $(MAKE) install -j && \
+		git checkout -f .
 
 uninstall-gui :
 	sudo $(MAKE) -C external/dwl uninstall
@@ -54,14 +82,14 @@ uninstall-gui :
 uninstall-udev :
 	sudo rm -r /etc/udev/rules.d/*
 
-install-themes : 
-	[ -d $(HOME)/.themes ] || mkdir $(HOME)/.themes
-	git clone https://github.com/B00merang-Project/Mac-OS-9 ~/.themes/Mac-OS-9
+install-themes :
+	[ -d $(HOME)/.themes/Mac-OS-9 ] || \
+		git clone https://github.com/B00merang-Project/Mac-OS-9 ~/.themes/Mac-OS-9
 
 install-mimir :
-	cd ./external/mimir && git chckout main && make install
+	cd ./external/mimir && git checkout main && make install
 
-install-full :  install-paru install-prereqs install-mimir
+install-full : install-paru install-prereqs install-aur install-mimir
 	echo "done full installation"
 
 install-android-env :
@@ -77,8 +105,7 @@ uninstall-film-android :
 	rm -r $(shell dirname `which sh`)/512x512 $(shell which film)
 
 check_dirs:
-	# if mimeapps exists as file delele it, if its a symlink or does not exists do nothing
-	[ -L ~/.config/mimeapps.list ] || ([ -f ~/.config/mimeapps.list ] && rm ~/.config/mimeapps.list ) || echo ""
+	[ ! -f ~/.config/mimeapps.list ] || [ -L ~/.config/mimeapps.list ] || rm ~/.config/mimeapps.list
 	[ -d $(HOME)/.config ] || mkdir $(HOME)/.config
 	[ -d $(HOME)/.local ] || mkdir $(HOME)/.local
 	[ -d $(HOME)/.local/share ] || mkdir -p $(HOME)/.local/share
@@ -99,7 +126,7 @@ install-cursors:
 	wget https://github.com/ful1e5/apple_cursor/releases/download/v1.2.0/bitmaps.zip && \
 	unzip bitmaps.zip && \
 	mv macOSBigSur/* bitmaps/macOS-BigSur/ && \
-	ctgen build.toml -s 29 -p x11 -d "bitmaps/macOS-BigSur" -n "dwlcursor" -c "Custom Sizes macOS XCursors" && \
+	ctgen build.toml -s 31 -p x11 -d "bitmaps/macOS-BigSur" -n "dwlcursor" -c "Custom Sizes macOS XCursors" && \
 	cp themes/dwlcursor ~/.icons/ -r
 	@echo "you have to install cursor with nwg-look in wayland"
 
