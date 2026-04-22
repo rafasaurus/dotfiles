@@ -9,7 +9,8 @@
 	url = https://github.com/rafasaurus/dwl
 [submodule "external/wlbubble"]
 	path = external/wlbubble
-	url = git@github.com:rafasaurus/wlbubble
+	url = https://github.com/rafasaurus/wlbubble
 [submodule ".fonts/private-fonts"]
 	path = .fonts/private-fonts
 	url = git@github.com:rafasaurus/private-fonts
+	update = none
