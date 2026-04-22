@@ -8,7 +8,7 @@ blink_timeout = 0
 TERM = "xterm-256color"
 
 [font]
-size = 16
+size = 14
 
 [font.bold]
 family = "ComicCode"

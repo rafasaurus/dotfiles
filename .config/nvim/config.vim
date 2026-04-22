@@ -27,8 +27,7 @@ Plug 'nvim-telescope/telescope.nvim',
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'junegunn/goyo.vim'
 Plug 'kyoz/purify', { 'rtp': 'vim' }
-Plug 'bignimbus/pop-punk.vim'
-Plug 'folke/tokyonight.nvim'
+" Plug 'folke/tokyonight.nvim'
 Plug 'airblade/vim-gitgutter'
 Plug 'f-person/auto-dark-mode.nvim'
 call plug#end()

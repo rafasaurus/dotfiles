@@ -1,10 +1,6 @@
 #!/bin/bash
 DATE=$(date +%Y-%m-%d)
-OBSIDIAN_DIR="$HOME/obsidian/daily-notes"
+OBSIDIAN_DIR="$HOME/obsidian/todos"
 NOTE="$OBSIDIAN_DIR/$DATE.md"
 
-if [ ! -f "$NOTE" ]; then
-    pushd $HOME/obsidian && python daily_appender.py
-fi
-
-vim "$NOTE"
+$EDITOR "$NOTE"

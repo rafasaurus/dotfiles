@@ -1,9 +1,13 @@
 #!/usr/bin/env sh
 
-while read file
+while read -r file
 do
     case "$1" in
-        "w") pkill swaybg ; cp "$file" ~/.config/wall-tile.png ; swaybg -m tile -i "$file" & ;;
+        "w")
+            pkill swaybg
+            cp "$file" ~/.config/wall-tile.png
+            swaybg -m tile -i "$file" &
+            exit ;;
         "W") pkill swaybg ; rm ~/.config/wall.png ; rm ~/.config/wall-tile.png ; cp "$file" ~/.config/wall.png ; swaybg -i "$file" & ;;
         "q") apply-hald-clut.sh "$file" | xargs -L 1 notify-send ;;
         "l") $TERMINAL -e vim ~/.local/bin/apply-hald-clut.sh "$file" ;;
