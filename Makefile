@@ -126,7 +126,7 @@ install-cursors:
 	wget https://github.com/ful1e5/apple_cursor/releases/download/v1.2.0/bitmaps.zip && \
 	unzip bitmaps.zip && \
 	mv macOSBigSur/* bitmaps/macOS-BigSur/ && \
-	ctgen build.toml -s 31 -p x11 -d "bitmaps/macOS-BigSur" -n "dwlcursor" -c "Custom Sizes macOS XCursors" && \
+	ctgen build.toml -s 32 -p x11 -d "bitmaps/macOS-BigSur" -n "dwlcursor" -c "Custom Sizes macOS XCursors" && \
 	cp themes/dwlcursor ~/.icons/ -r
 	@echo "you have to install cursor with nwg-look in wayland"
 
