@@ -4,10 +4,6 @@
 systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_RUNTIME_DIR QT_QPA_PLATFORMTHEME XCURSOR_THEME XCURSOR_SIZE &
 dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_RUNTIME_DIR &
 dbus-update-activation-environment --systemd --all &
-# killall pipewire pipewire-pulse wireplumber syncthing wmbubble
-# pipewire &
-# pipewire-pulse &
-# wireplumber &
 syncthing --no-browser &
 relaunch_statusbar.sh
 set_wallpaper.sh
@@ -20,7 +16,6 @@ mako &
 notify-send "Welcome to Rice of rafasaurus" &
 
 # Restart portals to pick up new environment
-systemctl --user stop xdg-desktop-portal xdg-desktop-portal-wlr
-systemctl --user start xdg-desktop-portal xdg-desktop-portal-wlr
-
-killall pipewire pipewire-pulse wireplumber; pipewire & pipewire-pulse & wireplumber &
+systemctl --user stop xdg-desktop-portal xdg-desktop-portal-wlr pipewire pipewire-pulse wireplumber
+systemctl --user start xdg-desktop-portal xdg-desktop-portal-wlr pipewire pipewire-pulse wireplumber
+# killall pipewire pipewire-pulse wireplumber; pipewire & disown; pipewire-pulse & disown; wireplumber & disown;

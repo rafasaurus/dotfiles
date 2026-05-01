@@ -1,0 +1,35 @@
+# Office: tall 2560x2880 external only
+# Home: 4K external only
+profile main {
+    output eDP-1 enable mode 1920x1200 position 0,0 scale 1
+}
+
+profile home {
+    output eDP-1 disable
+    output "LG Electronics LG HDR 4K 0x0000AA8C" enable mode 3840x2160 position 0,0 scale 1
+}
+
+profile office {
+    output eDP-1 disable
+    output DP-5 enable mode 2560x2880 position 0,0 scale 1 transform 90
+}
+profile office1 {
+    output eDP-1 disable
+    output DP-4 enable mode 2560x2880 position 0,0 scale 1 transform 90
+}
+profile office2 {
+    output eDP-1 disable
+    output DP-1 enable mode 2560x2880 position 0,0 scale 1 transform 90
+}
+
+profile office3 {
+    output eDP-1 disable
+    output DP-2 enable mode 2560x2880 position 0,0 scale 1 transform 90
+}
+
+# profile home1 {
+#     output eDP-1 disable
+#     output DP-2 enable mode 3840x2160 position 0,0 scale 1
+# }
+
+# Mobile: fallback on laptop

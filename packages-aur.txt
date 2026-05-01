@@ -4,3 +4,4 @@ qt5-styleplugins
 python312
 python38
 librepods-git
+cpuid2cpuflags

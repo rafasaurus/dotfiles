@@ -18,6 +18,7 @@ fcft
 ffmpeg
 figlet
 fontconfig
+foot
 fuse2
 fuse3
 fuzzel
@@ -44,6 +45,7 @@ maim
 mako
 man
 mlocate
+mpv
 mtr
 ncurses
 neovim
@@ -74,6 +76,7 @@ rhythmbox
 ripgrep
 rust
 slurp
+sshfs
 stow
 sudo-rs
 swaybg
@@ -93,6 +96,8 @@ unrar
 unzip
 upower
 vtk
+wdisplays
+wf-recorder
 wget
 wireplumber
 wl-clipboard
