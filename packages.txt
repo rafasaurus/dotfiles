@@ -81,6 +81,7 @@ stow
 sudo-rs
 swaybg
 swaylock
+texlive-fontsrecommended
 the_silver_searcher
 thunar
 tllist
