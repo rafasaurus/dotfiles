@@ -46,7 +46,9 @@ do
     FLLUT="${LUT%.*}"
     orig=${FL}_orig.${extension}
     [ -f $orig ] || cp "$1" $orig
-    $CONVERT $orig ${LPATH}/${LUT} -hald-clut $1
+    # $CONVERT $orig ${LPATH}/${LUT} -hald-clut $1
+    hald_clut ${LPATH}/${LUT} $orig $1
+
     exiftool -delete_original -Exif:ImageDescription="${FLLUT}" -Description="${FLLUT}" "$1" 
     # ffmpeg -i $1 -i "${LPATH}/${LUT}" -filter_complex "haldclut" "result.mp4"
     echo "done $LUT"
