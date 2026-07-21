@@ -580,6 +580,7 @@ int main(int argc, char **argv) {
             .interval = 999999,
             .update = launcher_text,
             .left_click = "sh -c 'fuzzel &'",
+            .middle_click = "sh -c 'power &'",
             .right_click = "autored",
             .signal_idx = -1
         }

@@ -1,6 +1,6 @@
 #!/bin/bash
 set -x
-choices=`echo "lock suspend suspend_to_external_screen bluetooth shutdown reboot screen_layout" | tr ' ' '\n'`
+choices=`echo "lock suspend suspend_and_lock bluetooth shutdown reboot setup" | tr ' ' '\n'`
 
 if command -v wofi
 then 
@@ -12,10 +12,10 @@ fi
 echo $chosen
 case "$chosen" in
     lock) lock.sh;;
-    suspend) ~/.screenlayout/built-in.sh && setxkbmap -layout 'us' && systemctl suspend || setxkbmap -layout 'us' && systemctl suspend ;;
-    suspend_to_external_screen) setxkbmap -layout 'us' && systemctl suspend ;;
+    suspend) systemctl suspend ;;
+    suspend_and_lock) lock.sh && systemctl suspend ;;
     bluetooth) rofi-bluetooth ;;
-    shutdown) ~/.local/bin/scripts/tools/prompt "Do you want to shutdown ?" "shutdown now";;
-    reboot) ~/.local/bin/scripts/tools/prompt "Do you want to shutdown ?" "reboot";;
-    screen_layout) ~/.local/bin/scr ;;
+    shutdown) ~/.local/bin/prompt "Do you want to shutdown ?" "shutdown now";;
+    reboot) ~/.local/bin/prompt "Do you want to shutdown ?" "reboot";;
+    setup) ~/.local/bin/prompt "Do you want to run ~/setup ?" "sh -c ~/setup";;
 esac
