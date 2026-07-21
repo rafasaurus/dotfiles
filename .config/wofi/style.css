@@ -1,0 +1,48 @@
+window {
+    margin: auto;            /* <-- Add this line to force GTK auto-centering */
+    border: none;
+    border-radius: 7px;
+    background-color: #1a1a1a;
+    font-family: "SF Mono", monospace;
+    font-weight: bold;
+    font-size: 12pt;
+}
+
+#input {
+    margin: 5px;
+    border: none;
+    color: #ebdbb2;
+    background-color: #1a1a1a;
+}
+
+#inner-box {
+    margin: 5px;
+    border: none;
+    background-color: #1a1a1a;
+}
+
+#outer-box {
+    margin: 5px;
+    border: none;
+    background-color: #1a1a1a;
+}
+
+#scroll {
+    margin: 0px;
+    border: none;
+}
+
+#text {
+    margin: 5px;
+    border: none;
+    color: #ebdbb2;
+}
+
+#entry:selected {
+    background-color: #005577;
+    border-radius: 4px;
+}
+
+#text:selected {
+    color: #ebdbb2;
+}
