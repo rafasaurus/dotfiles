@@ -1,6 +1,6 @@
 #!/bin/bash
 set -x
-choices=`echo "lock suspend suspend_and_lock bluetooth shutdown reboot setup" | tr ' ' '\n'`
+choices=`echo "lock suspend suspend_and_lock bluetooth shutdown reboot setup launcher" | tr ' ' '\n'`
 
 if command -v wofi
 then 
@@ -18,4 +18,5 @@ case "$chosen" in
     shutdown) ~/.local/bin/prompt "Do you want to shutdown ?" "shutdown now";;
     reboot) ~/.local/bin/prompt "Do you want to shutdown ?" "reboot";;
     setup) ~/.local/bin/prompt "Do you want to run ~/setup ?" "sh -c ~/setup";;
+    launcher) fuzzel ;;
 esac
