@@ -1,6 +1,6 @@
 export VISUAL="/usr/bin/vim" # for crontab -e
 export EDITOR=nvim 
-export TERMINAL=alacritty
+export TERMINAL=foot
 export BROWSER=brave
 export LD_LIBRARY_PATH="/usr/local/lib"
 export LIBVA_DRIVER_NAME=iHD
