@@ -109,6 +109,8 @@ xclip
 xdg-desktop-portal
 xdg-desktop-portal-gtk
 xdg-desktop-portal-wlr
+xorg-bdftopcf
+xorg-fonttosfnt
 xorg-server
 xorg-xwayland
 zathura
