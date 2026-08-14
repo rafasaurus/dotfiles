@@ -8,22 +8,22 @@ blink_timeout = 0
 TERM = "xterm-256color"
 
 [font]
-size = 14
+size = 16
 
 [font.bold]
-family = "ComicCode"
+family = "ttyp0 otb"
 style = "Bold"
 
 [font.bold_italic]
-family = "ComicCode"
+family = "ttyp0 otb"
 style = "Bold Italic"
 
 [font.italic]
-family = "ComicCode"
+family = "ttyp0 otb"
 style = "Italic"
 
 [font.normal]
-family = "ComicCode"
+family = "ttyp0 otb"
 style = "medium"
 
 [font.offset]
