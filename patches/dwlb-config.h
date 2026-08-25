@@ -22,8 +22,8 @@ static bool center_title = false;
 static bool custom_title = false;
 // title color use active colors
 static bool active_color_title = true;
-// scale
-static uint32_t buffer_scale = 1;
+// buffer scale override; 0 follows each output's own scale
+static uint32_t buffer_scale = 0;
 // font
 static char *fontstr = "monospace:bold:size=12.5";
 // tag names
