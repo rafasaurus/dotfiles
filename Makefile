@@ -1,5 +1,7 @@
 stow_dirs = $(wildcard .)
 
+DOCKER_IMAGE ?= dotfiles-test
+
 .DEFAULT_GOAL := stow
 
 .PHONY: all stow restow destow install-prereqs install-paru \
@@ -7,6 +9,7 @@ stow_dirs = $(wildcard .)
 	install-mimir install-full install-android-env install-film-android \
 	install-neovim reinstall reinstall-gui \
 	uninstall-gui uninstall-udev check_dirs install-cursors toggle help \
+	docker-build test docker-shell
 
 help:
 	@printf "%-28s %s\n" "Target" "Description"
@@ -31,9 +34,21 @@ help:
 	@printf "%-28s %s\n" "install-android-env" "Install mimir ARM binary for Android"
 	@printf "%-28s %s\n" "install-film-android" "Install film tools for Android device"
 	@printf "%-28s %s\n" "toggle"            "Toggle git remote visibility"
+	@printf "%-28s %s\n" "docker-build"      "Build Arch docker image for tests"
+	@printf "%-28s %s\n" "test"              "Run dotfile tests in docker (Arch)"
+	@printf "%-28s %s\n" "docker-shell"      "Interactive shell in test container"
 
 toggle:
 	./toggle-git.sh
+
+docker-build :
+	docker build -t $(DOCKER_IMAGE) -f test/Dockerfile test
+
+test : docker-build
+	docker run --rm -v $(CURDIR):/dotfiles:ro $(DOCKER_IMAGE)
+
+docker-shell : docker-build
+	docker run -it --rm --hostname arch -v $(CURDIR):/dotfiles $(DOCKER_IMAGE) /bin/zsh -l
 
 stow : check_dirs
 	stow --target $(HOME) --verbose $(stow_dirs)

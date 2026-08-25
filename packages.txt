@@ -44,8 +44,8 @@ lolcat
 lsof
 maim
 mako
-man
-mlocate
+man-db
+plocate
 mpv
 mtr
 ncurses
@@ -90,7 +90,7 @@ tmux
 traceroute
 trash-cli
 ttf-dejavu
-ttf-font-awesome
+otf-font-awesome
 ttf-inconsolata
 tumbler
 unclutter
@@ -103,7 +103,7 @@ wf-recorder
 wget
 wireplumber
 wl-clipboard
-wlroots0.19
+wlroots0.20
 wmenu
 wtype
 xclip
