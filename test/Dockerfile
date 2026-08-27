@@ -14,4 +14,4 @@ RUN pacman -Syu --noconfirm --needed \
 ENV DOTFILES=/dotfiles
 WORKDIR /dotfiles
 
-CMD ["/usr/local/bin/run-tests.sh"]
+CMD ["/dotfile/test/run-tests.sh"]
