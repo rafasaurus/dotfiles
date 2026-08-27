@@ -55,8 +55,12 @@ else
 	if [ -z "$badnames" ]; then ok "all entries look like package names"; else bad "malformed:$badnames"; fi
 fi
 
-if [ "$SKIP_PKG_CHECK" != 1 ] && [ "${#pkgs[@]}" -gt 0 ]; then
-	head "packages.txt repo availability"
+head "packages.txt repo availability"
+if ! command -v pacman >/dev/null 2>&1; then
+	printf "  SKIP (pacman not available on this distro)\n"
+elif [ "$SKIP_PKG_CHECK" = 1 ]; then
+	printf "  SKIP (SKIP_PKG_CHECK=1)\n"
+elif [ "${#pkgs[@]}" -gt 0 ]; then
 	missing="$(printf '%s\n' "${pkgs[@]}" \
 		| xargs -P 8 -I{} sh -c 'pacman -Si --quiet "{}" >/dev/null 2>&1 || pacman -Sg --quiet "{}" >/dev/null 2>&1 || echo "{}"' || true)"
 	if [ -z "$missing" ]; then
@@ -171,3 +175,11 @@ rm -f "$log"
 head "summary"
 printf "  ${B}%d passed, %d failed${N}\n" "$pass" "$fail"
 [ "$fail" -eq 0 ]
+output=$(make -C "$DOTFILES" install-gui 2>&1); rc=$?
+if [ "$rc" -eq 0 ]; then
+    ok "make install-gui succeeded"
+elif echo "$output" | grep -q "No rule to make target"; then
+    bad "make install-gui: target not found in Makefile"
+else
+    ok "make install-gui ran (exit code $rc, likely display error without X server)"
+fi

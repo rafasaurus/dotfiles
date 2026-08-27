@@ -1,6 +1,18 @@
 stow_dirs = $(wildcard .)
 
-DOCKER_IMAGE ?= dotfiles-test
+DISTRO ?= arch
+
+ifeq ($(DISTRO),arch)
+BASE_IMAGE = archlinux:base-devel
+else ifeq ($(DISTRO),ubuntu)
+BASE_IMAGE = ubuntu:24.04
+else ifeq ($(DISTRO),fedora)
+BASE_IMAGE = fedora:latest
+else
+$(error unknown DISTRO '$(DISTRO)', expected one of: arch ubuntu fedora)
+endif
+
+DOCKER_IMAGE ?= dotfiles-test-$(DISTRO)
 
 .DEFAULT_GOAL := stow
 
@@ -34,15 +46,15 @@ help:
 	@printf "%-28s %s\n" "install-android-env" "Install mimir ARM binary for Android"
 	@printf "%-28s %s\n" "install-film-android" "Install film tools for Android device"
 	@printf "%-28s %s\n" "toggle"            "Toggle git remote visibility"
-	@printf "%-28s %s\n" "docker-build"      "Build Arch docker image for tests"
-	@printf "%-28s %s\n" "test"              "Run dotfile tests in docker (Arch)"
+	@printf "%-28s %s\n" "docker-build"      "Build docker test image (DISTRO=arch|ubuntu|fedora)"
+	@printf "%-28s %s\n" "test"              "Run dotfile tests in docker (DISTRO=arch|ubuntu|fedora)"
 	@printf "%-28s %s\n" "docker-shell"      "Interactive shell in test container"
 
 toggle:
 	./toggle-git.sh
 
 docker-build :
-	docker build -t $(DOCKER_IMAGE) -f test/Dockerfile test
+	docker build --build-arg BASE_IMAGE=$(BASE_IMAGE) -t $(DOCKER_IMAGE) -f test/Dockerfile test
 
 test : docker-build
 	docker run --rm -v $(CURDIR):/dotfiles:ro $(DOCKER_IMAGE)

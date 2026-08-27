@@ -9,9 +9,11 @@ RUN pacman -Syu --noconfirm --needed \
       fzf \
       ripgrep \
       fd \
+      make \
+      gcc \
     && pacman -Scc --noconfirm
 
 ENV DOTFILES=/dotfiles
 WORKDIR /dotfiles
 
-CMD ["/dotfile/test/run-tests.sh"]
+CMD ["/dotfiles/test/run-tests.sh"]
