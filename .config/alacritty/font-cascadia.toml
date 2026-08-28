@@ -1,0 +1,18 @@
+[font]
+size = 16
+
+[font.bold]
+family = "Cascadia Mono"
+style = "Bold"
+
+[font.bold_italic]
+family = "Cascadia Mono"
+style = "Bold Italic"
+
+[font.italic]
+family = "Cascadia Mono"
+style = "Italic"
+
+[font.normal]
+family = "Cascadia Mono"
+style = "Regular"

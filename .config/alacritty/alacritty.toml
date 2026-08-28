@@ -1,4 +1,4 @@
-general.import = ["dark.toml"]
+general.import = ["dark.toml", "font.toml"]
 
 [cursor]
 blink_interval = 333
@@ -6,25 +6,6 @@ blink_timeout = 0
 
 [env]
 TERM = "xterm-256color"
-
-[font]
-size = 16
-
-[font.bold]
-family = "ttyp0 otb"
-style = "Bold"
-
-[font.bold_italic]
-family = "ttyp0 otb"
-style = "Bold Italic"
-
-[font.italic]
-family = "ttyp0 otb"
-style = "Italic"
-
-[font.normal]
-family = "ttyp0 otb"
-style = "medium"
 
 [font.offset]
 x = 0

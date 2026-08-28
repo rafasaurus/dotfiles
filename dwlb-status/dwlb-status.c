@@ -318,6 +318,10 @@ static void launcher_text(char *out, size_t outsz) {
     snprintf(out, outsz, "🐧");
 }
 
+static void font_text(char *out, size_t outsz) {
+    snprintf(out, outsz, "Aa");
+}
+
 static void ram_text(char *out, size_t outsz) {
     uint64_t mem_tot=0, mem_avl=0;
     if (read_mem_kib(&mem_tot, &mem_avl)) {
@@ -574,6 +578,15 @@ int main(int argc, char **argv) {
             .update = theme_text,
             .left_click = "sh -c 'switch-theme -a; dwlb-status --signal 1'",
             .signal_idx = 1
+        },
+        {
+            .name = "Font",
+            .interval = 999999,
+            .update = font_text,
+            .left_click = "font-cycle next",
+            .scroll_up = "font-cycle next",
+            .scroll_down = "font-cycle prev",
+            .signal_idx = -1
         },
         {
             .name = "Launcher",

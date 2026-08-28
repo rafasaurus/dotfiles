@@ -1,0 +1,18 @@
+[font]
+size = 16
+
+[font.bold]
+family = "Ttyp0 otb"
+style = "Bold"
+
+[font.bold_italic]
+family = "Ttyp0 otb"
+style = "Bold Italic"
+
+[font.italic]
+family = "Ttyp0 otb"
+style = "Italic"
+
+[font.normal]
+family = "Ttyp0 otb"
+style = "Regular"

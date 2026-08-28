@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+set -eu
+
+config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/alacritty"
+config="$config_dir/alacritty.toml"
+mapfile -t fonts < <(printf '%s\n' "$config_dir"/font*.toml | sort)
+
+if ((${#fonts[@]} == 0)) || [[ ! -f "$config" ]]; then
+    exit 1
+fi
+
+current=$(sed -n 's/^general.import = \["dark.toml", "\(.*\)"\]$/\1/p' "$config")
+current_index=-1
+for i in "${!fonts[@]}"; do
+    if [[ "${fonts[i]##*/}" == "$current" ]]; then
+        current_index=$i
+        break
+    fi
+done
+
+if ((current_index < 0)); then
+    exit 1
+fi
+
+case "${1:-next}" in
+    next) step=1 ;;
+    prev) step=-1 ;;
+    *) exit 1 ;;
+esac
+
+next_index=$(( (current_index + step + ${#fonts[@]}) % ${#fonts[@]} ))
+next="${fonts[next_index]##*/}"
+font_name=$(sed -n 's/^family = "\(.*\)"$/\1/p; t; d' "${fonts[next_index]}" | sed -n '1p')
+
+sed -i "s|^general.import = .*|general.import = [\"dark.toml\", \"$next\"]|" "$config"
+notify-send "Alacritty font" "$font_name" || true

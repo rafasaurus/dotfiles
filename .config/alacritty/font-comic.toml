@@ -1,0 +1,18 @@
+[font]
+size = 16
+
+[font.bold]
+family = "Comic Code"
+style = "Bold"
+
+[font.bold_italic]
+family = "Comic Code"
+style = "Bold Italic"
+
+[font.italic]
+family = "Comic Code"
+style = "Italic"
+
+[font.normal]
+family = "Comic Code"
+style = "Regular"
