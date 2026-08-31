@@ -52,7 +52,7 @@ switch_theme() {
         exit 1
     fi
     
-    sed -i "s|^general\.import = \[.*\]|general.import = [\"${theme}.toml\"]|" "$CONFIG_FILE"
+    sed -i "s|^[[:space:]]*\"dark\.toml\",\{0,1\}[[:space:]]*$|    \"${theme}.toml\",|; s|^[[:space:]]*\"light\.toml\",\{0,1\}[[:space:]]*$|    \"${theme}.toml\",|" "$CONFIG_FILE"
     echo "Switched to ${theme} theme"
 }
 

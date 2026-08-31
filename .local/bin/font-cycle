@@ -10,7 +10,8 @@ if ((${#fonts[@]} == 0)) || [[ ! -f "$config" ]]; then
     exit 1
 fi
 
-current=$(sed -n 's/^general.import = \["dark.toml", "\(.*\)"\]$/\1/p' "$config")
+current=$(sed -n 's/^[[:space:]]*"\(font[^" ]*\.toml\)",\{0,1\}[[:space:]]*$/\1/p' "$config")
+if [[ -z "$current" ]]; then exit 1; fi
 current_index=-1
 for i in "${!fonts[@]}"; do
     if [[ "${fonts[i]##*/}" == "$current" ]]; then
@@ -33,5 +34,5 @@ next_index=$(( (current_index + step + ${#fonts[@]}) % ${#fonts[@]} ))
 next="${fonts[next_index]##*/}"
 font_name=$(sed -n 's/^family = "\(.*\)"$/\1/p; t; d' "${fonts[next_index]}" | sed -n '1p')
 
-sed -i "s|^general.import = .*|general.import = [\"dark.toml\", \"$next\"]|" "$config"
+sed -i "s|^[[:space:]]*\"font[^\"]*\.toml\",\{0,1\}[[:space:]]*$|    \"$next\",|" "$config"
 notify-send "Alacritty font" "$font_name" || true

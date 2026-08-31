@@ -1,4 +1,7 @@
-general.import = ["dark.toml", "font.toml"]
+general.import = [
+    "dark.toml",
+    "font.toml",
+]
 
 [cursor]
 blink_interval = 333
