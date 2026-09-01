@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <signal.h>
+#include <limits.h>
 
 /* ---------- Tunables ---------- */
 #ifndef RAPL_EVERY_DEFAULT
@@ -75,6 +76,105 @@ static bool read_first_existing_u64(const char *a, const char *b, uint64_t *out)
 }
 
 static bool path_readable(const char *p) { return p && access(p, R_OK) == 0; }
+
+#define MAX_POWER_COUNTERS 32
+typedef struct {
+    char path[PATH_MAX];
+    char name[64];
+    uint64_t max_range;
+    uint64_t previous;
+    bool has_range;
+    bool valid;
+} PowerCounter;
+
+static PowerCounter package_counters[MAX_POWER_COUNTERS];
+static PowerCounter uncore_counters[MAX_POWER_COUNTERS];
+static size_t package_count = 0, uncore_count = 0;
+static bool power_first_render = true;
+static char power_provider[64] = "none";
+
+static bool read_text_file(const char *path, char *out, size_t outsz) {
+    FILE *f = fopen(path, "re");
+    if (!f) return false;
+    bool ok = fgets(out, outsz, f) != NULL;
+    fclose(f);
+    if (ok) out[strcspn(out, "\n")] = 0;
+    return ok;
+}
+
+static void add_power_counter(PowerCounter *counters, size_t *count, const char *path, const char *name) {
+    if (*count >= MAX_POWER_COUNTERS || strlen(path) >= PATH_MAX) return;
+    for (size_t i = 0; i < *count; ++i) {
+        if (strcmp(counters[i].path, path) == 0) return;
+    }
+    char resolved[PATH_MAX];
+    if (!realpath(path, resolved)) return;
+    PowerCounter *c = &counters[(*count)++];
+    memset(c, 0, sizeof *c);
+    snprintf(c->path, sizeof c->path, "%s", resolved);
+    snprintf(c->name, sizeof c->name, "%s", name);
+    char range_path[PATH_MAX + 32];
+    snprintf(range_path, sizeof range_path, "%s/max_energy_range_uj", c->path);
+    c->has_range = read_u64_file(range_path, &c->max_range) && c->max_range > 0;
+    char energy_path[PATH_MAX + 16];
+    snprintf(energy_path, sizeof energy_path, "%s/energy_uj", c->path);
+    c->valid = read_u64_file(energy_path, &c->previous);
+}
+
+static bool powercap_entry(const char *path, char *name, size_t namesz, char *provider, size_t providersz) {
+    char name_path[PATH_MAX], energy_path[PATH_MAX];
+    snprintf(name_path, sizeof name_path, "%s/name", path);
+    snprintf(energy_path, sizeof energy_path, "%s/energy_uj", path);
+    if (!read_text_file(name_path, name, namesz) || !path_readable(energy_path)) return false;
+    const char *base = strrchr(path, '/') + 1;
+    size_t len = strcspn(base, ":");
+    if (len == 0 || len >= providersz) return false;
+    memcpy(provider, base, len);
+    provider[len] = '\0';
+    return true;
+}
+
+static void discover_powercounters(void) {
+    DIR *root = opendir("/sys/class/powercap");
+    if (!root) return;
+    char preferred[64] = "";
+    bool have_intel = false, have_amd = false;
+    struct dirent *de;
+    while ((de = readdir(root))) {
+        if (de->d_name[0] == '.') continue;
+        char path[PATH_MAX];
+        if (snprintf(path, sizeof path, "/sys/class/powercap/%s", de->d_name) >= (int)sizeof path)
+            continue;
+        char name[64], provider[64];
+        if (!powercap_entry(path, name, sizeof name, provider, sizeof provider)) continue;
+        if (strncmp(name, "package", 7) == 0 && (name[7] == '-' || name[7] == '\0')) {
+            if (strcmp(provider, "intel-rapl") == 0) have_intel = true;
+            if (strcmp(provider, "amd-rapl") == 0) have_amd = true;
+            if (!preferred[0]) snprintf(preferred, sizeof preferred, "%s", provider);
+        }
+    }
+    closedir(root);
+    if (have_intel) snprintf(preferred, sizeof preferred, "intel-rapl");
+    else if (have_amd) snprintf(preferred, sizeof preferred, "amd-rapl");
+    if (!preferred[0]) return;
+    snprintf(power_provider, sizeof power_provider, "%s", preferred);
+
+    root = opendir("/sys/class/powercap");
+    if (!root) return;
+    while ((de = readdir(root))) {
+        if (de->d_name[0] == '.') continue;
+        char path[PATH_MAX], name[64], provider[64];
+        if (snprintf(path, sizeof path, "/sys/class/powercap/%s", de->d_name) >= (int)sizeof path)
+            continue;
+        if (!powercap_entry(path, name, sizeof name, provider, sizeof provider) ||
+            strcmp(provider, preferred) != 0) continue;
+        if (strncmp(name, "package", 7) == 0 && (name[7] == '-' || name[7] == '\0'))
+            add_power_counter(package_counters, &package_count, path, name);
+        else if (strcmp(name, "uncore") == 0)
+            add_power_counter(uncore_counters, &uncore_count, path, name);
+    }
+    closedir(root);
+}
 
 static char *cpu_temp_path_g = NULL;
 static char *cpu_core_path_g = NULL;
@@ -375,26 +475,102 @@ static void cpu_load_text(char *out, size_t outsz) {
     snprintf(out, outsz, "📈 %u%%", cpu_pct);
 }
 
-static uint64_t prev_cpu_uj_g = 0, prev_soc_uj_g = 0, prev_us_g = 0;
+static uint64_t prev_us_g = 0;
+
+static bool power_delta(PowerCounter *counter, uint64_t current, uint64_t *delta) {
+    if (!counter->valid) {
+        counter->previous = current;
+        counter->valid = true;
+        return false;
+    }
+    if (current >= counter->previous) {
+        *delta = current - counter->previous;
+    } else if (counter->has_range) {
+        *delta = counter->max_range - counter->previous + current;
+        if (*delta > counter->max_range / 2ull) {
+            counter->previous = current;
+            counter->valid = false;
+            return false;
+        }
+    } else {
+        counter->valid = false;
+        return false;
+    }
+    counter->previous = current;
+    return true;
+}
+
+static bool power_group_w10(PowerCounter *counters, size_t count, uint64_t dus, uint64_t *w10) {
+    uint64_t energy = 0;
+    bool complete = count > 0;
+    for (size_t i = 0; i < count; ++i) {
+        char energy_path[PATH_MAX + 16];
+        uint64_t current = 0, delta = 0;
+        snprintf(energy_path, sizeof energy_path, "%s/energy_uj", counters[i].path);
+        if (!read_u64_file(energy_path, &current)) {
+            counters[i].valid = false;
+            complete = false;
+            continue;
+        }
+        if (!power_delta(&counters[i], current, &delta)) {
+            complete = false;
+            continue;
+        }
+        energy += delta;
+    }
+    if (!complete) return false;
+    *w10 = (energy * 10ull + dus / 2ull) / dus;
+    return true;
+}
+
 static void power_text(char *out, size_t outsz) {
-    const char *PKG_CPU = "/sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj";
-    const char *PKG_SOC = "/sys/class/powercap/intel-rapl/intel-rapl:1/energy_uj";
-    if (access(PKG_CPU, R_OK) != 0) {
-        snprintf(out, outsz, "^fg(FFD700)⚡^fg() --W --W");
+    if (package_count == 0) {
+        snprintf(out, outsz, "^fg(FFD700)⚡^fg() --/--W");
         return;
     }
-    uint64_t cur_cpu_uj=0, cur_soc_uj=0, cur_us=now_us();
-    read_u64_file(PKG_CPU, &cur_cpu_uj);
-    read_u64_file(PKG_SOC, &cur_soc_uj);
+    if (power_first_render) {
+        power_first_render = false;
+        snprintf(out, outsz, "^fg(FFD700)⚡^fg() --/--W");
+        return;
+    }
+    uint64_t cur_us = now_us();
     uint64_t dus = (cur_us > prev_us_g) ? (cur_us - prev_us_g) : 1;
-    uint64_t d_cpu = (cur_cpu_uj > prev_cpu_uj_g) ? (cur_cpu_uj - prev_cpu_uj_g) : 0;
-    uint64_t d_soc = (cur_soc_uj > prev_soc_uj_g) ? (cur_soc_uj - prev_soc_uj_g) : 0;
-    uint64_t cpu_w10 = (d_cpu * 10ull + dus/2ull) / dus;
-    uint64_t soc_w10 = (d_soc * 10ull + dus/2ull) / dus;
-    snprintf(out, outsz, "^fg(FFD700)⚡^fg() %llu.%llu/%llu.%lluW",
-             (unsigned long long)(soc_w10/10ull), (unsigned long long)(soc_w10%10ull),
-             (unsigned long long)(cpu_w10/10ull), (unsigned long long)(cpu_w10%10ull));
-    prev_cpu_uj_g = cur_cpu_uj; prev_soc_uj_g = cur_soc_uj; prev_us_g = cur_us;
+    uint64_t package_w10 = 0, uncore_w10 = 0;
+    bool package_ok = power_group_w10(package_counters, package_count, dus, &package_w10);
+    bool uncore_ok = power_group_w10(uncore_counters, uncore_count, dus, &uncore_w10);
+    prev_us_g = cur_us;
+    if (!package_ok) {
+        snprintf(out, outsz, "^fg(FFD700)⚡^fg() --/--W");
+        return;
+    }
+    if (uncore_ok) {
+        snprintf(out, outsz, "^fg(FFD700)⚡^fg() %llu.%llu/%llu.%lluW",
+                 (unsigned long long)(uncore_w10 / 10ull), (unsigned long long)(uncore_w10 % 10ull),
+                 (unsigned long long)(package_w10 / 10ull), (unsigned long long)(package_w10 % 10ull));
+    } else {
+        snprintf(out, outsz, "^fg(FFD700)⚡^fg() --/%llu.%lluW",
+                 (unsigned long long)(package_w10 / 10ull), (unsigned long long)(package_w10 % 10ull));
+    }
+}
+
+static void power_details(void) {
+    discover_powercounters();
+    char message[512];
+    if (package_count == 0) {
+        snprintf(message, sizeof message,
+                 "No package energy counter is available in /sys/class/powercap.");
+    } else if (uncore_count > 0) {
+        snprintf(message, sizeof message,
+                 "Bar: uncore/package W. Package is total CPU-package power; uncore is a component already included in package. Provider: %s. Source counters: %zu package, %zu uncore. Values are averages between energy_uj samples, not whole-system power.",
+                 power_provider, package_count, uncore_count);
+    } else {
+        snprintf(message, sizeof message,
+                 "Bar: --/package W. Package is total CPU-package power, including cores and available on-package hardware. Provider: %s. Source counters: %zu package. This is an energy_uj average, not whole-system power; uncore is unavailable.",
+                 power_provider, package_count);
+    }
+    char command[768];
+    snprintf(command, sizeof command, "notify-send -a dwlb-status 'CPU energy' '%s'", message);
+    system(command);
 }
 
 static void vpn_text(char *out, size_t outsz) {
@@ -495,6 +671,10 @@ int main(int argc, char **argv) {
             calendar_details();
             return 0;
         }
+        if (strcmp(argv[i], "--power-details") == 0) {
+            power_details();
+            return 0;
+        }
         if (strcmp(argv[i], "--signal") == 0 && i + 1 < argc) {
             int sig_idx = atoi(argv[++i]);
             if (sig_idx < 0 || sig_idx >= 32) return 1;
@@ -525,9 +705,8 @@ int main(int argc, char **argv) {
     /* CPU temp path (discover once) */
     discover_temp_paths();
 
-    /* Baselines */
-    read_u64_file("/sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj", &prev_cpu_uj_g);
-    read_u64_file("/sys/class/powercap/intel-rapl/intel-rapl:1/energy_uj", &prev_soc_uj_g);
+    /* Discover package and optional uncore counters by domain name, not vendor paths. */
+    discover_powercounters();
     prev_us_g = now_us();
     read_cpu_totals(&prev_idle_g, &prev_total_g);
 
@@ -554,6 +733,7 @@ int main(int argc, char **argv) {
             .name = "Power",
             .interval = rapl_every,
             .update = power_text,
+            .left_click = "dwlb-status --power-details",
             .signal_idx = -1
         },
         {
