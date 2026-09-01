@@ -350,6 +350,46 @@ static void battery_text(char *out, size_t outsz) {
     snprintf(out, outsz, "%s %s%%%s", icon, pct_s, eta);
 }
 
+static void battery_details(void) {
+    char details[512] = "";
+    FILE *fp = popen(
+        "upower -d 2>/dev/null | awk '"
+        "/energy-rate:/ { rate=$2 \" \" $3 }\n"
+        "/energy-full-design:/ { design=$2 \" \" $3; design_value=$2 }\n"
+        "/energy-full:/ { full=$2 \" \" $3; full_value=$2 }\n"
+        "/energy:/ { energy=$2 \" \" $3 }\n"
+        "/percentage:/ { percentage=$2 }\n"
+        "/state:/ { state=$2 }\n"
+        "/voltage:/ { voltage=$2 \" \" $3 }\n"
+        "/time to empty:/ { empty=$4 \" \" $5 }\n"
+        "/time to full:/ { charge=$4 \" \" $5 }\n"
+        "END {\n"
+        "    if (rate != \"\") print \"Energy rate: \" rate\n"
+        "    if (design != \"\") print \"Designed capacity: \" design\n"
+        "    if (full != \"\") {\n"
+        "        printf \"Actual capacity: %s\\n\", full\n"
+        "        if (design_value > 0) printf \"Capacity health: %.0f%%\\n\", full_value / design_value * 100\n"
+        "    }\n"
+        "    if (energy != \"\") print \"Current energy: \" energy\n"
+        "    if (percentage != \"\") print \"Charge: \" percentage\n"
+        "    if (state != \"\") print \"State: \" state\n"
+        "    if (voltage != \"\") print \"Voltage: \" voltage\n"
+        "    if (empty != \"\") print \"Time to empty: \" empty\n"
+        "    if (charge != \"\") print \"Time to full: \" charge\n"
+        "}'", "r");
+    if (fp) {
+        size_t len = 0;
+        while (len + 1 < sizeof details && fgets(details + len, sizeof details - len, fp))
+            len = strlen(details);
+        while (len > 0 && details[len - 1] == '\n') details[--len] = 0;
+        pclose(fp);
+    }
+
+    if (!details[0])
+        snprintf(details, sizeof details, "Battery details unavailable (upower -d)");
+    notify_text("Battery", details);
+}
+
 /* Read pamixer outputs (polled infrequently) - with timeout to prevent hangs */
 static void volume_text(char *out, size_t outsz) {
     FILE *fp;
@@ -750,6 +790,10 @@ int main(int argc, char **argv) {
             temperature_details();
             return 0;
         }
+        if (strcmp(argv[i], "--battery-details") == 0) {
+            battery_details();
+            return 0;
+        }
         if (strcmp(argv[i], "--signal") == 0 && i + 1 < argc) {
             int sig_idx = atoi(argv[++i]);
             if (sig_idx < 0 || sig_idx >= 32) return 1;
@@ -851,6 +895,7 @@ int main(int argc, char **argv) {
             .name = "Battery",
             .interval = BATT_EVERY,
             .update = battery_text,
+            .left_click = "dwlb-status --battery-details",
             .signal_idx = 4
         },
         {
