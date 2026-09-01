@@ -315,7 +315,7 @@ static void disk_details(void) {
 }
 
 static void calendar_details(void) {
-    system("notify-send -a dwlb-status Calendar \"$(cal)\"");
+    system("notify-send -a dwlb-status Calendar \"$(cal -n 2)\"");
 }
 
 static void duck_text(char *out, size_t outsz) {
