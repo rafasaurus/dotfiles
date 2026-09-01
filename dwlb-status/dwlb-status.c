@@ -32,6 +32,8 @@ typedef struct {
     char buffer[128];
 } __attribute__((aligned(64))) Unit;
 
+static void notify_text(const char *title, const char *message);
+
 /* Signal mapping: bitmask for units */
 volatile sig_atomic_t update_mask = 0;
 
@@ -176,10 +178,13 @@ static void discover_powercounters(void) {
     closedir(root);
 }
 
+#define MAX_CPU_CORES 128
 static char *cpu_temp_path_g = NULL;
 static char *cpu_core_path_g = NULL;
+static char *cpu_core_paths_g[MAX_CPU_CORES];
+static size_t cpu_core_count_g = 0;
 
-/* Scan hwmon for coretemp "Package id 0" temp input and "Core 0" input */
+/* Scan hwmon for the package temperature and all available core inputs. */
 static void discover_temp_paths(void) {
     DIR *root = opendir("/sys/class/hwmon");
     if (!root) return;
@@ -205,8 +210,16 @@ static void discover_temp_paths(void) {
                     if (fgets(ltxt, sizeof ltxt, lf)) {
                         if (!cpu_temp_path_g && strncmp(ltxt, "Package id 0", 12) == 0) {
                             asprintf(&cpu_temp_path_g, "%s/temp%d_input", base, i);
-                        } else if (!cpu_core_path_g && strncmp(ltxt, "Core 0", 6) == 0) {
-                            asprintf(&cpu_core_path_g, "%s/temp%d_input", base, i);
+                        } else if (strncmp(ltxt, "Core ", 5) == 0) {
+                            char *path = NULL;
+                            asprintf(&path, "%s/temp%d_input", base, i);
+                            if (path && cpu_core_count_g < MAX_CPU_CORES) {
+                                cpu_core_paths_g[cpu_core_count_g++] = path;
+                                if (!cpu_core_path_g && strncmp(ltxt, "Core 0", 6) == 0)
+                                    cpu_core_path_g = path;
+                            } else {
+                                free(path);
+                            }
                         }
                     }
                     fclose(lf);
@@ -410,6 +423,15 @@ static void disk_text(char *out, size_t outsz) {
     snprintf(out, outsz, "💾 %.0f/%.0fGiB", used, tot);
 }
 
+static void notify_text(const char *title, const char *message) {
+    pid_t pid = fork();
+    if (pid == 0) {
+        execlp("notify-send", "notify-send", "-a", "dwlb-status", title, message, (char *)NULL);
+        _exit(127);
+    }
+    if (pid > 0) waitpid(pid, NULL, 0);
+}
+
 static void disk_details(void) {
     system("notify-send -a dwlb-status 'Disk usage' \"$(df -h \"$HOME\" /)\"");
 }
@@ -449,7 +471,14 @@ static void temp_text(char *out, size_t outsz) {
     if (cpu_temp_path_g && read_u64_file(cpu_temp_path_g, &pkg_milli)) {
         has_pkg = true;
     }
-    if (cpu_core_path_g && read_u64_file(cpu_core_path_g, &core_milli)) {
+    for (size_t i = 0; i < cpu_core_count_g; ++i) {
+        uint64_t current = 0;
+        if (read_u64_file(cpu_core_paths_g[i], &current) && (!has_core || current > core_milli)) {
+            core_milli = current;
+            has_core = true;
+        }
+    }
+    if (!has_core && cpu_core_path_g && read_u64_file(cpu_core_path_g, &core_milli)) {
         has_core = true;
     }
 
@@ -462,6 +491,27 @@ static void temp_text(char *out, size_t outsz) {
     } else {
         snprintf(out, outsz, "🔥 ?°C");
     }
+}
+
+static void temperature_details(void) {
+    discover_temp_paths();
+    char message[1024];
+    size_t len = 0;
+    uint64_t pkg_milli = 0;
+    if (cpu_temp_path_g && read_u64_file(cpu_temp_path_g, &pkg_milli))
+        len += (size_t)snprintf(message + len, sizeof message - len, "Package: %llu C\n",
+                                 (unsigned long long)(pkg_milli / 1000ull));
+    else
+        len += (size_t)snprintf(message + len, sizeof message - len, "Package: unavailable\n");
+
+    for (size_t i = 0; i < cpu_core_count_g && len < sizeof message; ++i) {
+        uint64_t core_milli = 0;
+        if (read_u64_file(cpu_core_paths_g[i], &core_milli))
+            len += (size_t)snprintf(message + len, sizeof message - len, "Core %zu: %llu C\n",
+                                     i, (unsigned long long)(core_milli / 1000ull));
+    }
+    if (len > 0 && message[len - 1] == '\n') message[len - 1] = '\0';
+    notify_text("CPU temperatures", message);
 }
 
 static uint64_t prev_idle_g=0, prev_total_g=0;
@@ -523,6 +573,19 @@ static bool power_group_w10(PowerCounter *counters, size_t count, uint64_t dus, 
     return true;
 }
 
+static bool power_group_energy(PowerCounter *counters, size_t count, uint64_t *energy) {
+    *energy = 0;
+    if (count == 0) return false;
+    for (size_t i = 0; i < count; ++i) {
+        char path[PATH_MAX + 16];
+        uint64_t current = 0;
+        snprintf(path, sizeof path, "%s/energy_uj", counters[i].path);
+        if (!read_u64_file(path, &current)) return false;
+        *energy += current;
+    }
+    return true;
+}
+
 static void power_text(char *out, size_t outsz) {
     if (package_count == 0) {
         snprintf(out, outsz, "^fg(FFD700)⚡^fg() --/--W");
@@ -544,11 +607,10 @@ static void power_text(char *out, size_t outsz) {
         return;
     }
     if (uncore_ok) {
-        snprintf(out, outsz, "^fg(FFD700)⚡^fg() %llu.%llu/%llu.%lluW",
-                 (unsigned long long)(uncore_w10 / 10ull), (unsigned long long)(uncore_w10 % 10ull),
+        snprintf(out, outsz, "^fg(FFD700)⚡^fg() %llu.%lluW",
                  (unsigned long long)(package_w10 / 10ull), (unsigned long long)(package_w10 % 10ull));
     } else {
-        snprintf(out, outsz, "^fg(FFD700)⚡^fg() --/%llu.%lluW",
+        snprintf(out, outsz, "^fg(FFD700)⚡^fg() %llu.%lluW",
                  (unsigned long long)(package_w10 / 10ull), (unsigned long long)(package_w10 % 10ull));
     }
 }
@@ -559,18 +621,27 @@ static void power_details(void) {
     if (package_count == 0) {
         snprintf(message, sizeof message,
                  "No package energy counter is available in /sys/class/powercap.");
-    } else if (uncore_count > 0) {
-        snprintf(message, sizeof message,
-                 "Bar: uncore/package W. Package is total CPU-package power; uncore is a component already included in package. Provider: %s. Source counters: %zu package, %zu uncore. Values are averages between energy_uj samples, not whole-system power.",
-                 power_provider, package_count, uncore_count);
     } else {
-        snprintf(message, sizeof message,
-                 "Bar: --/package W. Package is total CPU-package power, including cores and available on-package hardware. Provider: %s. Source counters: %zu package. This is an energy_uj average, not whole-system power; uncore is unavailable.",
-                 power_provider, package_count);
+        uint64_t package_before = 0, package_after = 0, uncore_before = 0, uncore_after = 0;
+        bool package_ok = power_group_energy(package_counters, package_count, &package_before);
+        bool uncore_ok = uncore_count > 0 && power_group_energy(uncore_counters, uncore_count, &uncore_before);
+        struct timespec req = { 1, 0 };
+        nanosleep(&req, NULL);
+        package_ok = package_ok && power_group_energy(package_counters, package_count, &package_after);
+        uncore_ok = uncore_ok && power_group_energy(uncore_counters, uncore_count, &uncore_after);
+        if (package_ok) {
+            double package_w = (double)(package_after - package_before) / 1000000.0;
+            if (uncore_ok) {
+                double uncore_w = (double)(uncore_after - uncore_before) / 1000000.0;
+                snprintf(message, sizeof message, "Uncore: %.1f W\nPackage: %.1f W", uncore_w, package_w);
+            } else {
+                snprintf(message, sizeof message, "Uncore: unavailable\nPackage: %.1f W", package_w);
+            }
+        } else {
+            snprintf(message, sizeof message, "Unable to read power counters.");
+        }
     }
-    char command[768];
-    snprintf(command, sizeof command, "notify-send -a dwlb-status 'CPU energy' '%s'", message);
-    system(command);
+    notify_text("CPU energy", message);
 }
 
 static void vpn_text(char *out, size_t outsz) {
@@ -675,6 +746,10 @@ int main(int argc, char **argv) {
             power_details();
             return 0;
         }
+        if (strcmp(argv[i], "--temperature-details") == 0) {
+            temperature_details();
+            return 0;
+        }
         if (strcmp(argv[i], "--signal") == 0 && i + 1 < argc) {
             int sig_idx = atoi(argv[++i]);
             if (sig_idx < 0 || sig_idx >= 32) return 1;
@@ -748,6 +823,7 @@ int main(int argc, char **argv) {
             .name = "Temp",
             .interval = 1,
             .update = temp_text,
+            .left_click = "dwlb-status --temperature-details",
             .signal_idx = -1
         },
         {
