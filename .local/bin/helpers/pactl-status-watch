@@ -1,0 +1,11 @@
+#!/bin/sh
+
+while pactl subscribe 2>/dev/null | while IFS= read -r event; do
+    case "$event" in
+        *" on sink "*|*" on server "*)
+            dwlb-status --signal 0
+            ;;
+    esac
+done; do
+    sleep 1
+done

@@ -41,7 +41,7 @@ static void handle_sig(int sig) {
 
 static const double LOOP_SLEEP_SEC = 1.2; /* main refresh period */
 static const int    THEME_EVERY    = 100; /* poll theme every N ticks */
-static const int    VOL_EVERY      = 3;   /* poll volume every N ticks */
+static const int    VOL_EVERY      = 10;  /* poll volume every N ticks */
 static const int    BATT_EVERY     = 20;  /* poll battery every N ticks */
 static const int    TIME_EVERY     = 8;   /* poll date/time every N ticks */
 static const int    DISK_EVERY     = 120; /* poll disk every N ticks */
@@ -307,7 +307,15 @@ static void disk_text(char *out, size_t outsz) {
     if (!read_disk_bytes(home, &used_b, &tot_b)) { read_disk_bytes("/", &used_b, &tot_b); }
     double used = (double)used_b / (1024.0*1024.0*1024.0);
     double tot  = (double)tot_b  / (1024.0*1024.0*1024.0);
-    snprintf(out, outsz, "💾 %.0f/%.0fMib", used, tot);
+    snprintf(out, outsz, "💾 %.0f/%.0fGiB", used, tot);
+}
+
+static void disk_details(void) {
+    system("notify-send -a dwlb-status 'Disk usage' \"$(df -h \"$HOME\" /)\"");
+}
+
+static void calendar_details(void) {
+    system("notify-send -a dwlb-status Calendar \"$(cal)\"");
 }
 
 static void duck_text(char *out, size_t outsz) {
@@ -389,6 +397,19 @@ static void power_text(char *out, size_t outsz) {
     prev_cpu_uj_g = cur_cpu_uj; prev_soc_uj_g = cur_soc_uj; prev_us_g = cur_us;
 }
 
+static void vpn_text(char *out, size_t outsz) {
+    FILE *fp = popen("timeout 1 nmcli -t -f NAME,TYPE connection show --active 2>/dev/null | awk -F: '$2 == \"vpn\" { print $1; exit }'", "r");
+    if (fp && fgets(out, outsz, fp)) {
+        out[strcspn(out, "\n")] = 0;
+        char text[128];
+        snprintf(text, sizeof text, "🛡 %s", out);
+        snprintf(out, outsz, "%s", text);
+    } else {
+        out[0] = 0;
+    }
+    if (fp) pclose(fp);
+}
+
 static inline void wrap_tag(char *buf, size_t *len, const char *tag, size_t tag_len, const char *cmd) {
     if (__builtin_expect(cmd != NULL, 0)) {
         size_t cmd_len = strlen(cmd);
@@ -466,6 +487,14 @@ static void send_signal(int sig_idx) {
 int main(int argc, char **argv) {
     /* Signal mode: ./dwlb-status --signal N */
     for (int i = 1; i < argc; ++i) {
+        if (strcmp(argv[i], "--disk-details") == 0) {
+            disk_details();
+            return 0;
+        }
+        if (strcmp(argv[i], "--calendar") == 0) {
+            calendar_details();
+            return 0;
+        }
         if (strcmp(argv[i], "--signal") == 0 && i + 1 < argc) {
             int sig_idx = atoi(argv[++i]);
             if (sig_idx < 0 || sig_idx >= 32) return 1;
@@ -519,7 +548,7 @@ int main(int argc, char **argv) {
             .update = airpods_text,
             .left_click = "airpods",
             .right_click = "librepods",
-            .signal_idx = -1
+            .signal_idx = 3
         },
         {
             .name = "Power",
@@ -545,7 +574,8 @@ int main(int argc, char **argv) {
             .name = "CPU",
             .interval = 1,
             .update = cpu_load_text,
-            .left_click = "cpupower-gui",
+            .left_click = "tuned-profile --select",
+            .right_click = "tuned-profile --notify",
             .signal_idx = -1
         },
         {
@@ -558,6 +588,7 @@ int main(int argc, char **argv) {
             .name = "Disk",
             .interval = DISK_EVERY,
             .update = disk_text,
+            .left_click = "dwlb-status --disk-details",
             .signal_idx = -1
         },
         {
@@ -570,6 +601,7 @@ int main(int argc, char **argv) {
             .name = "Time",
             .interval = TIME_EVERY,
             .update = time_text,
+            .left_click = "dwlb-status --calendar",
             .signal_idx = 5
         },
         {
@@ -586,6 +618,12 @@ int main(int argc, char **argv) {
             .left_click = "font-cycle next",
             .scroll_up = "font-cycle next",
             .scroll_down = "font-cycle prev",
+            .signal_idx = -1
+        },
+        {
+            .name = "VPN",
+            .interval = 20,
+            .update = vpn_text,
             .signal_idx = -1
         },
         {
@@ -654,4 +692,3 @@ int main(int argc, char **argv) {
 
     return 0;
 }
-

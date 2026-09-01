@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+if [ "${1-}" = "--select" ]; then
+    profile=$(tuned-adm list | sed -n 's/^-[[:space:]]*\([^[:space:]]*\).*/\1/p' | wmenu -i -l 15)
+    if [ -n "$profile" ]; then
+        if sudo -A tuned-adm profile "$profile" >/dev/null 2>&1; then
+            notify-send "Tuned profile" "$profile"
+        else
+            notify-send -u critical "Tuned profile" "Failed to select $profile"
+        fi
+    fi
+    exit 0
+fi
+
+if [ "${1-}" = "--notify" ]; then
+    profile=$(tuned-adm active 2>/dev/null | sed -n 's/^Current active profile:[[:space:]]*//p')
+    if [ -n "$profile" ]; then
+        notify-send "Tuned profile" "$profile"
+    else
+        notify-send -u critical "Tuned profile" "No active profile"
+    fi
+    exit 0
+fi

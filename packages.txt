@@ -87,6 +87,7 @@ the_silver_searcher
 thunar
 tllist
 tmux
+tuned
 traceroute
 trash-cli
 ttf-dejavu

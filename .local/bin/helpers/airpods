@@ -18,9 +18,11 @@ fi
 if is_connected; then
     bluetoothctl disconnect "$device"
     echo "disconnected"
+    dwlb-status --signal 3
     exit 0
 fi
 
 bluetoothctl connect "$device"
 echo "connected"
+dwlb-status --signal 3
 exit 1
