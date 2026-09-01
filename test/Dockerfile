@@ -13,7 +13,7 @@ RUN pacman -Syu --noconfirm --needed \
       gcc \
     && pacman -Scc --noconfirm
 
-ENV DOTFILES=/dotfiles
-WORKDIR /dotfiles
+ENV DOTFILES=/root/dotfiles
+WORKDIR /root/dotfiles
 
-CMD ["/dotfiles/test/run-tests.sh"]
+CMD ["/root/dotfiles/test/run-tests.sh"]

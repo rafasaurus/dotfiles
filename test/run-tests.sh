@@ -3,8 +3,8 @@ set -u
 
 DOTFILES="${DOTFILES:-}"
 if [ -z "$DOTFILES" ]; then
-	if [ -f /dotfiles/Makefile ]; then
-		DOTFILES=/dotfiles
+	if [ -f /root/dotfiles/Makefile ]; then
+		DOTFILES=/root/dotfiles
 	else
 		script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 		DOTFILES="$(dirname "$script_dir")"

@@ -1,24 +1,12 @@
-stow_dirs = $(wildcard .)
-
-DISTRO ?= arch
-
-ifeq ($(DISTRO),arch)
 BASE_IMAGE = archlinux:base-devel
-else ifeq ($(DISTRO),ubuntu)
-BASE_IMAGE = ubuntu:24.04
-else ifeq ($(DISTRO),fedora)
-BASE_IMAGE = fedora:latest
-else
-$(error unknown DISTRO '$(DISTRO)', expected one of: arch ubuntu fedora)
-endif
 
-DOCKER_IMAGE ?= dotfiles-test-$(DISTRO)
+DOCKER_IMAGE ?= dotfiles-test-arch
 
 .DEFAULT_GOAL := stow
 
 .PHONY: all stow restow destow install-prereqs install-paru \
 	install-aur install-udev install-gui install-themes \
-	install-mimir install-full install-android-env install-film-android \
+	install-mimir \
 	install-neovim reinstall reinstall-gui \
 	uninstall-gui uninstall-udev check_dirs install-cursors toggle help \
 	docker-build test docker-shell
@@ -43,11 +31,9 @@ help:
 	@printf "%-28s %s\n" "install-cursors"   "Build and install dwlcursor (Apple cursor)"
 	@printf "%-28s %s\n" "install-mimir"     "Install mimir from source"
 	@printf "%-28s %s\n" "install-neovim"    "Install neovim nightly AppImage"
-	@printf "%-28s %s\n" "install-android-env" "Install mimir ARM binary for Android"
-	@printf "%-28s %s\n" "install-film-android" "Install film tools for Android device"
 	@printf "%-28s %s\n" "toggle"            "Toggle git remote visibility"
-	@printf "%-28s %s\n" "docker-build"      "Build docker test image (DISTRO=arch|ubuntu|fedora)"
-	@printf "%-28s %s\n" "test"              "Run dotfile tests in docker (DISTRO=arch|ubuntu|fedora)"
+	@printf "%-28s %s\n" "docker-build"      "Build Arch Linux docker test image"
+	@printf "%-28s %s\n" "test"              "Run dotfile tests in Arch Linux docker"
 	@printf "%-28s %s\n" "docker-shell"      "Interactive shell in test container"
 
 toggle:
@@ -57,19 +43,19 @@ docker-build :
 	docker build --build-arg BASE_IMAGE=$(BASE_IMAGE) -t $(DOCKER_IMAGE) -f test/Dockerfile test
 
 test : docker-build
-	docker run --rm -v $(CURDIR):/dotfiles:ro $(DOCKER_IMAGE)
+	docker run --rm -v $(CURDIR):/root/dotfiles:ro $(DOCKER_IMAGE)
 
 docker-shell : docker-build
-	docker run -it --rm --hostname arch -v $(CURDIR):/dotfiles $(DOCKER_IMAGE) /bin/zsh -l
+	docker run -it --rm --hostname arch -v $(CURDIR):/root/dotfiles $(DOCKER_IMAGE) /bin/zsh -l
 
 stow : check_dirs
-	stow --target $(HOME) --verbose $(stow_dirs)
+	stow --target $(HOME) --verbose .
 
 restow :
-	stow --target $(HOME) --verbose --restow $(stow_dirs)
+	stow --target $(HOME) --verbose --restow .
 
 destow :
-	stow -D --target $(HOME) --verbose $(stow_dirs)
+	stow -D --target $(HOME) --verbose .
 
 install-prereqs :
 	sudo pacman -S --needed - < packages.txt
@@ -115,21 +101,6 @@ install-themes :
 
 install-mimir :
 	cd ./external/mimir && git checkout main && make install
-
-install-full : install-paru install-prereqs install-aur install-mimir
-	echo "done full installation"
-
-install-android-env :
-	cp .local/bin/mimir_armv7l $(shell dirname `which sh`)
-
-install-film-android :
-	apt install exiftool which
-	mkdir -p $(HOME)/.local/bin
-	cp -r .local/bin/luts/ $(HOME)/.local/bin/ && echo "copied luts"
-	cp -r .local/bin/film $(shell dirname `which sh`) && echo "copied film script"
-
-uninstall-film-android :
-	rm -r $(shell dirname `which sh`)/512x512 $(shell which film)
 
 check_dirs:
 	[ ! -f ~/.config/mimeapps.list ] || [ -L ~/.config/mimeapps.list ] || rm ~/.config/mimeapps.list
