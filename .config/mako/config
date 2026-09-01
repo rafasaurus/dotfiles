@@ -1,2 +1,8 @@
 default-timeout=45000
-font=sf mono 12
+font=ttyp0 otb 14
+height=500
+width=500
+padding=10
+icons=1
+outer-margin=15
+border-radius=10
