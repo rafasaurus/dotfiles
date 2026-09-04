@@ -42,13 +42,15 @@ static void handle_sig(int sig) {
     if (idx >= 0 && idx < 32) update_mask |= (1 << idx);
 }
 
-static const double LOOP_SLEEP_SEC = 1.2; /* main refresh period */
-static const int    THEME_EVERY    = 100; /* poll theme every N ticks */
-static const int    VOL_EVERY      = 10;  /* poll volume every N ticks */
-static const int    BATT_EVERY     = 20;  /* poll battery every N ticks */
-static const int    TIME_EVERY     = 8;   /* poll date/time every N ticks */
-static const int    DISK_EVERY     = 120; /* poll disk every N ticks */
-static const int    AIRPODS_EVERY  = 3;  /* poll airpods every N ticks (~10 seconds) */
+static const double LOOP_SLEEP_SEC = 0.2; /* equalizer frame period (5 FPS) */
+static const int    STATUS_TICK    = 6;   /* former 1.2-second status cadence */
+static const int    THEME_EVERY    = 600;
+static const int    VOL_EVERY      = 60;
+static const int    MUSIC_EVERY    = 5;   /* poll audio activity every second */
+static const int    BATT_EVERY     = 120;
+static const int    TIME_EVERY     = 48;
+static const int    DISK_EVERY     = 720;
+static const int    AIRPODS_EVERY  = 18;  /* poll airpods every ~3.6 seconds */
 
 /* ---------- Helpers ---------- */
 static inline uint64_t now_us(void) {
@@ -412,6 +414,46 @@ static void volume_text(char *out, size_t outsz) {
     } else {
         snprintf(out, outsz, "🔊 %d%%", vol);
     }
+}
+
+static bool music_playing(void) {
+    FILE *fp = popen("timeout 1 pactl list sink-inputs 2>/dev/null", "r");
+    if (!fp) return false;
+
+    char line[128];
+    bool playing = false;
+    while (fgets(line, sizeof line, fp)) {
+        if (strstr(line, "Corked: no")) {
+            playing = true;
+            break;
+        }
+    }
+    pclose(fp);
+    return playing;
+}
+
+static void equalizer_text(char *out, size_t outsz) {
+    static const char *const notes[] = { "♪✨", "✨♫", "♬✨" };
+    // static const char *const notes[] = { "♩--", "-♪-", "--♫", "--♬" };
+    static int music_ticks = MUSIC_EVERY - 1;
+    static int frame_ticks;
+    static unsigned frame;
+    static bool playing;
+
+    if (++music_ticks >= MUSIC_EVERY) {
+        playing = music_playing();
+        music_ticks = 0;
+    }
+    if (!playing) {
+        out[0] = '\0';
+        return;
+    }
+
+    if (++frame_ticks >= 3) {
+        frame = (frame + 1) % 3;
+        frame_ticks = 0;
+    }
+    snprintf(out, outsz, "^fg(FABA17)%s^fg()", notes[frame]);
 }
 
 /* Check airpods connection status (polled infrequently) - with timeout to prevent hangs */
@@ -808,16 +850,16 @@ int main(int argc, char **argv) {
     }
 
     /* RAPL sampling frequency (in ticks): default, env, CLI -r N */
-    int rapl_every = RAPL_EVERY_DEFAULT;
+    int rapl_every = RAPL_EVERY_DEFAULT * STATUS_TICK;
     const char *ev = getenv("RAPL_EVERY");
     if (ev) {
         int n = atoi(ev);
-        if (n >= 1) rapl_every = n;
+        if (n >= 1) rapl_every = n * STATUS_TICK;
     }
     for (int i = 1; i < argc; ++i) {
         if ((strcmp(argv[i], "-r") == 0 || strcmp(argv[i], "--rapl-every") == 0) && i+1 < argc) {
             int n = atoi(argv[++i]);
-            if (n >= 1) rapl_every = n;
+            if (n >= 1) rapl_every = n * STATUS_TICK;
         }
     }
 
@@ -830,6 +872,12 @@ int main(int argc, char **argv) {
     read_cpu_totals(&prev_idle_g, &prev_total_g);
 
     Unit units[] = {
+        {
+            .name = "Equalizer",
+            .interval = 1,
+            .update = equalizer_text,
+            .signal_idx = -1
+        },
         {
             .name = "Volume",
             .interval = VOL_EVERY,
@@ -857,7 +905,7 @@ int main(int argc, char **argv) {
         },
         {
             .name = "Duck",
-            .interval = 999999,
+            .interval = 999999 * STATUS_TICK,
             .update = duck_text,
             .left_click = "sh -c 'pgrep -x wmbubble >/dev/null || wmbubble &'",
             .right_click = "pkill -x wmbubble",
@@ -865,14 +913,14 @@ int main(int argc, char **argv) {
         },
         {
             .name = "Temp",
-            .interval = 1,
+            .interval = STATUS_TICK,
             .update = temp_text,
             .left_click = "dwlb-status --temperature-details",
             .signal_idx = -1
         },
         {
             .name = "CPU",
-            .interval = 1,
+            .interval = STATUS_TICK,
             .update = cpu_load_text,
             .left_click = "tuned-profile --select",
             .right_click = "tuned-profile --notify",
@@ -880,7 +928,7 @@ int main(int argc, char **argv) {
         },
         {
             .name = "RAM",
-            .interval = 1,
+            .interval = STATUS_TICK,
             .update = ram_text,
             .signal_idx = -1
         },
@@ -914,7 +962,7 @@ int main(int argc, char **argv) {
         },
         {
             .name = "Font",
-            .interval = 999999,
+            .interval = 999999 * STATUS_TICK,
             .update = font_text,
             .left_click = "font-cycle next",
             .scroll_up = "font-cycle next",
@@ -923,13 +971,13 @@ int main(int argc, char **argv) {
         },
         {
             .name = "VPN",
-            .interval = 20,
+            .interval = 20 * STATUS_TICK,
             .update = vpn_text,
             .signal_idx = -1
         },
         {
             .name = "Launcher",
-            .interval = 999999,
+            .interval = 999999 * STATUS_TICK,
             .update = launcher_text,
             .left_click = "sh -c 'fuzzel &'",
             .middle_click = "sh -c 'power &'",
@@ -957,8 +1005,10 @@ int main(int argc, char **argv) {
             bool time_hit = (current_mask == 0 && tick % units[i].interval == 0);
 
             if (sig_hit || time_hit) {
+                char previous[sizeof units[i].buffer];
+                memcpy(previous, units[i].buffer, sizeof previous);
                 units[i].update(units[i].buffer, sizeof(units[i].buffer));
-                dirty = true;
+                dirty |= memcmp(previous, units[i].buffer, sizeof previous) != 0;
             }
         }
 
@@ -966,16 +1016,16 @@ int main(int argc, char **argv) {
             char bar[1024];
             char *p = bar;
             char *end = bar + sizeof(bar);
+            bool have_unit = false;
             for (int i = 0; i < num_units; i++) {
                 char rendered[512];
                 size_t rlen = 0;
                 render_unit(&units[i], rendered, &rlen);
                 if (p + rlen + 2 < end) {
+                    if (have_unit) *p++ = ' ';
                     memcpy(p, rendered, rlen);
                     p += rlen;
-                    if (i < num_units - 1) {
-                        *p++ = ' ';
-                    }
+                    have_unit = true;
                 }
             }
             *p = '\0';
