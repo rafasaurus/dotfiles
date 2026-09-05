@@ -51,6 +51,7 @@ bindkey "^[b" backward-word # Move backward one word
 
 # Change cursor shape for different vi modes.
 [ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
+[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && source /usr/share/doc/fzf/examples/key-bindings.zsh
 
 function zle-keymap-select {
   # RPS1="${${KEYMAP/vicmd/-- NORMAL --}/(main|viins)/ -- INSERT --}"
