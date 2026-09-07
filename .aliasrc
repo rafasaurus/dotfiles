@@ -18,6 +18,8 @@ alias ka="killall" \
     tree='exa --tree --level=2 --long -a --header --git' \
     sl='ls' \
     noise='mpv ~/Music/white_noise.mp3' \
+    study='mpv ~/Music/study_hollow.mp3' \
+    jackson='mpv ~/Music/jackson_hour.mp3' \
     diff='diff --strip-trailing-cr' \
     oneko='oneko -rv -fg \#CCCCCC -speed 13' \
     rg='rg --ignore-case' \
