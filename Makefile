@@ -10,7 +10,7 @@ STOW_PACKAGES := common $(if $(wildcard $(HOSTNAME)),$(HOSTNAME))
 	install-aur install-udev install-gui install-themes \
 	install-mimir \
 	install-neovim reinstall reinstall-gui \
-	uninstall-gui uninstall-udev check_dirs clean_stale_links install-cursors toggle help \
+	uninstall-gui uninstall-udev check_dirs install-cursors toggle help \
 	docker-build test docker-shell
 
 help:
@@ -50,7 +50,7 @@ test : docker-build
 docker-shell : docker-build
 	docker run -it --rm --hostname arch -v $(CURDIR):/root/dotfiles $(DOCKER_IMAGE) /bin/zsh -l
 
-stow : check_dirs clean_stale_links
+stow : check_dirs
 	stow --target $(HOME) --verbose $(STOW_PACKAGES)
 
 restow :
@@ -114,9 +114,6 @@ check_dirs:
 	[ -d $(HOME)/.local/share/fonts ] || mkdir -p $(HOME)/.local/share/fonts
 	[ -d $(HOME)/.cache/zsh ] || mkdir -p $(HOME)/.cache/zsh
 	[ -d $(HOME)/.todo ] || mkdir $(HOME)/.todo
-
-clean_stale_links:
-	@find "$(HOME)" -xtype l -exec sh -c 'for link; do case "$$(realpath -m "$$link")" in "$(CURDIR)"/*) rm "$$link";; esac; done' sh {} +
 
 install-cursors:
 	rm -rf apple_cursor
