@@ -1,6 +1,8 @@
 BASE_IMAGE = archlinux:base-devel
 
 DOCKER_IMAGE ?= dotfiles-test-arch
+HOSTNAME := $(shell hostname)
+STOW_PACKAGES := common $(if $(wildcard $(HOSTNAME)),$(HOSTNAME))
 
 .DEFAULT_GOAL := stow
 
@@ -8,15 +10,15 @@ DOCKER_IMAGE ?= dotfiles-test-arch
 	install-aur install-udev install-gui install-themes \
 	install-mimir \
 	install-neovim reinstall reinstall-gui \
-	uninstall-gui uninstall-udev check_dirs install-cursors toggle help \
+	uninstall-gui uninstall-udev check_dirs clean_stale_links install-cursors toggle help \
 	docker-build test docker-shell
 
 help:
 	@printf "%-28s %s\n" "Target" "Description"
 	@printf "%-28s %s\n" "------" "-----------"
-	@printf "%-28s %s\n" "stow"              "Symlink dotfiles into HOME (default)"
-	@printf "%-28s %s\n" "restow"            "Re-symlink dotfiles (refresh)"
-	@printf "%-28s %s\n" "destow"            "Remove dotfile symlinks from HOME"
+	@printf "%-28s %s\n" "stow"              "Symlink common and hostname dotfiles into HOME (default)"
+	@printf "%-28s %s\n" "restow"            "Re-symlink common and hostname dotfiles (refresh)"
+	@printf "%-28s %s\n" "destow"            "Remove common and hostname dotfile symlinks from HOME"
 	@printf "%-28s %s\n" "install-full"      "Bootstrap: paru + pacman pkgs + AUR pkgs + mimir"
 	@printf "%-28s %s\n" "install-prereqs"   "Install official packages via pacman (packages.txt)"
 	@printf "%-28s %s\n" "install-paru"      "Install paru AUR helper (if not present)"
@@ -48,14 +50,14 @@ test : docker-build
 docker-shell : docker-build
 	docker run -it --rm --hostname arch -v $(CURDIR):/root/dotfiles $(DOCKER_IMAGE) /bin/zsh -l
 
-stow : check_dirs
-	stow --target $(HOME) --verbose .
+stow : check_dirs clean_stale_links
+	stow --target $(HOME) --verbose $(STOW_PACKAGES)
 
 restow :
-	stow --target $(HOME) --verbose --restow .
+	stow --target $(HOME) --verbose --restow $(STOW_PACKAGES)
 
 destow :
-	stow -D --target $(HOME) --verbose .
+	stow -D --target $(HOME) --verbose $(STOW_PACKAGES)
 
 install-prereqs :
 	sudo pacman -S --needed - < packages.txt
@@ -78,7 +80,7 @@ reinstall : uninstall-gui install-gui install-prereqs install-aur
 reinstall-gui: uninstall-gui install-gui
 
 install-gui :
-	cp .config/wall.png $(HOME)/.config/wall.png
+	cp common/.config/wall.png $(HOME)/.config/wall.png
 	sudo $(MAKE) -C external/dwl install -j
 	sudo $(MAKE) -C external/wlbubble install -j
 	$(MAKE) -C dwlb-status install
@@ -112,6 +114,9 @@ check_dirs:
 	[ -d $(HOME)/.local/share/fonts ] || mkdir -p $(HOME)/.local/share/fonts
 	[ -d $(HOME)/.cache/zsh ] || mkdir -p $(HOME)/.cache/zsh
 	[ -d $(HOME)/.todo ] || mkdir $(HOME)/.todo
+
+clean_stale_links:
+	@find "$(HOME)" -xtype l -exec sh -c 'for link; do case "$$(realpath -m "$$link")" in "$(CURDIR)"/*) rm "$$link";; esac; done' sh {} +
 
 install-cursors:
 	rm -rf apple_cursor

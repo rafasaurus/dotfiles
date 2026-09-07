@@ -47,10 +47,10 @@
 st
 wallpaper
 # .local
-.config/darktable
-.config/nvim/plugged/
-.config/ranger/colorschemes/__init__.py
-.config/ranger/colorschemes/__pycache__
+common/.config/darktable
+common/.config/nvim/plugged/
+common/.config/ranger/colorschemes/__init__.py
+common/.config/ranger/colorschemes/__pycache__
 apple_cursor
 dwlb-status/dwlb-status
 .secrets

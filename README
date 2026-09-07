@@ -7,3 +7,5 @@ Usage:
 cd ~
 git clone https://github.com/rafasaurus/dotfiles --recursive
 
+`make stow` applies the `common` package and, when present, the package named
+by `hostname` (for example, `x220`).
