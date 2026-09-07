@@ -1,2 +1,2 @@
 #!/bin/sh
-wl-paste | qrencode -s 10 -o /tmp/qr.png && sxiv /tmp/qr.png
+wl-paste | qrencode -s 10 -o /tmp/qr.png && nsxiv /tmp/qr.png
