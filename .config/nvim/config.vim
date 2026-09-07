@@ -29,7 +29,6 @@ Plug 'junegunn/goyo.vim'
 Plug 'kyoz/purify', { 'rtp': 'vim' }
 " Plug 'folke/tokyonight.nvim'
 Plug 'airblade/vim-gitgutter'
-Plug 'f-person/auto-dark-mode.nvim'
 call plug#end()
 
 set cot=menuone,noinsert,noselect shm+=c

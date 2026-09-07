@@ -17,7 +17,13 @@ x-scheme-handler/lbry=lbry.desktop
 inode/directory=thunar.desktop
 x-scheme-handler/notion=notion-app.desktop
 x-scheme-handler/tg=org.telegram.desktop.desktop
+x-scheme-handler/sgnl=signal.desktop
+x-scheme-handler/signalcaptcha=signal.desktop
+x-scheme-handler/viber=viber.desktop
+x-scheme-handler/claude-cli=claude-code-url-handler.desktop
 
 [Added Associations]
 x-scheme-handler/tg=org.telegram.desktop.desktop;
 video/webm=mpv.desktop;vlc.desktop;
+video/mp4=mpv.desktop;vlc.desktop;
+application/epub+zip=org.pwmt.zathura-pdf-mupdf.desktop;
