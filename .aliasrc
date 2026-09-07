@@ -4,6 +4,7 @@
 [[ -f $HOME/.cache/wal/colors.sh ]] && source "$HOME/.cache/wal/colors.sh"
 
 alias ka="killall" \
+    alias kanshi='kanshi -c "$HOME/.config/kanshi/config.$(hostname)"' \
     dmenu='wmenu' \
     vi='/usr/bin/vim' \
     rm='trash-put' \
