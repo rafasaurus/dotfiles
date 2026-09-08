@@ -1,34 +1,35 @@
 [colors]
-draw_bold_text_with_bright_colors = true
+draw_bold_text_with_bright_colors = false
 
 [colors.primary]
-background = "#1e2124"
-foreground = "#6bf078"
+background = "#22252a"
+foreground = "#bcbfc4"
+dim_foreground = "#8a8d92"
 
 [colors.cursor]
 text = "CellBackground"
-cursor = "#528bff"
+cursor = "#7aa2f7"
 
 [colors.normal]
-black = "#21222c"
-blue = "#0bbecc"
-cyan = "#0088aa"
-green = "#50fa7b"
-magenta = "#b271a9"
-red = "#ff5555"
-white = "#f8f8f2"
-yellow = "#f1fa8c"
+black   = "#2c3038"
+red     = "#d97a7a"
+green   = "#8fbf7f"
+yellow  = "#d9be7a"
+blue    = "#7f9fc9"
+magenta = "#b48ead"
+cyan    = "#7fb3b3"
+white   = "#bcbfc4"
 
 [colors.bright]
-black = "#6272a4"
-red = "#ff6e6e"
-green = "#69ff94"
-yellow = "#ffffa5"
-blue = "#d6acff"
-magenta = "#ff92df"
-cyan = "#a4ffff"
-white = "#ffffff"
+black   = "#5c6370"
+red     = "#e08a8a"
+green   = "#9fcf8f"
+yellow  = "#e6cd8a"
+blue    = "#8fafd9"
+magenta = "#c49ebd"
+cyan    = "#8fc3c3"
+white   = "#d6d9de"
 
 [colors.selection]
 text = "CellForeground"
-background = "#3e4451"
+background = "#3a4048"
