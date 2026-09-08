@@ -35,7 +35,8 @@ for f in .zshrc .zprofile; do
 		zsh -n "$DOTFILES/common/$f" && ok "zsh -n $f" || bad "zsh -n $f"
 	fi
 done
-for f in .bashrc .bash_profile .profile .aliasrc .wprofile .winitrc toggle-git.sh; do
+for f in .bashrc .bash_profile .profile .aliasrc .wprofile .winitrc toggle-git.sh \
+	.local/bin/helpers/tailscale-tmux; do
 	if [ -f "$DOTFILES/common/$f" ]; then
 		bash -n "$DOTFILES/common/$f" && ok "bash -n $f" || bad "bash -n $f"
 	fi
