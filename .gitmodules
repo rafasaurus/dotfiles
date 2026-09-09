@@ -14,3 +14,6 @@
 	path = .fonts/private-fonts
 	url = git@github.com:rafasaurus/private-fonts
 	update = none
+[submodule "external/tmax"]
+	path = external/tmax
+	url = https://github.com/theo-kirby/tmax.git

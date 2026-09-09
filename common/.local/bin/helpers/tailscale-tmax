@@ -1,0 +1,148 @@
+#!/usr/bin/env python3
+"""Open a Tailscale machine's tmux session as a local tmax proxy."""
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+USER = "rafael"
+RUNTIME = Path.home() / ".cache" / "tailscale-tmax"
+CONFIG = RUNTIME / "remotes.json"
+
+
+def run(*args, **kwargs):
+    return subprocess.run(args, text=True, **kwargs)
+
+
+def tmux(*args, check=True, **kwargs):
+    return run("tmux", *args, check=check, **kwargs)
+
+
+def message(client, text):
+    tmux("display-message", "-c", client, text, check=False)
+
+
+def tmax_dir():
+    result = tmux("show-environment", "-g", "TMAX_DIR", capture_output=True, check=False)
+    if result.returncode == 0:
+        return Path(result.stdout.strip().split("=", 1)[1])
+    return Path.home() / "dotfiles" / "external" / "tmax"
+
+
+def inventory():
+    status = json.loads(subprocess.check_output(["tailscale", "status", "--json"], text=True))
+    peers = [status.get("Self", {})] + list((status.get("Peer") or {}).values())
+    remotes = {"local": {"label": status.get("Self", {}).get("HostName", "local")}}
+    choices = []
+    used = set(remotes)
+
+    for peer in peers:
+        dns_name = peer.get("DNSName", "").rstrip(".")
+        if not dns_name or peer is status.get("Self"):
+            continue
+        base = re.sub(r"[^A-Za-z0-9_-]", "_", peer.get("HostName", dns_name))
+        key = base or "host"
+        suffix = 2
+        while key in used:
+            key = f"{base}_{suffix}"
+            suffix += 1
+        used.add(key)
+        socket = RUNTIME / f"{key}.sock"
+        remotes[key] = {
+            "destination": f"{USER}@{dns_name}",
+            "control_path": str(socket),
+            "label": peer.get("HostName", key),
+        }
+        choices.append((key, peer.get("HostName", key), peer.get("OS", "unknown"), dns_name,
+                        "online" if peer.get("Online") else "offline"))
+
+    RUNTIME.mkdir(mode=0o700, parents=True, exist_ok=True)
+    RUNTIME.chmod(0o700)
+    CONFIG.write_text(json.dumps(remotes, indent=2) + "\n")
+    CONFIG.chmod(0o600)
+    tmux("set-environment", "-g", "TMAX_REMOTES_FILE", str(CONFIG))
+    return remotes, choices
+
+
+def choose_host(choices):
+    rows = ["\t".join((key, label, os_name, dns_name, state)) for key, label, os_name, dns_name, state in choices]
+    result = subprocess.run(
+        ["fzf", "--delimiter=\t", "--with-nth=2,3,4,5", "--header=Machine  OS  Address  Status",
+         "--layout=reverse", "--height=100%", "--prompt=Connect: "],
+        input="\n".join(rows) + "\n", text=True, capture_output=True,
+    )
+    return result.stdout.split("\t", 1)[0] if result.returncode == 0 else ""
+
+
+def master_is_alive(destination, socket):
+    return run("ssh", "-S", str(socket), "-O", "check", destination,
+               stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
+
+
+def establish_master(destination, socket):
+    if master_is_alive(destination, socket):
+        return True
+    socket.unlink(missing_ok=True)
+    result = run(
+        "ssh", "-M", "-S", str(socket), "-o", "ControlMaster=yes", "-o", "ControlPersist=10m",
+        "-o", "BatchMode=no", "-o", "StrictHostKeyChecking=ask", "-o", "ConnectTimeout=10",
+        "-fN", destination,
+    )
+    return result.returncode == 0
+
+
+def remote_session(destination, socket):
+    command = "tmux list-sessions -F '#{session_id}\t#{session_activity}'"
+    result = run("ssh", "-T", "-S", str(socket), "-o", "ControlMaster=no", "-o", "BatchMode=yes",
+                 destination, command, capture_output=True)
+    if result.returncode != 0 or not result.stdout.strip():
+        create = run("ssh", "-T", "-S", str(socket), "-o", "ControlMaster=no", "-o", "BatchMode=yes",
+                     destination, "tmux new-session -d -s main", capture_output=True)
+        if create.returncode != 0:
+            return ""
+        result = run("ssh", "-T", "-S", str(socket), "-o", "ControlMaster=no", "-o", "BatchMode=yes",
+                     destination, command, capture_output=True)
+    sessions = [line.split("\t", 1) for line in result.stdout.splitlines() if line.startswith("$")]
+    return max(sessions, key=lambda session: int(session[1]))[0] if sessions else ""
+
+
+def attach(client, host, remotes):
+    destination = remotes[host]["destination"]
+    socket = Path(remotes[host]["control_path"])
+    if not establish_master(destination, socket):
+        message(client, f"Tailscale: SSH authentication failed for {host}")
+        return
+    session = remote_session(destination, socket)
+    if not session:
+        message(client, f"Tailscale: unable to start tmux on {host}")
+        return
+    result = run(sys.executable, str(tmax_dir() / "scripts" / "remote.py"), "attach", host, session,
+                 env={**os.environ, "TMAX_REMOTES_FILE": str(CONFIG)}, capture_output=True)
+    if result.returncode:
+        message(client, "Tailscale: " + result.stderr.strip().replace("\n", " "))
+        return
+    proxy = result.stdout.strip()
+    tmux("switch-client", "-c", client, "-t", proxy, check=False)
+
+
+def main():
+    if sys.argv[1:] == ["--sync"]:
+        inventory()
+        return
+    if len(sys.argv) != 2:
+        raise SystemExit(f"usage: {sys.argv[0]} TMUX_CLIENT")
+    client = sys.argv[1]
+    try:
+        remotes, choices = inventory()
+    except (OSError, subprocess.CalledProcessError, json.JSONDecodeError) as error:
+        message(client, f"Tailscale: {error}")
+        return
+    host = choose_host(choices)
+    if host:
+        attach(client, host, remotes)
+
+
+if __name__ == "__main__":
+    main()

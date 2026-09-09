@@ -35,12 +35,17 @@ for f in .zshrc .zprofile; do
 		zsh -n "$DOTFILES/common/$f" && ok "zsh -n $f" || bad "zsh -n $f"
 	fi
 done
-for f in .bashrc .bash_profile .profile .aliasrc .wprofile .winitrc toggle-git.sh \
-	.local/bin/helpers/tailscale-tmux; do
+for f in .bashrc .bash_profile .profile .aliasrc .wprofile .winitrc toggle-git.sh; do
 	if [ -f "$DOTFILES/common/$f" ]; then
 		bash -n "$DOTFILES/common/$f" && ok "bash -n $f" || bad "bash -n $f"
 	fi
 done
+if [ -f "$DOTFILES/common/.local/bin/helpers/tailscale-tmax" ]; then
+	python3 -c 'from pathlib import Path; compile(Path(__import__("sys").argv[1]).read_text(), __import__("sys").argv[1], "exec")' \
+		"$DOTFILES/common/.local/bin/helpers/tailscale-tmax" \
+		&& ok "python3 syntax .local/bin/helpers/tailscale-tmax" \
+		|| bad "python3 syntax .local/bin/helpers/tailscale-tmax"
+fi
 
 head "packages.txt format"
 valid_name='^[a-zA-Z0-9@._+:-]+$'
