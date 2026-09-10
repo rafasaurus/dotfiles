@@ -10,7 +10,7 @@
 [submodule "external/wlbubble"]
 	path = external/wlbubble
 	url = https://github.com/rafasaurus/wlbubble
-[submodule ".fonts/private-fonts"]
-	path = .fonts/private-fonts
+[submodule "common/.fonts/private-fonts"]
+	path = common/.fonts/private-fonts
 	url = git@github.com:rafasaurus/private-fonts
 	update = none
