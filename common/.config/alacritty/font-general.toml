@@ -2,17 +2,17 @@
 size = 16
 
 [font.bold]
-family = "Cascadia Mono"
+family = "jetbrains mono"
 style = "Bold"
 
 [font.bold_italic]
-family = "Cascadia Mono"
+family = "jetbrains mono"
 style = "Bold Italic"
 
 [font.italic]
-family = "Cascadia Mono"
+family = "jetbrains mono"
 style = "Italic"
 
 [font.normal]
-family = "Cascadia Mono"
+family = "jetbrains mono"
 style = "Regular"

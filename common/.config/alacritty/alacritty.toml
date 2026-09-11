@@ -1,6 +1,6 @@
 general.import = [
     "dark.toml",
-    "font.toml",
+    "font-ttyp0.toml",
 ]
 
 [cursor]

@@ -1,0 +1,18 @@
+[font]
+size = 16
+
+[font.bold]
+family = "Anthropic Mono Web"
+style = "Bold"
+
+[font.bold_italic]
+family = "Anthropic Mono Web"
+style = "Bold Italic"
+
+[font.italic]
+family = "Anthropic Mono Web"
+style = "Italic"
+
+[font.normal]
+family = "Anthropic Mono Web"
+style = "Regular"
