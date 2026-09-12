@@ -4,7 +4,7 @@ set -eu
 
 config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/alacritty"
 config="$config_dir/alacritty.toml"
-mapfile -t fonts < <(printf '%s\n' "$config_dir"/font*.toml | sort)
+mapfile -t fonts < <(printf '%s\n' "$config_dir"/font-*.toml | sort)
 
 if ((${#fonts[@]} == 0)) || [[ ! -f "$config" ]]; then
     exit 1
@@ -21,16 +21,16 @@ for i in "${!fonts[@]}"; do
 done
 
 if ((current_index < 0)); then
-    exit 1
+    next_index=0
+else
+    case "${1:-next}" in
+        next) step=1 ;;
+        prev) step=-1 ;;
+        *) exit 1 ;;
+    esac
+    next_index=$(( (current_index + step + ${#fonts[@]}) % ${#fonts[@]} ))
 fi
 
-case "${1:-next}" in
-    next) step=1 ;;
-    prev) step=-1 ;;
-    *) exit 1 ;;
-esac
-
-next_index=$(( (current_index + step + ${#fonts[@]}) % ${#fonts[@]} ))
 next="${fonts[next_index]##*/}"
 font_name=$(sed -n 's/^family = "\(.*\)"$/\1/p; t; d' "${fonts[next_index]}" | sed -n '1p')
 

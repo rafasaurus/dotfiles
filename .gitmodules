@@ -13,4 +13,3 @@
 [submodule "common/.fonts/private-fonts"]
 	path = common/.fonts/private-fonts
 	url = git@github.com:rafasaurus/private-fonts
-	update = none
