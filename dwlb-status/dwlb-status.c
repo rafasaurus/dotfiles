@@ -13,6 +13,8 @@
 #include <errno.h>
 #include <signal.h>
 #include <limits.h>
+#include <stdarg.h>
+#include <sys/select.h>
 
 /* ---------- Tunables ---------- */
 #ifndef RAPL_EVERY_DEFAULT
@@ -27,30 +29,56 @@ typedef struct {
     const char *scroll_up;
     const char *scroll_down;
     const char *name;
-    int interval;
+    uint64_t interval_us;
     int signal_idx; /* -1 if no signal */
+    uint64_t next_deadline_us;
     char buffer[128];
 } __attribute__((aligned(64))) Unit;
 
 static void notify_text(const char *title, const char *message);
 
 /* Signal mapping: bitmask for units */
+#define MAX_UPDATE_SIGNALS 32
 volatile sig_atomic_t update_mask = 0;
+static sigset_t update_signals;
 
 static void handle_sig(int sig) {
     int idx = sig - SIGRTMIN;
-    if (idx >= 0 && idx < 32) update_mask |= (1 << idx);
+    if (idx >= 0 && idx < MAX_UPDATE_SIGNALS && sig <= SIGRTMAX)
+        update_mask |= (sig_atomic_t)(1u << idx);
 }
 
-static const double LOOP_SLEEP_SEC = 0.2; /* equalizer frame period (5 FPS) */
-static const int    STATUS_TICK    = 6;   /* former 1.2-second status cadence */
+static const uint64_t STATUS_TICK_US = 200000ull;
+static const int    STATUS_TICK      = 6; /* former 1.2-second status cadence */
 static const int    THEME_EVERY    = 600;
 static const int    VOL_EVERY      = 60;
-static const int    MUSIC_EVERY    = 5;   /* poll audio activity every second */
+static const uint64_t MUSIC_EVERY_US = 5ull * 1000000ull; /* animation is intentionally not realtime */
 static const int    BATT_EVERY     = 120;
 static const int    TIME_EVERY     = 48;
 static const int    DISK_EVERY     = 720;
 static const int    AIRPODS_EVERY  = 18;  /* poll airpods every ~3.6 seconds */
+
+static bool valid_signal_idx(int idx) {
+    return idx >= 0 && idx < MAX_UPDATE_SIGNALS && SIGRTMIN + idx <= SIGRTMAX;
+}
+
+static bool setup_signal_handlers(void) {
+    sigemptyset(&update_signals);
+    for (int i = 0; i < MAX_UPDATE_SIGNALS && SIGRTMIN + i <= SIGRTMAX; ++i)
+        if (sigaddset(&update_signals, SIGRTMIN + i) != 0)
+            return false;
+
+    if (sigprocmask(SIG_BLOCK, &update_signals, NULL) != 0)
+        return false;
+
+    struct sigaction action = {0};
+    action.sa_handler = handle_sig;
+    action.sa_mask = update_signals;
+    for (int i = 0; i < MAX_UPDATE_SIGNALS && SIGRTMIN + i <= SIGRTMAX; ++i)
+        if (sigaction(SIGRTMIN + i, &action, NULL) != 0)
+            return false;
+    return true;
+}
 
 /* ---------- Helpers ---------- */
 static inline uint64_t now_us(void) {
@@ -104,6 +132,23 @@ static bool read_text_file(const char *path, char *out, size_t outsz) {
     fclose(f);
     if (ok) out[strcspn(out, "\n")] = 0;
     return ok;
+}
+
+static bool appendf(char *out, size_t outsz, size_t *len, const char *fmt, ...) {
+    if (*len >= outsz || outsz == 0) return false;
+
+    va_list ap;
+    va_start(ap, fmt);
+    int written = vsnprintf(out + *len, outsz - *len, fmt, ap);
+    va_end(ap);
+    if (written < 0) return false;
+    if ((size_t)written >= outsz - *len) {
+        *len = outsz - 1;
+        out[*len] = '\0';
+        return false;
+    }
+    *len += (size_t)written;
+    return true;
 }
 
 static void add_power_counter(PowerCounter *counters, size_t *count, const char *path, const char *name) {
@@ -433,27 +478,11 @@ static bool music_playing(void) {
 }
 
 static void equalizer_text(char *out, size_t outsz) {
-    static const char *const notes[] = { "♪✨", "✨♫", "♬✨" };
-    // static const char *const notes[] = { "♩--", "-♪-", "--♫", "--♬" };
-    static int music_ticks = MUSIC_EVERY - 1;
-    static int frame_ticks;
-    static unsigned frame;
-    static bool playing;
-
-    if (++music_ticks >= MUSIC_EVERY) {
-        playing = music_playing();
-        music_ticks = 0;
-    }
-    if (!playing) {
+    if (!music_playing()) {
         out[0] = '\0';
         return;
     }
-
-    if (++frame_ticks >= 3) {
-        frame = (frame + 1) % 3;
-        frame_ticks = 0;
-    }
-    snprintf(out, outsz, "^fg(FABA17)%s^fg()", notes[frame]);
+    snprintf(out, outsz, "^fg(FABA17)♪^fg()");
 }
 
 /* Check airpods connection status (polled infrequently) - with timeout to prevent hangs */
@@ -577,20 +606,22 @@ static void temp_text(char *out, size_t outsz) {
 
 static void temperature_details(void) {
     discover_temp_paths();
-    char message[1024];
+    char message[1024] = "";
     size_t len = 0;
     uint64_t pkg_milli = 0;
-    if (cpu_temp_path_g && read_u64_file(cpu_temp_path_g, &pkg_milli))
-        len += (size_t)snprintf(message + len, sizeof message - len, "Package: %llu C\n",
-                                 (unsigned long long)(pkg_milli / 1000ull));
-    else
-        len += (size_t)snprintf(message + len, sizeof message - len, "Package: unavailable\n");
+    if (cpu_temp_path_g && read_u64_file(cpu_temp_path_g, &pkg_milli)) {
+        appendf(message, sizeof message, &len, "Package: %llu C\n",
+                (unsigned long long)(pkg_milli / 1000ull));
+    } else {
+        appendf(message, sizeof message, &len, "Package: unavailable\n");
+    }
 
-    for (size_t i = 0; i < cpu_core_count_g && len < sizeof message; ++i) {
+    for (size_t i = 0; i < cpu_core_count_g; ++i) {
         uint64_t core_milli = 0;
-        if (read_u64_file(cpu_core_paths_g[i], &core_milli))
-            len += (size_t)snprintf(message + len, sizeof message - len, "Core %zu: %llu C\n",
-                                     i, (unsigned long long)(core_milli / 1000ull));
+        if (read_u64_file(cpu_core_paths_g[i], &core_milli) &&
+            !appendf(message, sizeof message, &len, "Core %zu: %llu C\n",
+                     i, (unsigned long long)(core_milli / 1000ull)))
+            break;
     }
     if (len > 0 && message[len - 1] == '\n') message[len - 1] = '\0';
     notify_text("CPU temperatures", message);
@@ -728,22 +759,38 @@ static void power_details(void) {
 
 static void vpn_text(char *out, size_t outsz) {
     FILE *fp = popen("timeout 1 nmcli -t -f NAME,TYPE connection show --active 2>/dev/null | awk -F: '$2 == \"vpn\" { print $1; exit }'", "r");
-    if (fp && fgets(out, outsz, fp)) {
-        out[strcspn(out, "\n")] = 0;
-        char text[128];
-        snprintf(text, sizeof text, "🛡 %s", out);
-        snprintf(out, outsz, "%s", text);
+    char name[128];
+    if (fp && fgets(name, sizeof name, fp)) {
+        name[strcspn(name, "\n")] = 0;
+        size_t len = 0;
+        const char *prefix = "🛡 ";
+        while (*prefix && len + 1 < outsz) out[len++] = *prefix++;
+        for (const unsigned char *p = (const unsigned char *)name;
+             *p && len + 1 < outsz; ++p) {
+            if (*p == '\n' || *p == '\r' || *p == 0x7f || *p < 0x20)
+                continue;
+            if (*p == '^' && len + 2 < outsz) out[len++] = '^';
+            if (len + 1 >= outsz) break;
+            out[len++] = (char)*p;
+        }
+        out[len] = '\0';
     } else {
         out[0] = 0;
     }
     if (fp) pclose(fp);
 }
 
-static inline void wrap_tag(char *buf, size_t *len, const char *tag, size_t tag_len, const char *cmd) {
+static inline bool wrap_tag(char *buf, size_t cap, size_t *len, const char *tag, size_t tag_len, const char *cmd) {
     if (__builtin_expect(cmd != NULL, 0)) {
         size_t cmd_len = strlen(cmd);
         char inner[512];
         char *p = inner;
+
+        if (cmd_len > SIZE_MAX - *len || cmd_len + *len > SIZE_MAX - 6 ||
+            tag_len > (SIZE_MAX - cmd_len - *len - 6) / 2)
+            return false;
+        size_t new_len = cmd_len + *len + 2 * tag_len + 6;
+        if (new_len >= cap || new_len >= sizeof inner) return false;
 
         /* ^tag(cmd)buf^tag() */
         *p++ = '^';
@@ -762,12 +809,11 @@ static inline void wrap_tag(char *buf, size_t *len, const char *tag, size_t tag_
         *p++ = ')';
         *p = '\0';
 
-        size_t new_len = p - inner;
-        if (__builtin_expect(new_len < 512, 1)) {
-            memcpy(buf, inner, new_len + 1);
-            *len = new_len;
-        }
+        memcpy(buf, inner, new_len + 1);
+        *len = new_len;
+        return true;
     }
+    return true;
 }
 
 static void render_unit(const Unit *u, char *out, size_t *out_len) {
@@ -776,11 +822,11 @@ static void render_unit(const Unit *u, char *out, size_t *out_len) {
     if (__builtin_expect(blen >= sizeof(temp), 0)) return;
     memcpy(temp, u->buffer, blen + 1);
 
-    wrap_tag(temp, &blen, "lm", 2, u->left_click);
-    wrap_tag(temp, &blen, "mm", 2, u->middle_click);
-    wrap_tag(temp, &blen, "rm", 2, u->right_click);
-    wrap_tag(temp, &blen, "us", 2, u->scroll_up);
-    wrap_tag(temp, &blen, "ds", 2, u->scroll_down);
+    wrap_tag(temp, sizeof temp, &blen, "lm", 2, u->left_click);
+    wrap_tag(temp, sizeof temp, &blen, "mm", 2, u->middle_click);
+    wrap_tag(temp, sizeof temp, &blen, "rm", 2, u->right_click);
+    wrap_tag(temp, sizeof temp, &blen, "us", 2, u->scroll_up);
+    wrap_tag(temp, sizeof temp, &blen, "ds", 2, u->scroll_down);
 
     memcpy(out, temp, blen + 1);
     *out_len = blen;
@@ -837,29 +883,40 @@ int main(int argc, char **argv) {
             return 0;
         }
         if (strcmp(argv[i], "--signal") == 0 && i + 1 < argc) {
-            int sig_idx = atoi(argv[++i]);
-            if (sig_idx < 0 || sig_idx >= 32) return 1;
+            char *end = NULL;
+            errno = 0;
+            long parsed = strtol(argv[++i], &end, 10);
+            if (errno != 0 || end == argv[i] || *end != '\0' ||
+                parsed < 0 || parsed > INT_MAX || !valid_signal_idx((int)parsed))
+                return 1;
+            int sig_idx = (int)parsed;
             send_signal(sig_idx);
             return 0;
         }
     }
 
     /* Register signal handlers for the main process */
-    for (int i = 0; i < 32; ++i) {
-        signal(SIGRTMIN + i, handle_sig);
-    }
+    if (!setup_signal_handlers()) return 1;
 
     /* RAPL sampling frequency (in ticks): default, env, CLI -r N */
-    int rapl_every = RAPL_EVERY_DEFAULT * STATUS_TICK;
+    uint64_t rapl_every_us = (uint64_t)RAPL_EVERY_DEFAULT * STATUS_TICK * STATUS_TICK_US;
     const char *ev = getenv("RAPL_EVERY");
     if (ev) {
-        int n = atoi(ev);
-        if (n >= 1) rapl_every = n * STATUS_TICK;
+        char *end = NULL;
+        errno = 0;
+        unsigned long long n = strtoull(ev, &end, 10);
+        if (errno == 0 && end != ev && *end == '\0' && n >= 1 &&
+            n <= UINT64_MAX / (STATUS_TICK * STATUS_TICK_US))
+            rapl_every_us = n * STATUS_TICK * STATUS_TICK_US;
     }
     for (int i = 1; i < argc; ++i) {
         if ((strcmp(argv[i], "-r") == 0 || strcmp(argv[i], "--rapl-every") == 0) && i+1 < argc) {
-            int n = atoi(argv[++i]);
-            if (n >= 1) rapl_every = n * STATUS_TICK;
+            char *end = NULL;
+            errno = 0;
+            unsigned long long n = strtoull(argv[++i], &end, 10);
+            if (errno == 0 && end != argv[i] && *end == '\0' && n >= 1 &&
+                n <= UINT64_MAX / (STATUS_TICK * STATUS_TICK_US))
+                rapl_every_us = n * STATUS_TICK * STATUS_TICK_US;
         }
     }
 
@@ -874,13 +931,13 @@ int main(int argc, char **argv) {
     Unit units[] = {
         {
             .name = "Equalizer",
-            .interval = 1,
+            .interval_us = MUSIC_EVERY_US,
             .update = equalizer_text,
             .signal_idx = -1
         },
         {
             .name = "Volume",
-            .interval = VOL_EVERY,
+            .interval_us = VOL_EVERY * STATUS_TICK_US,
             .update = volume_text,
             .left_click = "pamixer -t",
             .right_click = "pavucontrol",
@@ -890,7 +947,7 @@ int main(int argc, char **argv) {
         },
         {
             .name = "Airpods",
-            .interval = AIRPODS_EVERY,
+            .interval_us = AIRPODS_EVERY * STATUS_TICK_US,
             .update = airpods_text,
             .left_click = "airpods",
             .right_click = "librepods",
@@ -898,14 +955,14 @@ int main(int argc, char **argv) {
         },
         {
             .name = "Power",
-            .interval = rapl_every,
+            .interval_us = rapl_every_us,
             .update = power_text,
             .left_click = "dwlb-status --power-details",
             .signal_idx = -1
         },
         {
             .name = "Duck",
-            .interval = 999999 * STATUS_TICK,
+            .interval_us = 999999ull * STATUS_TICK_US,
             .update = duck_text,
             .left_click = "sh -c 'pgrep -x wmbubble >/dev/null || wmbubble &'",
             .right_click = "pkill -x wmbubble",
@@ -913,14 +970,14 @@ int main(int argc, char **argv) {
         },
         {
             .name = "Temp",
-            .interval = STATUS_TICK,
+            .interval_us = STATUS_TICK * STATUS_TICK_US,
             .update = temp_text,
             .left_click = "dwlb-status --temperature-details",
             .signal_idx = -1
         },
         {
             .name = "CPU",
-            .interval = STATUS_TICK,
+            .interval_us = STATUS_TICK * STATUS_TICK_US,
             .update = cpu_load_text,
             .left_click = "tuned-profile --select",
             .right_click = "tuned-profile --notify",
@@ -928,41 +985,41 @@ int main(int argc, char **argv) {
         },
         {
             .name = "RAM",
-            .interval = STATUS_TICK,
+            .interval_us = STATUS_TICK * STATUS_TICK_US,
             .update = ram_text,
             .signal_idx = -1
         },
         {
             .name = "Disk",
-            .interval = DISK_EVERY,
+            .interval_us = DISK_EVERY * STATUS_TICK_US,
             .update = disk_text,
             .left_click = "dwlb-status --disk-details",
             .signal_idx = -1
         },
         {
             .name = "Battery",
-            .interval = BATT_EVERY,
+            .interval_us = BATT_EVERY * STATUS_TICK_US,
             .update = battery_text,
             .left_click = "dwlb-status --battery-details",
             .signal_idx = 4
         },
         {
             .name = "Time",
-            .interval = TIME_EVERY,
+            .interval_us = TIME_EVERY * STATUS_TICK_US,
             .update = time_text,
             .left_click = "dwlb-status --calendar",
             .signal_idx = 5
         },
         {
             .name = "Theme",
-            .interval = THEME_EVERY,
+            .interval_us = THEME_EVERY * STATUS_TICK_US,
             .update = theme_text,
             .left_click = "sh -c 'switch-theme -a; dwlb-status --signal 1'",
             .signal_idx = 1
         },
         {
             .name = "Font",
-            .interval = 999999 * STATUS_TICK,
+            .interval_us = 999999ull * STATUS_TICK_US,
             .update = font_text,
             .left_click = "font-cycle next",
             .scroll_up = "font-cycle next",
@@ -971,13 +1028,13 @@ int main(int argc, char **argv) {
         },
         {
             .name = "VPN",
-            .interval = 20 * STATUS_TICK,
+            .interval_us = 20 * STATUS_TICK_US * STATUS_TICK,
             .update = vpn_text,
             .signal_idx = -1
         },
         {
             .name = "Launcher",
-            .interval = 999999 * STATUS_TICK,
+            .interval_us = 999999ull * STATUS_TICK_US,
             .update = launcher_text,
             .left_click = "sh -c 'fuzzel &'",
             .middle_click = "sh -c 'power &'",
@@ -988,57 +1045,71 @@ int main(int argc, char **argv) {
     int num_units = sizeof(units) / sizeof(units[0]);
 
     /* Initial update */
+    uint64_t initial_deadline = now_us();
     for (int i = 0; i < num_units; i++) {
         units[i].update(units[i].buffer, sizeof(units[i].buffer));
+        units[i].next_deadline_us = initial_deadline + units[i].interval_us;
     }
 
-    int tick = 0;
     bool dirty = true;
+    sigset_t wait_mask;
+    sigemptyset(&wait_mask);
     for (;;) {
         sig_atomic_t current_mask = update_mask;
         update_mask = 0;
-
-        if (current_mask == 0) tick++;
+        uint64_t current_time = now_us();
 
         for (int i = 0; i < num_units; i++) {
-            bool sig_hit = (units[i].signal_idx != -1 && (current_mask & (1 << units[i].signal_idx)));
-            bool time_hit = (current_mask == 0 && tick % units[i].interval == 0);
+            bool sig_hit = (units[i].signal_idx != -1 &&
+                            (current_mask & (sig_atomic_t)(1u << units[i].signal_idx)));
+            bool time_hit = current_time >= units[i].next_deadline_us;
 
             if (sig_hit || time_hit) {
                 char previous[sizeof units[i].buffer];
                 memcpy(previous, units[i].buffer, sizeof previous);
                 units[i].update(units[i].buffer, sizeof(units[i].buffer));
                 dirty |= memcmp(previous, units[i].buffer, sizeof previous) != 0;
+                units[i].next_deadline_us = now_us() + units[i].interval_us;
             }
         }
 
         if (dirty) {
             char bar[1024];
-            char *p = bar;
-            char *end = bar + sizeof(bar);
+            size_t bar_len = 0;
             bool have_unit = false;
             for (int i = 0; i < num_units; i++) {
                 char rendered[512];
                 size_t rlen = 0;
                 render_unit(&units[i], rendered, &rlen);
-                if (p + rlen + 2 < end) {
-                    if (have_unit) *p++ = ' ';
-                    memcpy(p, rendered, rlen);
-                    p += rlen;
+                size_t separator = have_unit ? 1 : 0;
+                if (bar_len <= sizeof bar - 1 && separator <= sizeof bar - 1 - bar_len &&
+                    rlen <= sizeof bar - 1 - bar_len - separator) {
+                    if (have_unit) bar[bar_len++] = ' ';
+                    memcpy(bar + bar_len, rendered, rlen);
+                    bar_len += rlen;
                     have_unit = true;
                 }
             }
-            *p = '\0';
+            bar[bar_len] = '\0';
 
             printf("%s\n", bar);
             fflush(stdout);
             dirty = false;
         }
 
-        struct timespec req = { (time_t)LOOP_SLEEP_SEC, (long)((LOOP_SLEEP_SEC - (time_t)LOOP_SLEEP_SEC) * 1e9) };
-        if (nanosleep(&req, NULL) == -1 && errno == EINTR) {
-            continue;
-        }
+        uint64_t next_deadline = UINT64_MAX;
+        current_time = now_us();
+        for (int i = 0; i < num_units; ++i)
+            if (units[i].next_deadline_us < next_deadline)
+                next_deadline = units[i].next_deadline_us;
+
+        uint64_t wait_us = next_deadline > current_time ? next_deadline - current_time : 0;
+        struct timespec timeout = {
+            .tv_sec = (time_t)(wait_us / 1000000ull),
+            .tv_nsec = (long)((wait_us % 1000000ull) * 1000ull)
+        };
+        if (pselect(0, NULL, NULL, NULL, &timeout, &wait_mask) < 0 && errno != EINTR)
+            return 1;
     }
 
     return 0;
