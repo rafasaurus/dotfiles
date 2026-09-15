@@ -1,11 +1,23 @@
 rafasaurus's dotfiles
 ---------------------
 
-Uses GNU Stow – https://www.gnu.org/software/stow/
+Uses GNU Stow: https://www.gnu.org/software/stow/
 
-Usage: 
+Supported on Arch Linux. Install GNU Stow before continuing. Some targets also
+require `sudo`, `pacman`, `paru`, Docker, and the repository submodules.
+
+Usage:
+```
 cd ~
 git clone https://github.com/rafasaurus/dotfiles --recursive
+cd dotfiles
+make stow
+```
 
 `make stow` applies the `common` package and, when present, the package named
 by `hostname` (for example, `x220`).
+
+Use `make help` to list available targets. `install-udev` writes privileged
+system rules and `uninstall-udev` removes all local udev rules. Review those
+targets before running them. `make stow` may replace an existing
+`~/.config/mimeapps.list`.

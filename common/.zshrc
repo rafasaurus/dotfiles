@@ -102,4 +102,3 @@ history() { fc -lim "*$@*" 1 }
 [ -f "$HOME/.secrets" ] && source "$HOME/.secrets"
 [ -f "$HOME/.helpers" ] && source "$HOME/.helpers"
 [ -f "$HOME/.aliasrc" ] && source "$HOME/.aliasrc"
-[ -f "$HOME/.zprofile" ] && source "$HOME/.zprofile"

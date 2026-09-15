@@ -181,9 +181,6 @@ done
 
 rm -f "$log"
 
-head "summary"
-printf "  ${B}%d passed, %d failed${N}\n" "$pass" "$fail"
-[ "$fail" -eq 0 ]
 output=$(make -C "$DOTFILES" install-gui 2>&1); rc=$?
 if [ "$rc" -eq 0 ]; then
     ok "make install-gui succeeded"
@@ -192,3 +189,7 @@ elif echo "$output" | grep -q "No rule to make target"; then
 else
     ok "make install-gui ran (exit code $rc, likely display error without X server)"
 fi
+
+head "summary"
+printf "  ${B}%d passed, %d failed${N}\n" "$pass" "$fail"
+exit "$fail"

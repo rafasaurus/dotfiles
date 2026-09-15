@@ -1,31 +1,30 @@
 #!/bin/sh
 
 # load colors from wal
-[[ -f $HOME/.cache/wal/colors.sh ]] && source "$HOME/.cache/wal/colors.sh"
+[ -f "$HOME/.cache/wal/colors.sh" ] && . "$HOME/.cache/wal/colors.sh"
 
-alias ka="killall" \
-    alias kanshi='kanshi -c "$HOME/.config/kanshi/config.$(hostname)"' \
-    dmenu='wmenu' \
-    vi='/usr/bin/vim' \
-    rm='trash-put' \
-    ls="ls -hN --color=auto --group-directories-first" \
-    grep="grep --color=auto" \
-    diff="diff --color=auto" \
-    ffmpeg="ffmpeg -hide_banner" \
-    document_archlinux='$BROWSER /usr/share/doc/arch-wiki/html/en > /dev/null' \
-    weather='curl wttr.in/yerevan' \
-    cp='cp -iv' \
-    paru='paru --bottomup' \
-    tree='exa --tree --level=2 --long -a --header --git' \
-    sl='ls' \
-    noise='mpv ~/Music/white_noise.mp3' \
-    study='mpv ~/Music/study_hollow.mp3' \
-    jackson='mpv ~/Music/jackson_hour.mp3' \
-    diff='diff --strip-trailing-cr' \
-    oneko='oneko -rv -fg \#CCCCCC -speed 13' \
-    rg='rg --ignore-case' \
+alias ka='killall'
+alias kanshi='kanshi -c "$HOME/.config/kanshi/config.$(hostname)"'
+alias dmenu='wmenu'
+alias vi='/usr/bin/vim'
+alias rm='trash-put'
+alias ls='ls -hN --color=auto --group-directories-first'
+alias grep='grep --color=auto'
+alias diff='diff --strip-trailing-cr'
+alias ffmpeg='ffmpeg -hide_banner'
+alias document_archlinux='$BROWSER /usr/share/doc/arch-wiki/html/en > /dev/null'
+alias weather='curl wttr.in/yerevan'
+alias cp='cp -iv'
+alias paru='paru --bottomup'
+alias tree='exa --tree --level=2 --long -a --header --git'
+alias sl='ls'
+alias noise='mpv ~/Music/white_noise.mp3'
+alias study='mpv ~/Music/study_hollow.mp3'
+alias jackson='mpv ~/Music/jackson_hour.mp3'
+alias oneko='oneko -rv -fg \#CCCCCC -speed 13'
+alias rg='rg --ignore-case'
 
-command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d"
-command -v nsxiv >/dev/null && alias sxiv="nsxiv" sxivdiff="nsxiv -d"
+command -v nvim >/dev/null 2>&1 && alias vim='nvim' vimdiff='nvim -d'
+command -v nsxiv >/dev/null 2>&1 && alias sxiv='nsxiv' sxivdiff='nsxiv -d'
 
-vf() { fzf | xargs -r -I % $EDITOR % ;}
+vf() { fzf | while IFS= read -r file; do "$EDITOR" "$file"; done; }
