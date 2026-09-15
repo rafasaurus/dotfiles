@@ -2,12 +2,7 @@
 set -x
 choices=`echo "lock suspend suspend_and_lock bluetooth shutdown reboot setup launcher" | tr ' ' '\n'`
 
-if command -v wofi
-then 
-    chosen=$(echo -e "$choices" | wofi --dmenu -i -p "Choose what to do ?" -l 7)
-else
-    chosen=$(echo -e "$choices" | dmenu -i -r -p 0x0)
-fi
+chosen=$(echo -e "$choices" | dmenu_command --prompt="Choose what to do ?")
 
 echo $chosen
 case "$chosen" in

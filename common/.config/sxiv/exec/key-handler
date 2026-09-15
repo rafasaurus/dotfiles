@@ -16,12 +16,12 @@ do
         "e") $TERMINAL -e vim  ~/.config/sxiv/exec/key-handler & ;;
         "o") pkill sxiv && sxiv -t `dirname "$file"` || notify-send "$file" ;;
         "c")
-            [ -z "$destdir" ] && destdir="$(sed "s/\s.*#.*$//;/^\s*$/d" ~/.config/directories | awk '{print $2}' | dmenu -l 20 -i -p "Copy file(s) to where?" | sed "s|~|$HOME|g")"
+            [ -z "$destdir" ] && destdir="$(sed "s/\s.*#.*$//;/^\s*$/d" ~/.config/directories | awk '{print $2}' | dmenu_command --lines=20 --prompt="Copy file(s) to where?" | sed "s|~|$HOME|g")"
             [ -z "$destdir" ] && exit
             cp "$file" "$destdir" && notify-send -i "$(readlink -f "$file")" "$file copied to $destdir." &
             ;;
         "m")
-            [ -z "$destdir" ] && destdir="$(sed "s/\s.*#.*$//;/^\s*$/d" ~/.config/directories | awk '{print $2}' | dmenu -l 20 -i -p "Move file(s) to where?" | sed "s|~|$HOME|g")"
+            [ -z "$destdir" ] && destdir="$(sed "s/\s.*#.*$//;/^\s*$/d" ~/.config/directories | awk '{print $2}' | dmenu_command --lines=20 --prompt="Move file(s) to where?" | sed "s|~|$HOME|g")"
             [ -z "$destdir" ] && exit
             mv "$file" "$destdir" && notify-send -i "$(readlink -f "$file")" "$file moved to $destdir." &
             ;;
@@ -38,7 +38,7 @@ do
             readlink -f "$file" | wl-copy &&
                 notify-send "$(readlink -f "$file") copied to clipboard" & ;;
         "d")
-            [ "$(printf "No\\nYes" | dmenu -i -p "Really delete $file?")" = "Yes" ] && rm "$file" && notify-send "$file deleted." ;;
+            [ "$(printf "No\\nYes" | dmenu_command --prompt="Really delete $file?")" = "Yes" ] && rm "$file" && notify-send "$file deleted." ;;
         "g")	gimp && gimp "$file" & ;;
             esac
 done

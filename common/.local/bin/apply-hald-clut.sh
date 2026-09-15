@@ -12,7 +12,7 @@ if [ "$extension" != "jpeg" ] && [ "$extension" != "jpg" ]; then
     echo "[Warning] sxiv previews not working for non jpeg/jpg formats"
 fi
 
-PACK=$(echo -e "$(echo "new old" | tr ' ' '\n')" |  dmenu -i -p "Choose lut pack" -l 15)
+PACK=$(echo -e "$(echo "new old" | tr ' ' '\n')" | dmenu_command --prompt="Choose lut pack" --lines=15)
 if [ "$PACK" == "new" ]; then
     LPATH="/home/rafael/.local/bin/luts/"
 else
@@ -22,7 +22,7 @@ fi
 ALL_LUTS="$(ls $LPATH)"
 # choose dialog
 LUTS="`echo $ALL_LUTS | tr ' ' '\n'`"
-LUTS=$(echo -e "$LUTS" |  dmenu -i -p "Choose screen option" -l 15)
+LUTS=$(echo -e "$LUTS" | dmenu_command --prompt="Choose screen option" --lines=15)
 
 CONVERT=/usr/bin/convert
 FL="${1%.*}"

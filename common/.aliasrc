@@ -5,7 +5,7 @@
 
 alias ka='killall'
 alias kanshi='kanshi -c "$HOME/.config/kanshi/config.$(hostname)"'
-alias dmenu='wmenu'
+alias dmenu_command='$HOME/.local/bin/dmenu_command'
 alias vi='/usr/bin/vim'
 alias rm='trash-put'
 alias ls='ls -hN --color=auto --group-directories-first'
