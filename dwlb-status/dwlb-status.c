@@ -52,11 +52,12 @@ static const uint64_t STATUS_TICK_US = 200000ull;
 static const int    STATUS_TICK      = 6; /* former 1.2-second status cadence */
 static const int    THEME_EVERY    = 600;
 static const int    VOL_EVERY      = 60;
-static const uint64_t MUSIC_EVERY_US = 5ull * 1000000ull; /* animation is intentionally not realtime */
+static const uint64_t MUSIC_EVERY_US = 400000ull;
 static const int    BATT_EVERY     = 120;
 static const int    TIME_EVERY     = 48;
 static const int    DISK_EVERY     = 720;
 static const int    AIRPODS_EVERY  = 18;  /* poll airpods every ~3.6 seconds */
+static const uint64_t GOLD_EVERY_US = 30ull * 60ull * 1000000ull;
 
 static bool valid_signal_idx(int idx) {
     return idx >= 0 && idx < MAX_UPDATE_SIGNALS && SIGRTMIN + idx <= SIGRTMAX;
@@ -534,6 +535,35 @@ static void disk_text(char *out, size_t outsz) {
     snprintf(out, outsz, "💾 %.0f/%.0fGiB", used, tot);
 }
 
+static void gold_text(char *out, size_t outsz) {
+    FILE *fp = popen("curl -fsS --connect-timeout 3 --max-time 5 'https://api.goldprice.dev/v1/prices?symbol=XAU-USD-SPOT' 2>/dev/null", "r");
+    if (!fp) {
+        out[0] = '\0';
+        return;
+    }
+
+    char response[512] = "";
+    size_t len = 0;
+    while (len + 1 < sizeof response && fgets(response + len, sizeof response - len, fp))
+        len = strlen(response);
+    int status = pclose(fp);
+
+    const char *price = strstr(response, "\"price\":\"");
+    if (!WIFEXITED(status) || WEXITSTATUS(status) != 0 || !price) {
+        out[0] = '\0';
+        return;
+    }
+    price += strlen("\"price\":\"");
+    char *end = NULL;
+    errno = 0;
+    double value = strtod(price, &end);
+    if (errno != 0 || end == price || *end != '\"' || value <= 0.0) {
+        out[0] = '\0';
+        return;
+    }
+    snprintf(out, outsz, "^fg(FFD700)💰^fg() $%.2f/g", value / 31.1034768);
+}
+
 static void notify_text(const char *title, const char *message) {
     pid_t pid = fork();
     if (pid == 0) {
@@ -958,6 +988,12 @@ int main(int argc, char **argv) {
             .interval_us = rapl_every_us,
             .update = power_text,
             .left_click = "dwlb-status --power-details",
+            .signal_idx = -1
+        },
+        {
+            .name = "Gold",
+            .interval_us = GOLD_EVERY_US,
+            .update = gold_text,
             .signal_idx = -1
         },
         {
