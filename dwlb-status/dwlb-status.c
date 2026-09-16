@@ -479,11 +479,15 @@ static bool music_playing(void) {
 }
 
 static void equalizer_text(char *out, size_t outsz) {
+    static const char *const notes[] = { "♪✨", "✨♫", "♬✨" };
+    static unsigned frame;
+
     if (!music_playing()) {
         out[0] = '\0';
         return;
     }
-    snprintf(out, outsz, "^fg(FABA17)♪^fg()");
+    snprintf(out, outsz, "^fg(FABA17)%s^fg()", notes[frame]);
+    frame = (frame + 1) % (sizeof notes / sizeof notes[0]);
 }
 
 /* Check airpods connection status (polled infrequently) - with timeout to prevent hangs */
