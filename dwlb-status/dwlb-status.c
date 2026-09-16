@@ -58,6 +58,7 @@ static const int    TIME_EVERY     = 48;
 static const int    DISK_EVERY     = 720;
 static const int    AIRPODS_EVERY  = 18;  /* poll airpods every ~3.6 seconds */
 static const uint64_t GOLD_EVERY_US = 30ull * 60ull * 1000000ull;
+static const uint64_t WEATHER_EVERY_US = 30ull * 60ull * 1000000ull;
 
 static bool valid_signal_idx(int idx) {
     return idx >= 0 && idx < MAX_UPDATE_SIGNALS && SIGRTMIN + idx <= SIGRTMAX;
@@ -568,6 +569,22 @@ static void gold_text(char *out, size_t outsz) {
     snprintf(out, outsz, "^fg(FFD700)💰^fg() $%.2f/g", value / 31.1034768);
 }
 
+static void weather_text(char *out, size_t outsz) {
+    FILE *fp = popen("curl -fsS --connect-timeout 3 --max-time 5 'https://wttr.in/Yerevan?format=1' 2>/dev/null", "r");
+    if (!fp) {
+        out[0] = '\0';
+        return;
+    }
+
+    bool got_weather = fgets(out, outsz, fp) != NULL;
+    int status = pclose(fp);
+    if (!got_weather || !WIFEXITED(status) || WEXITSTATUS(status) != 0) {
+        out[0] = '\0';
+        return;
+    }
+    out[strcspn(out, "\r\n")] = '\0';
+}
+
 static void notify_text(const char *title, const char *message) {
     pid_t pid = fork();
     if (pid == 0) {
@@ -998,6 +1015,12 @@ int main(int argc, char **argv) {
             .name = "Gold",
             .interval_us = GOLD_EVERY_US,
             .update = gold_text,
+            .signal_idx = -1
+        },
+        {
+            .name = "Weather",
+            .interval_us = WEATHER_EVERY_US,
+            .update = weather_text,
             .signal_idx = -1
         },
         {
