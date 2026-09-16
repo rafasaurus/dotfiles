@@ -1,10 +1,16 @@
 #!/bin/bash
-set -x
-choices=`echo "lock suspend suspend_and_lock bluetooth shutdown reboot setup launcher" | tr ' ' '\n'`
+choices='󰌾  lock
+󰒲  suspend
+󰌾  suspend_and_lock
+󰂯  bluetooth
+󰐥  shutdown
+󰜉  reboot
+󰒓  setup
+󰆍  launcher'
 
-chosen=$(echo -e "$choices" | dmenu_command --prompt="Choose what to do ?")
+chosen=$(printf '%s\n' "$choices" | dmenu_command --prompt="Choose what to do ?")
+chosen=$(printf '%s\n' "$chosen" | sed 's/^[^[:space:]]*[[:space:]]*//')
 
-echo $chosen
 case "$chosen" in
     lock) lock.sh;;
     suspend) systemctl suspend ;;
