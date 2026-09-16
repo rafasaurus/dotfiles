@@ -583,6 +583,19 @@ static void weather_text(char *out, size_t outsz) {
         return;
     }
     out[strcspn(out, "\r\n")] = '\0';
+    char *src = out, *dst = out;
+    bool previous_space = false;
+    while (*src) {
+        bool is_space = *src == ' ';
+        if (!is_space || !previous_space) *dst++ = *src;
+        previous_space = is_space;
+        ++src;
+    }
+    *dst = '\0';
+    if (strncmp(out, "☀️", strlen("☀️")) == 0) {
+        memmove(out + strlen("🔆"), out + strlen("☀️"), strlen(out + strlen("☀️")) + 1);
+        memcpy(out, "🔆", strlen("🔆"));
+    }
 }
 
 static void notify_text(const char *title, const char *message) {
