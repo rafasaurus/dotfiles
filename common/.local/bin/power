@@ -1,12 +1,12 @@
 #!/bin/bash
-choices='󰌾  lock
-󰒲  suspend
-󰌾  suspend_and_lock
-󰂯  bluetooth
-󰐥  shutdown
-󰜉  reboot
-󰒓  setup
-󰆍  launcher'
+choices='🔑  lock
+🌙  suspend
+🔒  suspend_and_lock
+🛜  bluetooth
+💀  shutdown
+♻️  reboot
+🚀  launcher
+📋  QR-clipboard'
 
 chosen=$(printf '%s\n' "$choices" | dmenu_command --prompt="Choose what to do ?")
 chosen=$(printf '%s\n' "$chosen" | sed 's/^[^[:space:]]*[[:space:]]*//')
@@ -18,6 +18,6 @@ case "$chosen" in
     bluetooth) rofi-bluetooth ;;
     shutdown) ~/.local/bin/prompt "Do you want to shutdown ?" "shutdown now";;
     reboot) ~/.local/bin/prompt "Do you want to shutdown ?" "reboot";;
-    setup) ~/.local/bin/prompt "Do you want to run ~/setup ?" "sh -c ~/setup";;
     launcher) fuzzel ;;
+    QR-clipboard) qr-clipboard ;;
 esac
