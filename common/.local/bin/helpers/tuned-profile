@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ "${1-}" = "--select" ]; then
-    profile=$(tuned-adm list | sed -n 's/^-[[:space:]]*\([^[:space:]]*\).*/\1/p' | wmenu -i -l 15)
+    profile=$(tuned-adm list | sed -n 's/^-[[:space:]]*\([^[:space:]]*\).*/\1/p' | dmenu_command -i -l 15)
     if [ -n "$profile" ]; then
         if sudo -A tuned-adm profile "$profile" >/dev/null 2>&1; then
             notify-send "Tuned profile" "$profile"

@@ -102,3 +102,6 @@ history() { fc -lim "*$@*" 1 }
 [ -f "$HOME/.secrets" ] && source "$HOME/.secrets"
 [ -f "$HOME/.helpers" ] && source "$HOME/.helpers"
 [ -f "$HOME/.aliasrc" ] && source "$HOME/.aliasrc"
+
+nohistory()  { unset HISTFILE; echo "History disabled" }
+yeshistory() { export HISTFILE=~/.cache/zsh/history; echo "History enabled" }
