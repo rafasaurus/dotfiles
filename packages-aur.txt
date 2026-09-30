@@ -1,4 +1,5 @@
 ttf-apple-emoji
+apple_cursor
 startw
 qt5-styleplugins
 python312

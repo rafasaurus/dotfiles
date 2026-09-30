@@ -30,5 +30,5 @@ export SUDO_ASKPASS="$HOME/.local/bin/dmenupass"
 export MOZ_USE_XINPUT2=1
 export MOZ_ENABLE_WAYLAND=1
 export XDG_DESKTOP_PORTAL_BACKEND=xdg-desktop-portal-wlr
-export XCURSOR_THEME="dwlcursor"
-export XCURSOR_SIZE=32
+export XCURSOR_THEME="macOS"
+export XCURSOR_SIZE=26
