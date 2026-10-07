@@ -512,6 +512,47 @@ static void airpods_text(char *out, size_t outsz) {
     }
 }
 
+/* -1 means the default controller is unavailable or could not be queried. */
+static int bluetooth_powered(void) {
+    FILE *fp = popen("timeout 2 bluetoothctl show 2>/dev/null", "r");
+    if (!fp) return -1;
+
+    char line[256];
+    int powered = -1;
+    while (fgets(line, sizeof line, fp)) {
+        char *field = line;
+        while (isspace((unsigned char)*field)) ++field;
+        if (strncmp(field, "Powered: yes", 12) == 0) powered = 1;
+        else if (strncmp(field, "Powered: no", 11) == 0) powered = 0;
+    }
+    int status = pclose(fp);
+    return status != -1 && WIFEXITED(status) && WEXITSTATUS(status) == 0 ? powered : -1;
+}
+
+static void bluetooth_text(char *out, size_t outsz) {
+    int powered = bluetooth_powered();
+    if (powered < 0) snprintf(out, outsz, "^fg(888888)^fg()");
+    else snprintf(out, outsz, powered ? "^fg(7FD88F)^fg()" : "^fg(FF79C6)^fg()");
+}
+
+static int bluetooth_toggle(void) {
+    int powered = bluetooth_powered();
+    if (powered < 0) {
+        notify_text("Bluetooth", "Cannot query the Bluetooth controller.");
+        return 1;
+    }
+
+    const char *command = powered
+        ? "timeout 5 bluetoothctl power off >/dev/null 2>&1"
+        : "timeout 2 rfkill unblock bluetooth && timeout 5 bluetoothctl power on >/dev/null 2>&1";
+    int status = system(command);
+    if (status == -1 || !WIFEXITED(status) || WEXITSTATUS(status) != 0) {
+        notify_text("Bluetooth", "Could not toggle Bluetooth power. Check bluetoothctl and rfkill.");
+        return 1;
+    }
+    return 0;
+}
+
 static void time_text(char *out, size_t outsz) {
     time_t t = time(NULL);
     struct tm tm; localtime_r(&t, &tm);
@@ -924,8 +965,21 @@ static void send_signal(int sig_idx) {
 }
 
 int main(int argc, char **argv) {
+    /* dwlb ignores SIGCHLD; click-launched helpers must be able to wait for
+     * their children so popen/system report the actual command status. */
+    struct sigaction child_action = {0};
+    child_action.sa_handler = SIG_DFL;
+    sigemptyset(&child_action.sa_mask);
+    if (sigaction(SIGCHLD, &child_action, NULL) != 0) return 1;
+
     /* Signal mode: ./dwlb-status --signal N */
     for (int i = 1; i < argc; ++i) {
+        if (strcmp(argv[i], "--bluetooth-toggle") == 0) {
+            int status = bluetooth_toggle();
+            send_signal(2);
+            send_signal(3);
+            return status;
+        }
         if (strcmp(argv[i], "--disk-details") == 0) {
             disk_details();
             return 0;
@@ -1008,6 +1062,13 @@ int main(int argc, char **argv) {
             .scroll_up = "sh -c \"pamixer -i 2; dwlb-status --signal 0\"",
             .scroll_down = "sh -c \"pamixer -d 2; dwlb-status --signal 0\"",
             .signal_idx = 0
+        },
+        {
+            .name = "Bluetooth",
+            .interval_us = AIRPODS_EVERY * STATUS_TICK_US,
+            .update = bluetooth_text,
+            .left_click = "dwlb-status --bluetooth-toggle",
+            .signal_idx = 2
         },
         {
             .name = "Airpods",
