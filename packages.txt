@@ -45,7 +45,6 @@ lsof
 maim
 mako
 man-db
-plocate
 mpv
 mtr
 ncurses
@@ -60,11 +59,14 @@ nwg-look
 opencv
 openssh
 otf-cascadia-code
+otf-commit-mono-nerd
+otf-font-awesome
 pamixer
 pass
 pavucontrol
 perf
 pipewire-pulse
+plocate
 poppler
 python-pip
 python-virtualenv
@@ -87,13 +89,12 @@ the_silver_searcher
 thunar
 tllist
 tmux
-tuned
 traceroute
 trash-cli
 ttf-dejavu
-otf-font-awesome
 ttf-inconsolata
 tumbler
+tuned
 unclutter
 unrar
 unzip
