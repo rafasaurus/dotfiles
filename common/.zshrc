@@ -92,8 +92,8 @@ prompt_mimir_cmd() {
 }
 add-zsh-hook precmd prompt_mimir_cmd
 
-# prompt_symbol='❯'
-prompt_symbol='>'
+prompt_symbol='❯'
+# prompt_symbol='>'
 PROMPT="%(?.%F{magenta}.%F{red})${prompt_symbol}%f "
 
 history() { fc -lim "*$@*" 1 }
