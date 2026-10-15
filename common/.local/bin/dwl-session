@@ -1,0 +1,3 @@
+#!/bin/sh
+# greetd starts this after authentication, without an interactive parent shell.
+exec /bin/sh "$HOME/.winitrc"

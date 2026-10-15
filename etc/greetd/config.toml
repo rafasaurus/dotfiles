@@ -1,0 +1,8 @@
+[terminal]
+vt = 1
+
+# Always authenticate, including after dwl exits or crashes.
+# Do not add an initial_session (autologin).
+[default_session]
+command = "/usr/bin/tuigreet --time --cmd /usr/local/bin/dwl-session"
+user = "greeter"

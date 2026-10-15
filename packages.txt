@@ -27,6 +27,8 @@ fzf
 gammastep
 git
 go
+greetd
+greetd-tuigreet
 grim
 grpc
 hdf5

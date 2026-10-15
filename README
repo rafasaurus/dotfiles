@@ -21,3 +21,15 @@ Use `make help` to list available targets. `install-udev` writes privileged
 system rules and `uninstall-udev` removes all local udev rules. Review those
 targets before running them. `make stow` may replace an existing
 `~/.config/mimeapps.list`.
+
+Text login (greetd + tuigreet):
+```
+make install-login
+# Save your work, then reboot:
+systemctl reboot
+```
+
+Disable any other display manager first. Use the tty1 login instead of startw;
+dwl exits or crashes return to authentication. Log out of other TTY shells.
+Logs: `journalctl -t dwl -b`. Recovery: Ctrl+Alt+F2, log in, run
+`sudo systemctl disable greetd`, then reboot.

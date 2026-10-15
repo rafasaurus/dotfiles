@@ -8,7 +8,7 @@ STOW_PACKAGES := common $(if $(wildcard $(HOSTNAME)),$(HOSTNAME))
 
 .PHONY: all stow restow destow install-prereqs install-paru \
 	install-aur install-udev install-gui install-themes \
-	install-mimir \
+	install-mimir install-login \
 	install-neovim reinstall reinstall-gui \
 	uninstall-gui uninstall-udev check_dirs install-cursors toggle help \
 	docker-build test docker-shell
@@ -24,6 +24,7 @@ help:
 	@printf "%-28s %s\n" "install-paru"      "Install paru AUR helper (if not present)"
 	@printf "%-28s %s\n" "install-aur"       "Install AUR packages via paru (packages-aur.txt)"
 	@printf "%-28s %s\n" "install-gui"       "Build and install dwl, dwlb, dwlb-status, wlbubble"
+	@printf "%-28s %s\n" "install-login"     "Install greetd + tuigreet; enable text login for next boot"
 	@printf "%-28s %s\n" "reinstall"         "Reinstall GUI + packages"
 	@printf "%-28s %s\n" "reinstall-gui"     "Reinstall GUI only"
 	@printf "%-28s %s\n" "uninstall-gui"     "Uninstall dwl and dwlb-status"
@@ -76,6 +77,13 @@ install-udev :
 	sudo cp -r etc/udev/rules.d/* /etc/udev/rules.d/
 	sudo udevadm control --reload-rules && sudo udevadm trigger
 
+install-login : stow
+	sudo pacman -S --needed greetd greetd-tuigreet
+	sudo install -Dm755 common/.local/bin/dwl-session /usr/local/bin/dwl-session
+	sudo install -Dm644 etc/greetd/config.toml /etc/greetd/config.toml
+	sudo systemctl enable greetd.service
+	@echo "Text login enabled for next boot. Save your work and reboot."
+
 reinstall : uninstall-gui install-gui install-prereqs install-aur
 reinstall-gui: uninstall-gui install-gui
 
@@ -126,7 +134,7 @@ install-cursors:
 	wget https://github.com/ful1e5/apple_cursor/releases/download/v1.2.0/bitmaps.zip && \
 	unzip bitmaps.zip && \
 	mv macOSBigSur/* bitmaps/macOS-BigSur/ && \
-	ctgen build.toml -s 32 -p x11 -d "bitmaps/macOS-BigSur" -n "dwlcursor" -c "Custom Sizes macOS XCursors" && \
+	ctgen build.toml -s 38 -p x11 -d "bitmaps/macOS-BigSur" -n "dwlcursor" -c "Custom Sizes macOS XCursors" && \
 	cp themes/dwlcursor ~/.icons/ -r
 	@echo "you have to install cursor with nwg-look in wayland"
 

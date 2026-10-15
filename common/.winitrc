@@ -2,4 +2,5 @@
 
 [ -f ~/.wprofile ] && . ~/.wprofile
 
-dbus-run-session dwl -s 'wlinit.sh' 2>&1 | tee /tmp/dwl.log
+# Keep logs in the journal and replace the launcher with the session process.
+exec systemd-cat --identifier=dwl dbus-run-session dwl -s 'wlinit.sh'
