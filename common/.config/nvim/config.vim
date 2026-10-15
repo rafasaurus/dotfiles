@@ -155,6 +155,6 @@ call SetThemeFromAlacritty()
 
 if executable('entr')
     let s:file = expand('~/.config/alacritty/alacritty.toml')
-    let s:cmd  = printf('echo %s | entr -n nvim --server %s --remote-send ":call SetThemeFromAlacritty()<CR>"', s:file, v:servername)
+    let s:cmd  = printf('echo %s | entr -np nvim --server %s --remote-send "<Cmd>call SetThemeFromAlacritty()<CR>"', s:file, v:servername)
     if executable('entr') | call jobstart(['sh', '-c', s:cmd]) | endif
 endif
