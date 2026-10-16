@@ -2,6 +2,7 @@ BASE_IMAGE = archlinux:base-devel
 
 DOCKER_IMAGE ?= dotfiles-test-arch
 HOSTNAME := $(shell hostname)
+PINGFANG_CONF := etc/fonts/conf.d/55-fonts-pingfang.conf
 STOW_PACKAGES := common $(if $(wildcard $(HOSTNAME)),$(HOSTNAME))
 
 .DEFAULT_GOAL := stow
@@ -97,6 +98,9 @@ install-gui :
 		sed -i 's/CFLAGS += -Wall -Wextra -Wno-unused-parameter -Wno-format-truncation -g/CFLAGS += -Wall -Wextra -Wno-unused-parameter -Wno-format-truncation -O2 -march=native/' Makefile && \
 		sudo $(MAKE) install -j && \
 		git checkout -f .
+	grep -qxF 'NoExtract = $(PINGFANG_CONF)' /etc/pacman.conf || \
+		sudo sed -i '/^\[options\]/a NoExtract = $(PINGFANG_CONF)' /etc/pacman.conf
+	sudo rm -f /$(PINGFANG_CONF)
 
 uninstall-gui :
 	sudo $(MAKE) -C external/dwl uninstall
