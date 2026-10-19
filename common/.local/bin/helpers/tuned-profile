@@ -1,23 +1,33 @@
 #!/usr/bin/env bash
 
+ppd_args=(org.freedesktop.UPower.PowerProfiles /org/freedesktop/UPower/PowerProfiles)
+
+active_ppd() {
+    busctl get-property "${ppd_args[@]}" org.freedesktop.UPower.PowerProfiles ActiveProfile 2>/dev/null | sed -n 's/^s "\(.*\)"$/\1/p'
+}
+
+active_tuned() {
+    tuned-adm active 2>/dev/null | sed -n 's/^Current active profile:[[:space:]]*//p'
+}
+
 if [ "${1-}" = "--select" ]; then
-    profile=$(tuned-adm list | sed -n 's/^-[[:space:]]*\([^[:space:]]*\).*/\1/p' | dmenu_command -i -l 15)
+    profile=$(printf '%s\n' power-saver balanced performance | dmenu_command -i --prompt="$(active_ppd) > ")
     if [ -n "$profile" ]; then
-        if sudo -A tuned-adm profile "$profile" >/dev/null 2>&1; then
-            notify-send "Tuned profile" "$profile"
+        if busctl call "${ppd_args[@]}" org.freedesktop.DBus.Properties Set ssv org.freedesktop.UPower.PowerProfiles ActiveProfile s "$profile" >/dev/null 2>&1; then
+            notify-send "Power profile" "$profile ($(active_tuned))"
         else
-            notify-send -u critical "Tuned profile" "Failed to select $profile"
+            notify-send -u critical "Power profile" "Failed to select $profile"
         fi
     fi
     exit 0
 fi
 
 if [ "${1-}" = "--notify" ]; then
-    profile=$(tuned-adm active 2>/dev/null | sed -n 's/^Current active profile:[[:space:]]*//p')
+    profile=$(active_ppd)
     if [ -n "$profile" ]; then
-        notify-send "Tuned profile" "$profile"
+        notify-send "Power profile" "$profile ($(active_tuned))"
     else
-        notify-send -u critical "Tuned profile" "No active profile"
+        notify-send -u critical "Power profile" "tuned-ppd not running"
     fi
     exit 0
 fi
