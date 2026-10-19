@@ -103,13 +103,12 @@ static bool read_u64_file(const char *path, uint64_t *out) {
     return true;
 }
 
-static bool read_first_existing_u64(const char *a, const char *b, uint64_t *out) {
-    if (a && read_u64_file(a, out)) return true;
-    if (b && read_u64_file(b, out)) return true;
-    return false;
-}
-
 static bool path_readable(const char *p) { return p && access(p, R_OK) == 0; }
+
+static bool sysfs_file_path(char *out, size_t outsz, const char *base, const char *file) {
+    int written = snprintf(out, outsz, "%s/%s", base, file);
+    return written >= 0 && (size_t)written < outsz;
+}
 
 #define MAX_POWER_COUNTERS 32
 typedef struct {
@@ -122,10 +121,13 @@ typedef struct {
 } PowerCounter;
 
 static PowerCounter package_counters[MAX_POWER_COUNTERS];
+static PowerCounter core_counters[MAX_POWER_COUNTERS];
 static PowerCounter uncore_counters[MAX_POWER_COUNTERS];
-static size_t package_count = 0, uncore_count = 0;
+static size_t package_count = 0, core_count = 0, uncore_count = 0;
 static bool power_first_render = true;
 static char power_provider[64] = "none";
+static char direct_power_path[PATH_MAX] = "";
+static char direct_power_name[64] = "";
 
 static bool read_text_file(const char *path, char *out, size_t outsz) {
     FILE *f = fopen(path, "re");
@@ -185,9 +187,45 @@ static bool powercap_entry(const char *path, char *name, size_t namesz, char *pr
     return true;
 }
 
+/* AMD APUs expose the GPU PPT through the amdgpu hwmon device.  This is a
+ * component measurement, not the APU package total, so it is detail-only. */
+static void discover_amdgpu_power(void) {
+    DIR *root = opendir("/sys/class/hwmon");
+    if (!root) return;
+
+    struct dirent *de;
+    while ((de = readdir(root))) {
+        if (strncmp(de->d_name, "hwmon", 5) != 0) continue;
+
+        char base[PATH_MAX], name_path[PATH_MAX], name[64];
+        if (snprintf(base, sizeof base, "/sys/class/hwmon/%s", de->d_name) >= (int)sizeof base ||
+            snprintf(name_path, sizeof name_path, "%s/name", base) >= (int)sizeof name_path ||
+            !read_text_file(name_path, name, sizeof name) || strcmp(name, "amdgpu") != 0)
+            continue;
+
+        for (int i = 1; i <= 32; ++i) {
+            char path[PATH_MAX], label_path[PATH_MAX], label[64] = "power";
+            if (snprintf(path, sizeof path, "%s/power%d_average", base, i) >= (int)sizeof path ||
+                !path_readable(path)) {
+                if (snprintf(path, sizeof path, "%s/power%d_input", base, i) >= (int)sizeof path ||
+                    !path_readable(path))
+                    continue;
+            }
+            if (snprintf(label_path, sizeof label_path, "%s/power%d_label", base, i) < (int)sizeof label_path)
+                read_text_file(label_path, label, sizeof label);
+            snprintf(direct_power_path, sizeof direct_power_path, "%s", path);
+            snprintf(direct_power_name, sizeof direct_power_name, "AMD GPU (%s)", label);
+            snprintf(power_provider, sizeof power_provider, "amdgpu-hwmon");
+            closedir(root);
+            return;
+        }
+    }
+    closedir(root);
+}
+
 static void discover_powercounters(void) {
     DIR *root = opendir("/sys/class/powercap");
-    if (!root) return;
+    if (!root) { discover_amdgpu_power(); return; }
     char preferred[64] = "";
     bool have_intel = false, have_amd = false;
     struct dirent *de;
@@ -207,7 +245,7 @@ static void discover_powercounters(void) {
     closedir(root);
     if (have_intel) snprintf(preferred, sizeof preferred, "intel-rapl");
     else if (have_amd) snprintf(preferred, sizeof preferred, "amd-rapl");
-    if (!preferred[0]) return;
+    if (!preferred[0]) { discover_amdgpu_power(); return; }
     snprintf(power_provider, sizeof power_provider, "%s", preferred);
 
     root = opendir("/sys/class/powercap");
@@ -221,10 +259,13 @@ static void discover_powercounters(void) {
             strcmp(provider, preferred) != 0) continue;
         if (strncmp(name, "package", 7) == 0 && (name[7] == '-' || name[7] == '\0'))
             add_power_counter(package_counters, &package_count, path, name);
+        else if (strcmp(name, "core") == 0)
+            add_power_counter(core_counters, &core_count, path, name);
         else if (strcmp(name, "uncore") == 0)
             add_power_counter(uncore_counters, &uncore_count, path, name);
     }
     closedir(root);
+    discover_amdgpu_power();
 }
 
 #define MAX_CPU_CORES 128
@@ -285,11 +326,13 @@ static void discover_temp_paths(void) {
         if (root) {
             while ((de = readdir(root))) {
                 if (strncmp(de->d_name, "hwmon", 5) != 0) continue;
-                char base[64];
-                snprintf(base, sizeof base, "/sys/class/hwmon/%s", de->d_name);
+                char base[PATH_MAX];
+                if (snprintf(base, sizeof base, "/sys/class/hwmon/%s", de->d_name) >= (int)sizeof base)
+                    continue;
                 for (int i = 1; i <= 32; ++i) {
-                    char inp[80];
-                    snprintf(inp, sizeof inp, "%s/temp%d_input", base, i);
+                    char inp[PATH_MAX + 16];
+                    if (snprintf(inp, sizeof inp, "%s/temp%d_input", base, i) >= (int)sizeof inp)
+                        continue;
                     if (access(inp, R_OK) == 0) {
                         cpu_temp_path_g = strdup(inp);
                         break;
@@ -345,39 +388,83 @@ static bool read_disk_bytes(const char *path, uint64_t *used, uint64_t *total) {
     *total = total_b; *used = used_b; return true;
 }
 
+static bool discover_battery(char *path, size_t pathsz) {
+    DIR *root = opendir("/sys/class/power_supply");
+    if (!root) return false;
+
+    bool found = false;
+    struct dirent *de;
+    while ((de = readdir(root))) {
+        if (de->d_name[0] == '.') continue;
+        char candidate[PATH_MAX], type_path[PATH_MAX], type[32];
+        if (snprintf(candidate, sizeof candidate, "/sys/class/power_supply/%s", de->d_name) >= (int)sizeof candidate ||
+            snprintf(type_path, sizeof type_path, "%s/type", candidate) >= (int)sizeof type_path ||
+            !read_text_file(type_path, type, sizeof type) || strcmp(type, "Battery") != 0)
+            continue;
+        snprintf(path, pathsz, "%s", candidate);
+        found = true;
+        break;
+    }
+    closedir(root);
+    return found;
+}
+
 /* Battery snapshot: returns text like "🔌 92% ~1.8h" or "🔋 85%" */
 static void battery_text(char *out, size_t outsz) {
-    const char *B = "/sys/class/power_supply/BAT0";
-    char cap_p[256], stat_p[256];
-    snprintf(cap_p, sizeof cap_p,  "%s/capacity", B);
-    snprintf(stat_p, sizeof stat_p, "%s/status",   B);
-    if (access(B, R_OK) != 0) { snprintf(out, outsz, "🔋 ??"); return; }
+    char battery[PATH_MAX];
+    if (!discover_battery(battery, sizeof battery)) {
+        out[0] = '\0';
+        return;
+    }
+    const char *B = battery;
+    char cap_p[PATH_MAX + 16], stat_p[PATH_MAX + 16];
+    if (!sysfs_file_path(cap_p, sizeof cap_p, B, "capacity") ||
+        !sysfs_file_path(stat_p, sizeof stat_p, B, "status")) {
+        out[0] = '\0';
+        return;
+    }
 
     /* percent */
-    char pct_s[8] = "??", status[16] = "Unknown";
-    FILE *f = fopen(cap_p, "re"); if (f) { if (fgets(pct_s, sizeof pct_s, f)) {} fclose(f); }
-    f = fopen(stat_p, "re"); if (f) { if (fgets(status, sizeof status, f)) {} fclose(f); }
-    pct_s[strcspn(pct_s, "\n")] = 0; status[strcspn(status, "\n")] = 0;
+    uint64_t pct = 0;
+    bool have_pct = read_u64_file(cap_p, &pct) && pct <= 100;
+    char status[16] = "Unknown";
+    read_text_file(stat_p, status, sizeof status);
 
     /* energy/power (uWh/uW) with fallbacks */
     uint64_t en_uWh=0, ef_uWh=0, pw_uW=0;
-    if (!read_first_existing_u64("/sys/class/power_supply/BAT0/energy_now",
-                                 "/sys/class/power_supply/BAT0/energy_now_uwh", &en_uWh)) en_uWh=0;
-    if (!read_first_existing_u64("/sys/class/power_supply/BAT0/energy_full",
-                                 "/sys/class/power_supply/BAT0/energy_full_uwh", &ef_uWh)) ef_uWh=0;
-    if (!read_u64_file("/sys/class/power_supply/BAT0/power_now", &pw_uW)) pw_uW=0;
+    char energy_now[PATH_MAX + 16], energy_full[PATH_MAX + 16], power_now[PATH_MAX + 16];
+    if (!sysfs_file_path(energy_now, sizeof energy_now, B, "energy_now") ||
+        !read_u64_file(energy_now, &en_uWh)) en_uWh=0;
+    if (!sysfs_file_path(energy_full, sizeof energy_full, B, "energy_full") ||
+        !read_u64_file(energy_full, &ef_uWh)) ef_uWh=0;
+    if (!sysfs_file_path(power_now, sizeof power_now, B, "power_now") ||
+        !read_u64_file(power_now, &pw_uW)) pw_uW=0;
 
     if ((en_uWh == 0 || ef_uWh == 0) || pw_uW == 0) {
         uint64_t qn=0, qf=0, vv=0, ia=0;
-        read_u64_file("/sys/class/power_supply/BAT0/charge_now", &qn);
-        read_u64_file("/sys/class/power_supply/BAT0/charge_full", &qf);
-        read_u64_file("/sys/class/power_supply/BAT0/voltage_now", &vv);
+        char charge_now[PATH_MAX + 16], charge_full[PATH_MAX + 16];
+        char voltage_now[PATH_MAX + 16], current_now[PATH_MAX + 16];
+        if (sysfs_file_path(charge_now, sizeof charge_now, B, "charge_now"))
+            read_u64_file(charge_now, &qn);
+        if (sysfs_file_path(charge_full, sizeof charge_full, B, "charge_full"))
+            read_u64_file(charge_full, &qf);
+        if (sysfs_file_path(voltage_now, sizeof voltage_now, B, "voltage_now"))
+            read_u64_file(voltage_now, &vv);
         if (en_uWh == 0 && qn > 0 && vv > 0) en_uWh = (qn * vv) / 1000000ull;
         if (ef_uWh == 0 && qf > 0 && vv > 0) ef_uWh = (qf * vv) / 1000000ull;
+        if (!have_pct && qf > 0) {
+            pct = (qn * 100ull + qf / 2ull) / qf;
+            have_pct = true;
+        }
         if (pw_uW == 0) {
-            read_u64_file("/sys/class/power_supply/BAT0/current_now", &ia);
+            if (sysfs_file_path(current_now, sizeof current_now, B, "current_now"))
+                read_u64_file(current_now, &ia);
             if (ia > 0 && vv > 0) pw_uW = (ia * vv) / 1000000ull;
         }
+    }
+    if (!have_pct && ef_uWh > 0) {
+        pct = (en_uWh * 100ull + ef_uWh / 2ull) / ef_uWh;
+        have_pct = true;
     }
 
     char icon[8] = "🔋";
@@ -396,7 +483,10 @@ static void battery_text(char *out, size_t outsz) {
         }
     }
 
-    snprintf(out, outsz, "%s %s%%%s", icon, pct_s, eta);
+    if (have_pct)
+        snprintf(out, outsz, "%s %llu%%%s", icon, (unsigned long long)pct, eta);
+    else
+        snprintf(out, outsz, "%s%s", icon, eta);
 }
 
 static void battery_details(void) {
@@ -806,12 +896,13 @@ static bool power_group_energy(PowerCounter *counters, size_t count, uint64_t *e
 
 static void power_text(char *out, size_t outsz) {
     if (package_count == 0) {
-        snprintf(out, outsz, "^fg(FFD700)⚡^fg() --/--W");
+        snprintf(out, outsz, "^fg(FFD700)⚡^fg() --W");
         return;
     }
     if (power_first_render) {
         power_first_render = false;
-        snprintf(out, outsz, "^fg(FFD700)⚡^fg() --/--W");
+        prev_us_g = now_us();
+        snprintf(out, outsz, "^fg(FFD700)⚡^fg() --W");
         return;
     }
     uint64_t cur_us = now_us();
@@ -837,29 +928,50 @@ static void power_details(void) {
     discover_powercounters();
     char message[512];
     if (package_count == 0) {
-        snprintf(message, sizeof message,
-                 "No package energy counter is available in /sys/class/powercap.");
+        uint64_t microwatts = 0;
+        if (direct_power_path[0] && read_u64_file(direct_power_path, &microwatts)) {
+            snprintf(message, sizeof message,
+                     "APU package: unavailable\nCPU: unavailable\n%s: %.1f W",
+                     direct_power_name, (double)microwatts / 1000000.0);
+        } else {
+            snprintf(message, sizeof message,
+                     "No readable APU package energy counter is available.");
+        }
     } else {
-        uint64_t package_before = 0, package_after = 0, uncore_before = 0, uncore_after = 0;
+        uint64_t package_before = 0, package_after = 0, core_before = 0, core_after = 0;
         bool package_ok = power_group_energy(package_counters, package_count, &package_before);
-        bool uncore_ok = uncore_count > 0 && power_group_energy(uncore_counters, uncore_count, &uncore_before);
+        bool core_ok = core_count > 0 && power_group_energy(core_counters, core_count, &core_before);
         struct timespec req = { 1, 0 };
         nanosleep(&req, NULL);
         package_ok = package_ok && power_group_energy(package_counters, package_count, &package_after);
-        uncore_ok = uncore_ok && power_group_energy(uncore_counters, uncore_count, &uncore_after);
+        core_ok = core_ok && power_group_energy(core_counters, core_count, &core_after);
         if (package_ok) {
             double package_w = (double)(package_after - package_before) / 1000000.0;
-            if (uncore_ok) {
-                double uncore_w = (double)(uncore_after - uncore_before) / 1000000.0;
-                snprintf(message, sizeof message, "Uncore: %.1f W\nPackage: %.1f W", uncore_w, package_w);
+            uint64_t gpu_uw = 0;
+            bool gpu_ok = direct_power_path[0] && read_u64_file(direct_power_path, &gpu_uw);
+            if (core_ok && gpu_ok) {
+                double core_w = (double)(core_after - core_before) / 1000000.0;
+                snprintf(message, sizeof message,
+                         "APU package: %.1f W\nCPU: %.1f W\n%s: %.1f W",
+                         package_w, core_w, direct_power_name, (double)gpu_uw / 1000000.0);
+            } else if (core_ok) {
+                double core_w = (double)(core_after - core_before) / 1000000.0;
+                snprintf(message, sizeof message,
+                         "APU package: %.1f W\nCPU: %.1f W\nGPU: unavailable",
+                         package_w, core_w);
+            } else if (gpu_ok) {
+                snprintf(message, sizeof message,
+                         "APU package: %.1f W\nCPU: unavailable\n%s: %.1f W",
+                         package_w, direct_power_name, (double)gpu_uw / 1000000.0);
             } else {
-                snprintf(message, sizeof message, "Uncore: unavailable\nPackage: %.1f W", package_w);
+                snprintf(message, sizeof message,
+                         "APU package: %.1f W\nCPU: unavailable\nGPU: unavailable", package_w);
             }
         } else {
             snprintf(message, sizeof message, "Unable to read power counters.");
         }
     }
-    notify_text("CPU energy", message);
+    notify_text("APU power", message);
 }
 
 static void vpn_text(char *out, size_t outsz) {
