@@ -409,18 +409,19 @@ static bool discover_battery(char *path, size_t pathsz) {
     return found;
 }
 
+static bool battery_u64(const char *bat, const char *attr, uint64_t *out) {
+    char p[PATH_MAX + 16];
+    return sysfs_file_path(p, sizeof p, bat, attr) && read_u64_file(p, out);
+}
+
 /* Battery snapshot: returns text like "🔌 92% ~1.8h" or "🔋 85%" */
 static void battery_text(char *out, size_t outsz) {
-    char battery[PATH_MAX];
-    if (!discover_battery(battery, sizeof battery)) {
-        out[0] = '\0';
-        return;
-    }
-    const char *B = battery;
+    char B[PATH_MAX];
+    if (!discover_battery(B, sizeof B)) { snprintf(out, outsz, "🔋 ??"); return; }
     char cap_p[PATH_MAX + 16], stat_p[PATH_MAX + 16];
     if (!sysfs_file_path(cap_p, sizeof cap_p, B, "capacity") ||
         !sysfs_file_path(stat_p, sizeof stat_p, B, "status")) {
-        out[0] = '\0';
+        snprintf(out, outsz, "🔋 ??");
         return;
     }
 
@@ -432,24 +433,15 @@ static void battery_text(char *out, size_t outsz) {
 
     /* energy/power (uWh/uW) with fallbacks */
     uint64_t en_uWh=0, ef_uWh=0, pw_uW=0;
-    char energy_now[PATH_MAX + 16], energy_full[PATH_MAX + 16], power_now[PATH_MAX + 16];
-    if (!sysfs_file_path(energy_now, sizeof energy_now, B, "energy_now") ||
-        !read_u64_file(energy_now, &en_uWh)) en_uWh=0;
-    if (!sysfs_file_path(energy_full, sizeof energy_full, B, "energy_full") ||
-        !read_u64_file(energy_full, &ef_uWh)) ef_uWh=0;
-    if (!sysfs_file_path(power_now, sizeof power_now, B, "power_now") ||
-        !read_u64_file(power_now, &pw_uW)) pw_uW=0;
+    if (!battery_u64(B, "energy_now", &en_uWh) && !battery_u64(B, "energy_now_uwh", &en_uWh)) en_uWh=0;
+    if (!battery_u64(B, "energy_full", &ef_uWh) && !battery_u64(B, "energy_full_uwh", &ef_uWh)) ef_uWh=0;
+    if (!battery_u64(B, "power_now", &pw_uW)) pw_uW=0;
 
     if ((en_uWh == 0 || ef_uWh == 0) || pw_uW == 0) {
         uint64_t qn=0, qf=0, vv=0, ia=0;
-        char charge_now[PATH_MAX + 16], charge_full[PATH_MAX + 16];
-        char voltage_now[PATH_MAX + 16], current_now[PATH_MAX + 16];
-        if (sysfs_file_path(charge_now, sizeof charge_now, B, "charge_now"))
-            read_u64_file(charge_now, &qn);
-        if (sysfs_file_path(charge_full, sizeof charge_full, B, "charge_full"))
-            read_u64_file(charge_full, &qf);
-        if (sysfs_file_path(voltage_now, sizeof voltage_now, B, "voltage_now"))
-            read_u64_file(voltage_now, &vv);
+        battery_u64(B, "charge_now", &qn);
+        battery_u64(B, "charge_full", &qf);
+        battery_u64(B, "voltage_now", &vv);
         if (en_uWh == 0 && qn > 0 && vv > 0) en_uWh = (qn * vv) / 1000000ull;
         if (ef_uWh == 0 && qf > 0 && vv > 0) ef_uWh = (qf * vv) / 1000000ull;
         if (!have_pct && qf > 0) {
@@ -457,8 +449,7 @@ static void battery_text(char *out, size_t outsz) {
             have_pct = true;
         }
         if (pw_uW == 0) {
-            if (sysfs_file_path(current_now, sizeof current_now, B, "current_now"))
-                read_u64_file(current_now, &ia);
+            battery_u64(B, "current_now", &ia);
             if (ia > 0 && vv > 0) pw_uW = (ia * vv) / 1000000ull;
         }
     }
