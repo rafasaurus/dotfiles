@@ -3,7 +3,6 @@ export EDITOR=nvim
 export TERMINAL=alacritty
 export BROWSER=brave
 export LD_LIBRARY_PATH="/usr/local/lib"
-export LIBVA_DRIVER_NAME=iHD
 export FZF_DEFAULT_OPTS=''
 
 PATH=$PATH:$HOME/.scripts/tools
