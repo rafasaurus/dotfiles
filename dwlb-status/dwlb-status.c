@@ -15,6 +15,7 @@
 #include <limits.h>
 #include <stdarg.h>
 #include <sys/select.h>
+#include <fcntl.h>
 
 /* ---------- Tunables ---------- */
 #ifndef RAPL_EVERY_DEFAULT
@@ -33,6 +34,9 @@ typedef struct {
     int signal_idx; /* -1 if no signal */
     uint64_t next_deadline_us;
     char buffer[128];
+    bool asynchronous;
+    pid_t worker_pid;
+    int worker_fd;
 } __attribute__((aligned(64))) Unit;
 
 static void notify_text(const char *title, const char *message);
@@ -87,6 +91,55 @@ static inline uint64_t now_us(void) {
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
     return (uint64_t)ts.tv_sec * 1000000ull + (uint64_t)ts.tv_nsec / 1000ull;
+}
+
+/* Network requests must never hold up the first frame or periodic local
+ * updates. Workers only calculate text; the parent owns rendering/signals. */
+static bool update_unit(Unit *unit) {
+    if (!unit->asynchronous) {
+        unit->update(unit->buffer, sizeof unit->buffer);
+        return true;
+    }
+    if (unit->worker_pid > 0) return true;
+    int fds[2];
+    if (pipe2(fds, O_CLOEXEC | O_NONBLOCK) < 0) return false;
+    if (fds[0] >= FD_SETSIZE) { close(fds[0]); close(fds[1]); return false; }
+    pid_t pid = fork();
+    if (pid < 0) { close(fds[0]); close(fds[1]); return false; }
+    if (pid == 0) {
+        close(fds[0]);
+        /* Do not keep the bar's output pipeline alive across a restart. */
+        close(STDOUT_FILENO);
+        char result[sizeof unit->buffer] = {0};
+        unit->update(result, sizeof result);
+        ssize_t written;
+        do { written = write(fds[1], result, sizeof result); }
+        while (written < 0 && errno == EINTR);
+        close(fds[1]);
+        _exit(written == (ssize_t)sizeof result ? 0 : 1);
+    }
+    close(fds[1]);
+    unit->worker_pid = pid;
+    unit->worker_fd = fds[0];
+    return true;
+}
+
+static bool collect_unit(Unit *unit) {
+    if (unit->worker_pid <= 0) return false;
+    int status;
+    pid_t result = waitpid(unit->worker_pid, &status, WNOHANG);
+    if (result == 0 || (result < 0 && errno == EINTR)) return false;
+    char text[sizeof unit->buffer] = {0};
+    bool changed = false;
+    if (result > 0 && WIFEXITED(status) && WEXITSTATUS(status) == 0 &&
+        read(unit->worker_fd, text, sizeof text) == (ssize_t)sizeof text) {
+        text[sizeof text - 1] = '\0';
+        changed = memcmp(unit->buffer, text, sizeof text) != 0;
+        memcpy(unit->buffer, text, sizeof text);
+    }
+    close(unit->worker_fd);
+    unit->worker_pid = 0;
+    return changed;
 }
 
 static bool read_u64_file(const char *path, uint64_t *out) {
@@ -1190,12 +1243,14 @@ int main(int argc, char **argv) {
         },
         {
             .name = "Gold",
+            .asynchronous = true,
             .interval_us = GOLD_EVERY_US,
             .update = gold_text,
             .signal_idx = -1
         },
         {
             .name = "Weather",
+            .asynchronous = true,
             .interval_us = WEATHER_EVERY_US,
             .update = weather_text,
             .signal_idx = -1
@@ -1285,10 +1340,9 @@ int main(int argc, char **argv) {
     int num_units = sizeof(units) / sizeof(units[0]);
 
     /* Initial update */
-    uint64_t initial_deadline = now_us();
     for (int i = 0; i < num_units; i++) {
-        units[i].update(units[i].buffer, sizeof(units[i].buffer));
-        units[i].next_deadline_us = initial_deadline + units[i].interval_us;
+        bool started = update_unit(&units[i]);
+        units[i].next_deadline_us = now_us() + (started ? units[i].interval_us : 1000000ull);
     }
 
     bool dirty = true;
@@ -1300,6 +1354,7 @@ int main(int argc, char **argv) {
         uint64_t current_time = now_us();
 
         for (int i = 0; i < num_units; i++) {
+            dirty |= collect_unit(&units[i]);
             bool sig_hit = (units[i].signal_idx != -1 &&
                             (current_mask & (sig_atomic_t)(1u << units[i].signal_idx)));
             bool time_hit = current_time >= units[i].next_deadline_us;
@@ -1307,9 +1362,9 @@ int main(int argc, char **argv) {
             if (sig_hit || time_hit) {
                 char previous[sizeof units[i].buffer];
                 memcpy(previous, units[i].buffer, sizeof previous);
-                units[i].update(units[i].buffer, sizeof(units[i].buffer));
+                bool started = update_unit(&units[i]);
                 dirty |= memcmp(previous, units[i].buffer, sizeof previous) != 0;
-                units[i].next_deadline_us = now_us() + units[i].interval_us;
+                units[i].next_deadline_us = now_us() + (started ? units[i].interval_us : 1000000ull);
             }
         }
 
@@ -1348,7 +1403,15 @@ int main(int argc, char **argv) {
             .tv_sec = (time_t)(wait_us / 1000000ull),
             .tv_nsec = (long)((wait_us % 1000000ull) * 1000ull)
         };
-        if (pselect(0, NULL, NULL, NULL, &timeout, &wait_mask) < 0 && errno != EINTR)
+        fd_set readers;
+        FD_ZERO(&readers);
+        int nfds = 0;
+        for (int i = 0; i < num_units; ++i) {
+            if (units[i].worker_pid <= 0) continue;
+            FD_SET(units[i].worker_fd, &readers);
+            if (units[i].worker_fd >= nfds) nfds = units[i].worker_fd + 1;
+        }
+        if (pselect(nfds, &readers, NULL, NULL, &timeout, &wait_mask) < 0 && errno != EINTR)
             return 1;
     }
 
