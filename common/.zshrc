@@ -15,6 +15,10 @@ autoload -U compinit
 zstyle ':completion:*' menu select
 zmodload zsh/complist
 compinit
+# Compile only when the dump changes; keep compinit's security checks on every startup.
+if [[ -f $_comp_dumpfile && ( ! -f $_comp_dumpfile.zwc || $_comp_dumpfile -nt $_comp_dumpfile.zwc ) ]]; then
+  zcompile "$_comp_dumpfile"
+fi
 _comp_options+=(globdots)		# Include hidden files.
 
 # vi mode
