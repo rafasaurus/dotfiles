@@ -94,6 +94,7 @@ install-gui :
 	sudo $(MAKE) -C external/wlbubble install -j
 	$(MAKE) -C dwlb-status install
 	cd external/dwlb && \
+		(git apply --reverse --check ../../patches/dwlb-color-emoji.patch 2>/dev/null || git apply ../../patches/dwlb-color-emoji.patch) && \
 		cp ../../patches/dwlb-config.h config.h && \
 		sed -i 's/CFLAGS += -Wall -Wextra -Wno-unused-parameter -Wno-format-truncation -g/CFLAGS += -Wall -Wextra -Wno-unused-parameter -Wno-format-truncation -O2 -march=native/' Makefile && \
 		sudo $(MAKE) install -j && \

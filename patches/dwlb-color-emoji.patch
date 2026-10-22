@@ -1,0 +1,19 @@
+diff --git a/dwlb.c b/dwlb.c
+--- a/dwlb.c
++++ b/dwlb.c
+@@ -300,7 +300,14 @@ get_scale_ctx(uint32_t scale)
+ 	char attrs[32];
+ 	snprintf(attrs, sizeof attrs, "dpi=%u", 96 * scale);
+ 
+-	struct fcft_font *f = fcft_from_name(fontnames_l, (const char **)fontnames, attrs);
++	/* Character-at-a-time rendering cannot associate VS16 with the preceding
++	 * glyph. Prefer color emoji even when the bitmap text font has that symbol. */
++	struct fcft_font_options *options = fcft_font_options_create();
++	if (!options)
++		return NULL;
++	options->emoji_presentation = FCFT_EMOJI_PRESENTATION_EMOJI;
++	struct fcft_font *f = fcft_from_name2(fontnames_l, (const char **)fontnames, attrs, options);
++	fcft_font_options_destroy(options);
+ 	if (!f)
+ 		return NULL;
+ 
