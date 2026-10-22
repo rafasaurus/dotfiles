@@ -1,2 +1,46 @@
-#!/bin/sh
-wl-paste | qrencode -s 10 -o /tmp/qr.png && nsxiv /tmp/qr.png
+#!/usr/bin/env python3
+"""Display a clipboard QR image, then overwrite and remove it."""
+import os
+from pathlib import Path
+import signal
+import subprocess
+import sys
+
+
+def interrupted(signum, _frame):
+    raise SystemExit(128 + signum)
+
+
+def main():
+    image = Path('/tmp/qr.png')
+    # Refuse existing files (including symlinks); never truncate someone else's file.
+    fd = os.open(image, os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_RDWR, 0o644)
+    identity = os.fstat(fd)
+    try:
+        for sig in (signal.SIGINT, signal.SIGTERM, signal.SIGHUP):
+            signal.signal(sig, interrupted)
+        clipboard = subprocess.run(['wl-paste'], capture_output=True, check=True).stdout
+        subprocess.run(['qrencode', '-s', '10', '-o', '-'],
+                       input=clipboard, stdout=fd, check=True)
+        subprocess.run(['nsxiv', str(image)], check=True)
+    finally:
+        try:
+            # Overwrite the opened inode, not a potentially replaced pathname.
+            subprocess.run(['shred', '-n', '1', '--', f'/proc/self/fd/{fd}'],
+                           pass_fds=(fd,), check=True)
+        finally:
+            os.close(fd)
+            try:
+                current = image.lstat()
+                if (current.st_dev, current.st_ino) == (identity.st_dev, identity.st_ino):
+                    image.unlink()
+            except FileNotFoundError:
+                pass
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except (OSError, subprocess.CalledProcessError) as error:
+        print(f'qr-clipboard: {error}', file=sys.stderr)
+        sys.exit(1)

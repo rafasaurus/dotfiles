@@ -744,6 +744,20 @@ static void gold_text(char *out, size_t outsz) {
     snprintf(out, outsz, "^fg(FFD700)💰^fg() $%.2f/g", value / 31.1034768);
 }
 
+/* Untrusted text must not introduce dwlb commands. Never split an escaped ^^. */
+static void escape_status_text(char *out, size_t outsz, const char *text) {
+    if (!outsz) return;
+    size_t len = 0;
+    for (const unsigned char *p = (const unsigned char *)text; *p; ++p) {
+        if (*p < 0x20 || *p == 0x7f) continue;
+        size_t needed = *p == '^' ? 2 : 1;
+        if (needed >= outsz - len) break;
+        if (*p == '^') out[len++] = '^';
+        out[len++] = (char)*p;
+    }
+    out[len] = '\0';
+}
+
 static void weather_text(char *out, size_t outsz) {
     FILE *fp = popen("curl -fsS --connect-timeout 3 --max-time 5 'https://wttr.in/Yerevan?format=1' 2>/dev/null", "r");
     if (!fp) {
@@ -771,6 +785,9 @@ static void weather_text(char *out, size_t outsz) {
         memmove(out + strlen("🔆"), out + strlen("☀️"), strlen(out + strlen("☀️")) + 1);
         memcpy(out, "🔆", strlen("🔆"));
     }
+    char raw[128];
+    snprintf(raw, sizeof raw, "%s", out);
+    escape_status_text(out, outsz, raw);
 }
 
 static void notify_text(const char *title, const char *message) {
@@ -1026,15 +1043,7 @@ static void vpn_text(char *out, size_t outsz) {
         size_t len = 0;
         const char *prefix = "🛡 ";
         while (*prefix && len + 1 < outsz) out[len++] = *prefix++;
-        for (const unsigned char *p = (const unsigned char *)name;
-             *p && len + 1 < outsz; ++p) {
-            if (*p == '\n' || *p == '\r' || *p == 0x7f || *p < 0x20)
-                continue;
-            if (*p == '^' && len + 2 < outsz) out[len++] = '^';
-            if (len + 1 >= outsz) break;
-            out[len++] = (char)*p;
-        }
-        out[len] = '\0';
+        escape_status_text(out + len, outsz - len, name);
     } else {
         out[0] = 0;
     }

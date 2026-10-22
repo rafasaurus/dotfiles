@@ -1,0 +1,21 @@
+#!/bin/sh
+# Explicit bootstrap only: never download executable code during editor startup.
+set -eu
+commit=7e5aae5e1187842cb0b1d8def986e48d481c4410
+sha256=4243c1d2a5d9a1012aca536315e69aab8549e60926b3dd80ee1f973954d77f9d
+temporary=$(mktemp -d)
+trap 'rm -rf -- "$temporary"' EXIT
+trap 'exit 129' HUP
+trap 'exit 130' INT
+trap 'exit 143' TERM
+curl --fail --location --proto '=https' --proto-redir '=https' \
+    --connect-timeout 10 --max-time 60 \
+    "https://raw.githubusercontent.com/junegunn/vim-plug/$commit/plug.vim" \
+    -o "$temporary/plug.vim"
+if ! printf '%s  %s\n' "$sha256" "$temporary/plug.vim" | sha256sum --check --status; then
+    printf '%s\n' 'vim-plug checksum mismatch; nothing installed.' >&2
+    exit 1
+fi
+install -Dm644 "$temporary/plug.vim" "$HOME/.vim/autoload/plug.vim"
+install -Dm644 "$temporary/plug.vim" "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim"
+printf '%s\n' 'Installed verified vim-plug. Run :PlugInstall explicitly to install plugins.'

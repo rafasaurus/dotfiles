@@ -18,9 +18,26 @@ make stow
 by `hostname` (for example, `x220`).
 
 Use `make help` to list available targets. `install-udev` writes privileged
-system rules and `uninstall-udev` removes all local udev rules. Review those
-targets before running them. `make stow` may replace an existing
+system rules and `uninstall-udev` removes only this repository's rule filenames.
+Review those targets before running them. `make stow` may replace an existing
 `~/.config/mimeapps.list`.
+
+Security and setup:
+- Install Neovim from Arch packages (`neovim` is in `packages.txt`); there is no
+  AppImage downloader. Existing manually installed binaries are not removed.
+- Run `make install-vim-plug` to install the pinned, SHA-256-verified plugin
+  manager for Vim and Neovim. Editor startup never downloads it. Run
+  `:PlugInstall` explicitly; plugins and AUR/source builds remain trusted code
+  that you should review before installing/updating.
+- Arduino/serial and ST-Link tools use the Arch `uucp` group, not world-writable
+  devices. Add your user once with `sudo usermod -aG uucp "$USER"`, then log out
+  and back in. Run `make install-udev` and reconnect devices to apply the rules.
+- Plain suspend intentionally does not lock. Use `suspend_and_lock` when wanted.
+- QR clipboard output stays at `/tmp/qr.png` until the viewer exits, then is
+  shredded and removed (also on handled signals/errors). Existing paths are
+  refused. Shredding cannot guarantee erasure on SSDs, tmpfs or COW filesystems.
+- Run `make test-security` for isolated regressions (requires Python 3, a C
+  compiler, Zsh and GNU coreutils; no root, network or desktop access needed).
 
 Text login (greetd + tuigreet):
 ```

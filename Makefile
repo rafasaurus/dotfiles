@@ -3,6 +3,8 @@ BASE_IMAGE = archlinux:base-devel
 DOCKER_IMAGE ?= dotfiles-test-arch
 HOSTNAME := $(shell hostname)
 PINGFANG_CONF := etc/fonts/conf.d/55-fonts-pingfang.conf
+UDEV_RULES_DIR ?= /etc/udev/rules.d
+UDEV_RULES := $(notdir $(wildcard etc/udev/rules.d/*.rules))
 STOW_PACKAGES := common $(if $(wildcard $(HOSTNAME)),$(HOSTNAME))
 
 .DEFAULT_GOAL := stow
@@ -10,9 +12,9 @@ STOW_PACKAGES := common $(if $(wildcard $(HOSTNAME)),$(HOSTNAME))
 .PHONY: all stow restow destow install-prereqs install-paru \
 	install-aur install-udev install-gui install-themes \
 	install-mimir install-login \
-	install-neovim reinstall reinstall-gui \
+	install-vim-plug reinstall reinstall-gui \
 	uninstall-gui uninstall-udev check_dirs install-cursors toggle help \
-	docker-build test docker-shell
+	docker-build test test-security docker-shell
 
 help:
 	@printf "%-28s %s\n" "Target" "Description"
@@ -30,14 +32,15 @@ help:
 	@printf "%-28s %s\n" "reinstall-gui"     "Reinstall GUI only"
 	@printf "%-28s %s\n" "uninstall-gui"     "Uninstall dwl and dwlb-status"
 	@printf "%-28s %s\n" "install-udev"      "Deploy udev rules and reload"
-	@printf "%-28s %s\n" "uninstall-udev"    "Remove all udev rules"
+	@printf "%-28s %s\n" "uninstall-udev"    "Remove only this repository's udev rules"
 	@printf "%-28s %s\n" "install-themes"    "Clone Mac-OS-9 GTK theme"
 	@printf "%-28s %s\n" "install-cursors"   "Build and install dwlcursor (Apple cursor)"
 	@printf "%-28s %s\n" "install-mimir"     "Install mimir from source"
-	@printf "%-28s %s\n" "install-neovim"    "Install neovim nightly AppImage"
+	@printf "%-28s %s\n" "install-vim-plug"  "Install pinned, checksum-verified vim-plug for Vim and Neovim"
 	@printf "%-28s %s\n" "toggle"            "Toggle git remote visibility"
 	@printf "%-28s %s\n" "docker-build"      "Build Arch Linux docker test image"
 	@printf "%-28s %s\n" "test"              "Run dotfile tests in Arch Linux docker"
+	@printf "%-28s %s\n" "test-security"     "Run isolated security and shell-cache regression tests"
 	@printf "%-28s %s\n" "docker-shell"      "Interactive shell in test container"
 
 toggle:
@@ -48,6 +51,10 @@ docker-build :
 
 test : docker-build
 	docker run --rm -v $(CURDIR):/root/dotfiles:ro $(DOCKER_IMAGE)
+
+test-security:
+	python3 test/security.py
+	python3 test/shell-startup.py
 
 docker-shell : docker-build
 	docker run -it --rm --hostname arch -v $(CURDIR):/root/dotfiles $(DOCKER_IMAGE) /bin/zsh -l
@@ -75,7 +82,10 @@ install-aur :
 	paru -S --needed - < packages-aur.txt
 
 install-udev :
-	sudo cp -r etc/udev/rules.d/* /etc/udev/rules.d/
+	sudo install -d "$(UDEV_RULES_DIR)"
+	@for rule in $(UDEV_RULES); do \
+		sudo install -m 0644 "etc/udev/rules.d/$$rule" "$(UDEV_RULES_DIR)/$$rule" || exit; \
+	done
 	sudo udevadm control --reload-rules && sudo udevadm trigger
 
 install-login : stow
@@ -108,7 +118,10 @@ uninstall-gui :
 	$(MAKE) -C dwlb-status uninstall
 
 uninstall-udev :
-	sudo rm -r /etc/udev/rules.d/*
+	@for rule in $(UDEV_RULES); do \
+		sudo rm -f -- "$(UDEV_RULES_DIR)/$$rule" || exit; \
+	done
+	sudo udevadm control --reload-rules
 
 install-themes :
 	[ -d $(HOME)/.themes/Mac-OS-9 ] || \
@@ -143,14 +156,5 @@ install-cursors:
 	cp themes/dwlcursor ~/.icons/ -r
 	@echo "you have to install cursor with nwg-look in wayland"
 
-install-neovim:
-	@set -e; \
-	BASE_URL="https://github.com/neovim/neovim/releases/download/nightly"; \
-	INSTALL_DIR="$(HOME)/.local/bin"; \
-	APPIMAGE="nvim-linux-x86_64.appimage"; \
-	[ -d "$$INSTALL_DIR" ] || { echo "$$INSTALL_DIR does not exist"; exit 1; }; \
-	case "$$(uname -m)" in \
-		aarch64|arm64) APPIMAGE="nvim-linux-arm64.appimage" ;; \
-	esac; \
-	curl -L "$$BASE_URL/$$APPIMAGE" -o "$$INSTALL_DIR/nvim"; \
-	chmod +x "$$INSTALL_DIR/nvim"
+install-vim-plug:
+	sh common/.local/bin/install-vim-plug

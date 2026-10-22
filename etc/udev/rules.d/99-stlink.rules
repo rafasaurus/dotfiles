@@ -1,1 +1,2 @@
-ATTRS{idVendor}=="0483", MODE="0666"
+# Explicit group access for ST development tools; no world-writable USB devices.
+SUBSYSTEM=="usb", ATTR{idVendor}=="0483", MODE="0660", GROUP="uucp"
