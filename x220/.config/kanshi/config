@@ -1,11 +1,11 @@
-profile dual {
-    output LVDS-1 enable mode 1366x768 position 0,0
-    output "HDMI-A-*" enable mode --preferred position 1366,0
-}
-
 profile lid_closed {
     output LVDS-1 disable
-    output "HDMI-A-*" enable mode --preferred position 0,0
+    output HDMI-A-1 enable mode preferred position 0,0
+}
+
+profile dual {
+    output LVDS-1 enable mode 1366x768 position 0,0
+    output HDMI-A-1 enable mode preferred position 1366,0
 }
 
 profile laptop_only {
