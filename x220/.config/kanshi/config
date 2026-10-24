@@ -10,4 +10,5 @@ profile dual {
 
 profile laptop_only {
     output LVDS-1 enable mode 1366x768 position 0,0
+    ...output HDMI-A-1 disable
 }
