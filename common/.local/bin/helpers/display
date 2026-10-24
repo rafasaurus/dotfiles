@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+config="${XDG_CONFIG_HOME:-$HOME/.config}/kanshi/config"
+
+fail() {
+    printf 'display: %s\n' "$1" >&2
+    notify-send -u critical "Display profile" "$1"
+    exit 1
+}
+
+# Extract named profiles, including quoted names.
+profiles=$(sed -nE 's/^[[:space:]]*profile[[:space:]]+("([^"]+)"|([^[:space:]{"#]+)).*/\2\3/p' "$config") || fail "Cannot read $config"
+[[ -n "$profiles" ]] || fail "No named profiles in $config"
+chosen=$(printf '%s\n' "$profiles" | dmenu_command --prompt="Display profile: ") || exit 0
+[[ -n "$chosen" ]] || exit 0
+
+# Fuzzel allows custom input; only accept a listed profile.
+grep -Fxq -- "$chosen" <<< "$profiles" || fail "Unknown profile: $chosen"
+kanshictl switch "$chosen" || fail "Failed to apply $chosen. Is Kanshi running?"
