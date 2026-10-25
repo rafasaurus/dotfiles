@@ -4,6 +4,7 @@ choices='🔑  lock
 🔒  suspend_and_lock
 🛜  bluetooth
 🖥️  display
+🌡️  gamma
 💀  shutdown
 ♻️  reboot
 🚀  launcher
@@ -18,6 +19,7 @@ case "$chosen" in
     suspend_and_lock) lock.sh && systemctl suspend ;;
     bluetooth) rofi-bluetooth ;;
     display) "$HOME/.local/bin/helpers/display" ;;
+    gamma) autored --slider ;;
     shutdown) ~/.local/bin/prompt "Do you want to shutdown ?" "shutdown now";;
     reboot) ~/.local/bin/prompt "Do you want to shutdown ?" "reboot";;
     launcher) fuzzel ;;

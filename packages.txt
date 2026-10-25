@@ -102,6 +102,8 @@ unrar
 unzip
 upower
 vtk
+wayland
+wayland-protocols
 wdisplays
 wf-recorder
 wget

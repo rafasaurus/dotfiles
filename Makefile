@@ -26,11 +26,11 @@ help:
 	@printf "%-28s %s\n" "install-prereqs"   "Install official packages via pacman (packages.txt)"
 	@printf "%-28s %s\n" "install-paru"      "Install paru AUR helper (if not present)"
 	@printf "%-28s %s\n" "install-aur"       "Install AUR packages via paru (packages-aur.txt)"
-	@printf "%-28s %s\n" "install-gui"       "Build and install dwl, dwlb, dwlb-status, wlbubble"
+	@printf "%-28s %s\n" "install-gui"       "Build and install dwl, dwlb, dwlb-status, wlbubble, wslider"
 	@printf "%-28s %s\n" "install-login"     "Install greetd + tuigreet; enable text login for next boot"
 	@printf "%-28s %s\n" "reinstall"         "Reinstall GUI + packages"
 	@printf "%-28s %s\n" "reinstall-gui"     "Reinstall GUI only"
-	@printf "%-28s %s\n" "uninstall-gui"     "Uninstall dwl and dwlb-status"
+	@printf "%-28s %s\n" "uninstall-gui"     "Uninstall dwl, dwlb-status and wslider"
 	@printf "%-28s %s\n" "install-udev"      "Deploy udev rules and reload"
 	@printf "%-28s %s\n" "uninstall-udev"    "Remove only this repository's udev rules"
 	@printf "%-28s %s\n" "install-themes"    "Clone Mac-OS-9 GTK theme"
@@ -102,6 +102,7 @@ install-gui :
 	cp common/.config/wall.png $(HOME)/.config/wall.png
 	sudo $(MAKE) -C external/dwl install -j
 	sudo $(MAKE) -C external/wlbubble install -j
+	$(MAKE) -C external/wslider install
 	$(MAKE) -C dwlb-status install
 	cd external/dwlb && \
 		(git apply --reverse --check ../../patches/dwlb-color-emoji.patch 2>/dev/null || git apply ../../patches/dwlb-color-emoji.patch) && \
@@ -116,6 +117,7 @@ install-gui :
 uninstall-gui :
 	sudo $(MAKE) -C external/dwl uninstall
 	$(MAKE) -C dwlb-status uninstall
+	rm -f -- "$(HOME)/.local/bin/wslider"
 
 uninstall-udev :
 	@for rule in $(UDEV_RULES); do \

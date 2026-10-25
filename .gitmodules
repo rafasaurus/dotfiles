@@ -13,3 +13,6 @@
 [submodule "common/.fonts/private-fonts"]
 	path = common/.fonts/private-fonts
 	url = git@github.com:rafasaurus/private-fonts
+[submodule "external/wslider"]
+	path = external/wslider
+	url = https://github.com/rafasaurus/wslider
