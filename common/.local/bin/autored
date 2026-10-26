@@ -12,16 +12,12 @@ case "$current_hour" in
     23) (( 10#$current_minute < 30 )) && temperature=3800 || temperature=3500 ;;
 esac
 
-state_dir="${XDG_RUNTIME_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}}/autored"
-
 apply_temperature() {
     [[ "$1" =~ ^[0-9]{4,5}$ ]] && (( 10#$1 >= 1000 && 10#$1 <= 25000 )) || {
         printf 'autored: expected Kelvin temperature (1000–25000)\n' >&2; return 1;
     }
     stop_gamma
     gammastep -P -O "$((10#$1))" &
-    mkdir -p -- "$state_dir"
-    printf '%s\n' "$((10#$1))" > "$state_dir/temperature"
 }
 
 stop_gamma() {
@@ -30,7 +26,7 @@ stop_gamma() {
 
 case "${1:-}" in
     --slider)
-        [[ ! -r "$state_dir/temperature" ]] || read -r temperature < "$state_dir/temperature"
+        apply_temperature "$temperature"
         wslider --min 3000 --max 6500 --value "$temperature" --timeout 1.4 |
             while IFS= read -r value; do
                 # wslider emits decimal Kelvin values; gammastep expects integers.

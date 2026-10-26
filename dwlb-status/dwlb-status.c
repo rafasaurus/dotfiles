@@ -1319,6 +1319,7 @@ int main(int argc, char **argv) {
             .interval_us = THEME_EVERY * STATUS_TICK_US,
             .update = theme_text,
             .left_click = "sh -c 'switch-theme -a; dwlb-status --signal 1'",
+            .right_click = "autored --slider",
             .signal_idx = 1
         },
         {
