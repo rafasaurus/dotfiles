@@ -13,6 +13,10 @@ profile office {
     output eDP-1 disable
     output DP-5 enable mode 2560x2880 position 0,0 scale 1 transform 90
 }
+profile office {
+    output eDP-1 disable
+    output DP-6 enable mode 2560x2880 position 0,0 scale 1 transform 90
+}
 profile office1 {
     output eDP-1 disable
     output DP-4 enable mode 2560x2880 position 0,0 scale 1 transform 90

@@ -1222,8 +1222,9 @@ int main(int argc, char **argv) {
             .name = "Volume",
             .interval_us = VOL_EVERY * STATUS_TICK_US,
             .update = volume_text,
-            .left_click = "pamixer -t",
+            .left_click = "volume-slider",
             .right_click = "pavucontrol",
+            .middle_click = "pamixer -t",
             .scroll_up = "sh -c \"pamixer -i 2; dwlb-status --signal 0\"",
             .scroll_down = "sh -c \"pamixer -d 2; dwlb-status --signal 0\"",
             .signal_idx = 0
@@ -1318,8 +1319,8 @@ int main(int argc, char **argv) {
             .name = "Theme",
             .interval_us = THEME_EVERY * STATUS_TICK_US,
             .update = theme_text,
-            .left_click = "sh -c 'switch-theme -a; dwlb-status --signal 1'",
-            .right_click = "autored --slider",
+            .left_click = "autored --slider",
+            .right_click = "sh -c 'switch-theme -a; dwlb-status --signal 1'",
             .signal_idx = 1
         },
         {
@@ -1379,7 +1380,7 @@ int main(int argc, char **argv) {
         }
 
         if (dirty) {
-            char bar[1024];
+            char bar[4096];
             size_t bar_len = 0;
             bool have_unit = false;
             for (int i = 0; i < num_units; i++) {

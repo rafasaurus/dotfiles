@@ -4,7 +4,7 @@
 [ -f ~/.profile ] && . ~/.profile
 
 # export QT_STYLE_OVERRIDE="gtk2"
-export QT_QPA_PLATFORMTHEME="qt5ct"
+export QT_QPA_PLATFORMTHEME="qt6ct"
 export QT_STYLE_OVERRIDE="Fusion"
 export QT_SCALE_FACTOR=1.25
 export GTK_USE_PORTAL=1
