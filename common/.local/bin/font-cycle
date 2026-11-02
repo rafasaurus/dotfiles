@@ -20,6 +20,13 @@ for i in "${!fonts[@]}"; do
     fi
 done
 
+if [[ "${1:-next}" == show ]]; then
+    if ((current_index < 0)); then exit 1; fi
+    font_name=$(sed -n 's/^family = "\(.*\)"$/\1/p; t; d' "${fonts[current_index]}" | sed -n '1p')
+    notify-send "Alacritty font" "$font_name" || true
+    exit 0
+fi
+
 if ((current_index < 0)); then
     next_index=0
 else

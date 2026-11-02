@@ -1327,7 +1327,8 @@ int main(int argc, char **argv) {
             .name = "Font",
             .interval_us = 999999ull * STATUS_TICK_US,
             .update = font_text,
-            .left_click = "font-cycle next",
+            .left_click = "font-cycle show",
+            .right_click = "font-cycle next",
             .scroll_up = "font-cycle next",
             .scroll_down = "font-cycle prev",
             .signal_idx = -1
