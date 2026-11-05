@@ -60,9 +60,11 @@ docker-shell : docker-build
 	docker run -it --rm --hostname arch -v $(CURDIR):/root/dotfiles $(DOCKER_IMAGE) /bin/zsh -l
 
 stow : check_dirs
+	python3 "$(CURDIR)/scripts/migrate-weekly-todo.py"
 	stow --target $(HOME) --verbose $(STOW_PACKAGES)
 
 restow :
+	python3 "$(CURDIR)/scripts/migrate-weekly-todo.py"
 	stow --target $(HOME) --verbose --restow $(STOW_PACKAGES)
 
 destow :
