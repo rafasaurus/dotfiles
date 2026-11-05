@@ -43,17 +43,23 @@ class MigrationTests(unittest.TestCase):
         self.assertEqual(note.read_text(), 'keep me')
         self.assertEqual(self.run_migration().returncode, 0)
 
-    def test_regular_file_preserved(self):
+    def test_syncthing_replacement_removed_and_notes_preserved(self):
         self.old.parent.mkdir()
-        self.old.write_text('local edits')
-        self.assertEqual(self.run_migration().returncode, 1)
-        self.assertEqual(self.old.read_text(), 'local edits')
+        self.old.write_text('synced script')
+        note = self.old.parent / 'note.md'
+        note.write_text('keep me')
+        self.assertEqual(self.run_migration().returncode, 0)
+        self.assertFalse(os.path.lexists(self.old))
+        self.assertEqual(note.read_text(), 'keep me')
 
-    def test_unexpected_link_preserved(self):
+    def test_other_script_link_removed_without_removing_target(self):
         self.old.parent.mkdir()
-        self.old.symlink_to('/missing/other-script')
-        self.assertEqual(self.run_migration().returncode, 1)
-        self.assertTrue(self.old.is_symlink())
+        target = self.home / 'other-script'
+        target.write_text('keep target')
+        self.old.symlink_to(target)
+        self.assertEqual(self.run_migration().returncode, 0)
+        self.assertFalse(os.path.lexists(self.old))
+        self.assertEqual(target.read_text(), 'keep target')
 
     def test_dangling_folded_directory_removed(self):
         self.old.parent.symlink_to(self.repo / 'common/obsidian')

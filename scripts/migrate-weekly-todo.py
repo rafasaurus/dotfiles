@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Remove only known legacy Stow links; never remove synced regular files."""
+"""Remove the retired weekly script, including Syncthing replacement files."""
 import os
 from pathlib import Path
 import sys
@@ -25,14 +25,9 @@ def main():
             return 0
         print('Legacy ~/obsidian is a directory symlink; review it manually before migration.', file=sys.stderr)
         return 1
-    if points_to(legacy_script, ROOT / 'common/obsidian/weekly_todo_roller.py'):
+    if os.path.lexists(legacy_script):
         legacy_script.unlink()
-        print('Removed legacy weekly_todo_roller.py symlink')
-    elif os.path.lexists(legacy_script):
-        print('Preserved ~/obsidian/weekly_todo_roller.py: not the expected Stow link. '
-              'Compare it with the Git version, then move it outside the synced folder '
-              'and rerun Stow.', file=sys.stderr)
-        return 1
+        print('Removed retired ~/obsidian/weekly_todo_roller.py')
     return 0
 
 
