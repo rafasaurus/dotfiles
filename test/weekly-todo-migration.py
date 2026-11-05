@@ -32,6 +32,19 @@ class MigrationTests(unittest.TestCase):
         self.assertEqual(self.run_migration().returncode, 0)
         self.assertFalse(self.old.parent.exists())
 
+    def test_todo_calls_relocated_roller_without_legacy_script(self):
+        binary = self.home / '.local/bin/weekly-todo-roller'
+        binary.parent.mkdir(parents=True)
+        binary.write_text(
+            'import os\nfrom pathlib import Path\n'
+            'Path(os.environ["HOME"], "roller-called").write_text("yes")\n')
+        result = subprocess.run(['bash', str(ROOT / 'common/.local/bin/todo')],
+                                env=dict(os.environ, HOME=str(self.home), EDITOR='/bin/true'),
+                                capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual((self.home / 'roller-called').read_text(), 'yes')
+        self.assertFalse(os.path.lexists(self.old))
+
     def test_dangling_link_removed_and_notes_preserved(self):
         self.old.parent.mkdir()
         note = self.old.parent / 'note.md'

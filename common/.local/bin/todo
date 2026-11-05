@@ -9,8 +9,7 @@ mkdir -p "$OBSIDIAN_DIR"
 
 if [ ! -f "$NOTE" ]; then
     echo "New week detected! Checking for unfinished tasks..."
-    pushd "$HOME/obsidian" > /dev/null && python3 weekly_todo_roller.py
-    popd > /dev/null
+    python3 "$HOME/.local/bin/weekly-todo-roller"
 fi
 
 $EDITOR "$NOTE"
